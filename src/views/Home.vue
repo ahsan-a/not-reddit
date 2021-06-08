@@ -1,5 +1,5 @@
 <template>
-	<img src="../assets/logo.png" class="mainLogo" />
+	<img src="../assets/logo.png" class="mainLogo md:w-64 h-auto" />
 	<div class="w-screen h-screen bg-nord0">
 		<div class="container pt-24 md:pt-48 px-6 mx-auto flex flex-wrap flex-col md:flex-row items-center">
 			<div class="flex flex-col w-full xl:w-2/5 justify-center lg:items-start overflow-y-hidden">
@@ -22,12 +22,15 @@
 	</div>
 </template>
 
-<script>
-	export default {};
-</script>
-
 <style lang="stylus" scoped>
 	.mainLogo {
-		position absolute
+		position: absolute
+		left: 50%
+		right: -50%
+		top: 50%
+		transform: translate(-50%, -50%)
+		@media screen and (max-width: 768px){
+			transform: translate(-50%, 0%)
+		}
 	}
 </style>
