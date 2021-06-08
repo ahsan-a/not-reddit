@@ -1,12 +1,13 @@
 <template>
+	<Navbar />
 	<img src="../assets/logo.png" class="mainLogo md:w-64 h-auto" />
 	<div class="w-screen h-screen bg-nord0">
 		<div class="container pt-24 md:pt-48 px-6 mx-auto flex flex-wrap flex-col md:flex-row items-center">
 			<div class="flex flex-col w-full xl:w-2/5 justify-center lg:items-start overflow-y-hidden">
-				<h1 class="my-4 text-3xl md:text-5xl text-nord4 font-bold leading-tight text-center md:text-left slide-in-bottom-h1">
+				<h1 class="my-4 text-3xl md:text-5xl text-nord4 font-bold leading-tight text-center md:text-left">
 					This isn't Reddit.
 				</h1>
-				<p class="leading-normal text-base md:text-2xl mb-8 text-center md:text-left slide-in-bottom-subtitle text-nord4">
+				<p class="leading-normal text-base md:text-2xl mb-8 text-center md:text-left text-nord4">
 					Please don't file a cease and desist letter.
 				</p>
 
@@ -21,6 +22,17 @@
 		</div>
 	</div>
 </template>
+
+<script lang="ts">
+	import { defineComponent } from 'vue';
+	import Navbar from '@/components/Navbar.vue';
+
+	export default defineComponent({
+		components: {
+			Navbar,
+		},
+	});
+</script>
 
 <style lang="stylus" scoped>
 	.mainLogo {
