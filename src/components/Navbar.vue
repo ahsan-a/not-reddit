@@ -21,7 +21,7 @@
 								</button>
 							</div>
 						</div>
-						<div class="hidden md:block">
+						<div class="hidden md:block" v-if="store.auth.state.user?.admin">
 							<div class="flex items-baseline ml-10 space-x-4 text-sm font-medium tracking-wider uppercase text-nord4">
 								<a
 									class="px-3 py-2 text-sm font-medium transition-colors rounded-md cursor-pointer text-nord5 hover:bg-nord3"
@@ -35,7 +35,7 @@
 					<div class="hidden md:block">
 						<div class="flex items-center ml-4 md:ml-6">
 							<!-- Profile dropdown -->
-							<div class="ml-3 menu">
+							<div class="ml-3 menu" v-if="store.auth.state.isLoggedIn">
 								<div>
 									<button
 										class="flex items-center max-w-xs text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-nord1 focus:ring-nord5"
@@ -45,7 +45,7 @@
 										@blur="PHFalse"
 									>
 										<span class="sr-only">Open user menu</span>
-										<img class="w-8 h-8 rounded-full" src="../assets/logo.png" />
+										<img class="w-8 h-8 rounded-full" :src="store.auth.state.user.image" />
 									</button>
 								</div>
 								<div
@@ -56,19 +56,22 @@
 									v-if="profileHover"
 								>
 									<p class="block px-4 py-2 text-sm font-semibold text-nord6">
-										sample
+										{{ store.auth.state.user.name }}
 									</p>
 									<a
 										href="#"
 										class="block px-4 py-2 text-sm transition-colors rounded-md text-nord6 hover:bg-nord2"
 										role="menuitem"
-										@click="profileHover = false"
+										@click="
+											profileHover = false;
+											firebase.auth().signOut();
+										"
 										>Sign out</a
 									>
 								</div>
 							</div>
 
-							<div class="relative ml-3">
+							<div class="relative ml-3" v-else>
 								<div class="flex ml-10 space-x-4">
 									<button
 										class="py-1 pl-2 pr-4 space-x-4 text-sm font-medium transition-colors rounded-md text-nord6 googleButton noOutline"
@@ -94,22 +97,9 @@
 
 					<div class="flex -mr-2 md:hidden">
 						<!-- Mobile menu button -->
-						<button class="pl-1 pr-3 space-x-4 text-sm font-medium rounded-md" @click="router.push({ path: '/login' })">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								class="transition-all fill-current w-9 h-9 text-nord8 hover:text-nord7"
-							>
-								<path
-									d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm7.753 18.305c-.261-.586-.789-.991-1.871-1.241-2.293-.529-4.428-.993-3.393-2.945 3.145-5.942.833-9.119-2.489-9.119-3.388 0-5.644 3.299-2.489 9.119 1.066 1.964-1.148 2.427-3.393 2.945-1.084.25-1.608.658-1.867 1.246-1.405-1.723-2.251-3.919-2.251-6.31 0-5.514 4.486-10 10-10s10 4.486 10 10c0 2.389-.845 4.583-2.247 6.305z"
-								/>
-							</svg>
-						</button>
 						<button
 							type="button"
-							class="inline-flex items-center justify-center p-2 mr-5 bg-nord0 text-nord4 fill-current"
+							class="inline-flex items-center justify-center p-2 mr-5 fill-current bg-nord0 text-nord4 noOutline"
 							aria-controls="mobile-menu"
 							aria-expanded="false"
 							@click="profileHover = !profileHover"
@@ -119,7 +109,7 @@
 								width="24"
 								height="24"
 								viewBox="0 0 24 24"
-								class="text-nord4 fill-current"
+								class="fill-current text-nord4"
 								v-if="!profileHover"
 							>
 								<path d="M4 22h-4v-4h4v4zm0-12h-4v4h4v-4zm0-8h-4v4h4v-4zm3 0v4h17v-4h-17zm0 12h17v-4h-17v4zm0 8h17v-4h-17v4z" />
@@ -146,6 +136,26 @@
 					>
 						Subreddits
 					</button>
+					<button
+						class="block px-3 py-2 text-base font-medium text-center transition-colors rounded-md text-nord5 hover:bg-nord2 noOutline"
+						@click="
+							PHFalse();
+							router.push({ path: '/login' });
+						"
+						v-if="!store.auth.state.isLoggedIn"
+					>
+						Sign In
+					</button>
+					<button
+						class="block px-3 py-2 text-base font-medium text-center transition-colors rounded-md text-nord5 hover:bg-nord2 noOutline"
+						@click="
+							PHFalse();
+							firebase.auth().signOut();
+						"
+						v-else
+					>
+						Sign Out
+					</button>
 				</div>
 			</div>
 		</nav>
@@ -156,6 +166,10 @@
 	import { defineComponent } from 'vue';
 	import { useRouter } from 'vue-router';
 	import { ref } from 'vue';
+
+	import firebase from '@/firebase';
+	import store from '@/store';
+
 	export default defineComponent({
 		setup() {
 			const profileHover = ref(false);
@@ -169,6 +183,8 @@
 				profileHover,
 				PHFalse,
 				router,
+				store,
+				firebase,
 			};
 		},
 	});
