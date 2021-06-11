@@ -21,6 +21,15 @@
 								</button>
 							</div>
 						</div>
+						<div class="hidden md:block">
+							<div class="flex items-baseline ml-10 space-x-4 text-sm font-medium tracking-wider text-nord4">
+								<button
+									class="px-3 py-2 text-sm font-medium uppercase transition-colors rounded-md cursor-pointer text-nord5 hover:bg-nord3 noOutline"
+								>
+									<a href="https://www.github.com/ahsan-a/not-reddit-next"> Github </a>
+								</button>
+							</div>
+						</div>
 						<div class="hidden md:block" v-if="store.auth.state.user?.admin">
 							<div class="flex items-baseline ml-10 space-x-4 text-sm font-medium tracking-wider uppercase text-nord4">
 								<a
