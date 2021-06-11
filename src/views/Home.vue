@@ -17,6 +17,7 @@
 					<a href="https://tailwindcss.com/" class="text-nord8">Tailwind</a>
 					and
 					<a href="https://firebase.google.com/" class="text-nord8">Firebase</a>.
+					Source code is availble on <a href="https://github.com/ahsan-a/not-reddit-next" class="text-nord8">Github</a>
 				</p>
 			</div>
 		</div>
