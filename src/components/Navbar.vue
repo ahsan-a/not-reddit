@@ -163,9 +163,8 @@
 </template>
 
 <script lang="ts">
-	import { defineComponent } from 'vue';
+	import { defineComponent, ref } from 'vue';
 	import { useRouter } from 'vue-router';
-	import { ref } from 'vue';
 
 	import firebase from '@/firebase';
 	import store from '@/store';
