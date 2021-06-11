@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute w-screen h-screen bg-nord0 -z-1"></div>
+	<div class="fixed w-screen h-screen bg-nord0 -z-1"></div>
 	<div class="h-screen">
 		<Navbar class="absolute" />
 		<!-- Container -->
