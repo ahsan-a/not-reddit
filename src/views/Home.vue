@@ -1,8 +1,8 @@
 <template>
-	<Navbar />
-	<img src="../assets/logo.png" class="h-auto mainLogo md:w-64" />
-	<div class="w-screen h-screen bg-nord0">
-		<div class="container flex flex-col flex-wrap items-center px-6 pt-24 mx-auto md:pt-48 md:flex-row">
+	<div class="h-screen bg-nord0">
+		<img src="../assets/logo.png" class="z-0 h-auto mainLogo md:w-64" />
+		<Navbar />
+		<div class="container flex flex-col flex-wrap items-center px-6 pt-24 mx-auto md:pt-48 md:flex-row z-1">
 			<div class="flex flex-col justify-center w-full overflow-y-hidden xl:w-2/5 lg:items-start">
 				<h1 class="my-4 text-3xl font-bold leading-tight text-center md:text-5xl text-nord4 md:text-left">
 					This isn't Reddit.

@@ -1,6 +1,6 @@
 <template>
-	<div class="navWrapper">
-		<nav class="sticky w-screen bg-nord0">
+	<div class="w-full nav">
+		<nav class="sticky w-full bg-nord0">
 			<div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
 				<div class="flex items-center justify-between h-16">
 					<div class="flex items-center">
@@ -221,18 +221,11 @@
 		border none
 		outline none
 	}
-	nav {
-		max-width 100vw
-	}
-	.navWrapper {
-		position absolute
-		width 100vw
-		z-index 100
-		overflow-x hidden
-		overflow-y visible
-	}
 	.noOutline {
 		border 0
 		outline 0
+	}
+	.nav {
+		overflow-x: hidden !important
 	}
 </style>
