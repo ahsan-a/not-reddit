@@ -1,9 +1,4 @@
 <template>
-	<title>Subreddits | not-reddit</title>
-	<meta content="Subreddits | not-reddit" property="og:title" />
-	<meta content="Sub(not)reddits" property="og:description" />
-	<meta content="../assets/logo.png" property="og:image" />
-
 	<div class="fixed w-screen h-screen bg-nord0 -z-1"></div>
 	<Navbar :padding="true" />
 	<div class="flex flex-col w-11/12 mx-auto xl:w-4/6 lg:w-5/6 subreddits">
@@ -82,7 +77,6 @@
 			const router = useRouter();
 
 			const getDate = (unix: number) => new Date(unix * 1000).toLocaleDateString();
-
 			return {
 				store,
 				router,

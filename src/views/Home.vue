@@ -1,9 +1,4 @@
 <template>
-	<title>not-reddit</title>
-	<meta content="not-reddit" property="og:title" />
-	<meta content="Like reddit but better" property="og:description" />
-	<meta content="../assets/logo.png" property="og:image" />
-
 	<div class="fixed w-screen h-screen bg-nord0 -z-1"></div>
 	<img src="../assets/logo.png" class="z-0 h-auto mainLogo md:w-64" />
 	<Navbar />

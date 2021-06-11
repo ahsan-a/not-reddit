@@ -1,8 +1,5 @@
 <template>
 	<title>Login | not-reddit</title>
-	<meta content="Login | not-reddit" property="og:title" />
-	<meta content="../assets/logo.png" property="og:image" />
-
 	<div class="fixed w-screen h-screen bg-nord0 -z-1"></div>
 	<div class="h-screen">
 		<Navbar class="absolute" />
@@ -74,7 +71,6 @@
 		},
 		setup() {
 			const router = useRouter();
-
 			async function loginWithProvider(type: string) {
 				let authProvider;
 				switch (type.toLowerCase()) {
