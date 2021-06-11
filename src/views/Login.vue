@@ -82,6 +82,7 @@
 						break;
 				}
 				await store.auth.actions.loginPrompt(authProvider);
+				router.push({ path: '/subreddits' });
 			}
 
 			return {

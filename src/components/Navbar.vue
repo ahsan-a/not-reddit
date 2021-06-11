@@ -75,7 +75,7 @@
 								<button
 									class="py-1 pl-2 pr-4 space-x-4 text-sm font-medium transition-colors rounded-md text-nord6 googleButton noOutline"
 									@click="router.push({ path: '/login' })"
-									@mousedown.middle="newtab('/admin')"
+									@mousedown.middle="newtab('/login')"
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -158,6 +158,7 @@
 			</div>
 		</div>
 	</nav>
+	<div class="space" v-if="props?.padding"></div>
 </template>
 
 <script lang="ts">
@@ -168,9 +169,13 @@
 	import store from '@/store';
 
 	export default defineComponent({
-		setup() {
+		props: {
+			padding: Boolean,
+		},
+		setup(props) {
 			const profileHover = ref(false);
 			const router = useRouter();
+			const newtab = (location: string) => window.open(location);
 			function PHFalse() {
 				setTimeout(() => {
 					profileHover.value = false;
@@ -182,6 +187,8 @@
 				router,
 				store,
 				firebase,
+				newtab,
+				props,
 			};
 		},
 	});
@@ -225,5 +232,8 @@
 	}
 	.nav {
 		overflow-x: hidden !important
+	}
+	.space {
+		padding-top: 64px
 	}
 </style>

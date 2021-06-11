@@ -1,6 +1,6 @@
 <template>
 	<div class="fixed w-screen h-screen bg-nord0 -z-1"></div>
-	<Navbar />
+	<Navbar :padding="true" />
 	<div class="flex flex-col w-11/12 mx-auto xl:w-4/6 lg:w-5/6 subreddits">
 		<button
 			class="block px-4 py-2 mx-auto mb-5 text-xl font-medium transition-colors rounded-md shadow-sm outline-none button bg-nord8 hover:bg-nord7 text-nord5 createSubredditButton"
