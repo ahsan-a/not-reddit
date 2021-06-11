@@ -1,17 +1,17 @@
 <template>
-	<Navbar />
-	<img src="../assets/logo.png" class="mainLogo md:w-64 h-auto" />
-	<div class="w-screen h-screen bg-nord0">
-		<div class="container pt-24 md:pt-48 px-6 mx-auto flex flex-wrap flex-col md:flex-row items-center">
-			<div class="flex flex-col w-full xl:w-2/5 justify-center lg:items-start overflow-y-hidden">
-				<h1 class="my-4 text-3xl md:text-5xl text-nord4 font-bold leading-tight text-center md:text-left">
+	<div class="h-screen bg-nord0">
+		<img src="../assets/logo.png" class="z-0 h-auto mainLogo md:w-64" />
+		<Navbar />
+		<div class="container flex flex-col flex-wrap items-center px-6 pt-24 mx-auto md:pt-48 md:flex-row z-1">
+			<div class="flex flex-col justify-center w-full overflow-y-hidden xl:w-2/5 lg:items-start">
+				<h1 class="my-4 text-3xl font-bold leading-tight text-center md:text-5xl text-nord4 md:text-left">
 					This isn't Reddit.
 				</h1>
-				<p class="leading-normal text-base md:text-2xl mb-8 text-center md:text-left text-nord4">
+				<p class="mb-8 text-base leading-normal text-center md:text-2xl md:text-left text-nord4">
 					Please don't file a cease and desist letter.
 				</p>
 
-				<p class="font-bold pb-8 lg:pb-6 text-center md:text-left fade-in text-nord4">
+				<p class="pb-8 font-bold text-center lg:pb-6 md:text-left fade-in text-nord4">
 					Built with
 					<a href="https://v3.vuejs.org/" class="text-nord8">Vue.js</a>,
 					<a href="https://tailwindcss.com/" class="text-nord8">Tailwind</a>
