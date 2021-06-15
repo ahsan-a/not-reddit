@@ -16,6 +16,11 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'Subreddits',
 		component: () => import('@/views/Subreddits.vue'),
 	},
+	{
+		path: '/r/:id',
+		name: 'Subreddit',
+		component: () => import('@/views/Subreddit.vue'),
+	},
 ];
 
 const router = createRouter({

@@ -2,16 +2,40 @@
 	<div class="fixed w-screen h-screen bg-nord0 -z-1"></div>
 	<Navbar :padding="true" />
 	<div class="flex flex-col w-11/12 mx-auto xl:w-4/6 lg:w-5/6 subreddits">
-		<button
-			class="block px-4 py-2 mx-auto mb-5 text-xl font-medium transition-colors rounded-md shadow-sm button bg-nord8 hover:bg-nord7 text-nord5 createSubredditButton noOutline"
-			@click="createSubredditOn = !createSubredditOn"
-			v-if="store.auth.state.isLoggedIn"
-		>
-			Create Subreddit
+		<button class="mx-auto my-5 button-blue" @click="createSubredditOn = !createSubredditOn" v-if="store.auth.state.isLoggedIn">
+			Create a Subreddit
 		</button>
 
 		<div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-			<div class="overflow-hidden border-b md:rounded-lg border-nord2">
+			<div v-if="createSubredditOn" class="px-4 py-5 mb-6 rounded-lg lg:px-32 md:py-10 bg-nord1">
+				<h1 class="text-3xl font-semibold text-nord6">Create a Subreddit</h1>
+
+				<form @submit.prevent="createSubreddit">
+					<h2 class="mt-4 text-lg font-semibold text-nord5">Subreddit Name</h2>
+					<input
+						type="text"
+						placeholder="Subreddit Name"
+						class="block w-full h-12 px-5 mx-auto mt-2 font-semibold transition-all border-none rounded-md shadow-sm outline-none text-md focus:outline-none focus:border-none bg-nord3 text-nord6 focus:shadow-md placeholder-nord4 focus:placeholder-nord5"
+						maxlength="25"
+						required
+						v-model="currentInput.name"
+						pattern=".*\S+.*"
+						title="Required"
+					/>
+					<h2 class="mt-6 text-lg font-semibold text-nord5">Subreddit Description</h2>
+					<textarea
+						placeholder="Subreddit Description"
+						class="block w-full h-24 px-5 pt-3 mx-auto mt-2 font-semibold transition-all border-none rounded-md outline-none resize-none text-md focus:outline-none focus:border-none bg-nord3 text-nord6 focus:shadow-md placeholder-nord4 focus:placeholder-nord5"
+						maxlength="150"
+						required
+						v-model="currentInput.description"
+						pattern=".*\S+.*"
+						title="Required"
+					/>
+					<button type="submit" class="block mx-auto mt-6 button-green">Submit</button>
+				</form>
+			</div>
+			<div class="overflow-hidden border-b rounded-lg border-nord2">
 				<table class="min-w-full mx-auto divide-y shadow divide-nord1">
 					<thead class="bg-nord1">
 						<tr>
@@ -59,62 +83,6 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="absolute createSubredditWrapper" v-if="createSubredditOn">
-		<div class="absolute flex-col w-full h-full shadow-lg createSubreddit bg-nord2 rounded-2xl">
-			<div class="w-full h-12 top bg-nord1 rounded-t-2xl">
-				<button
-					class="float-right w-5 h-5 mt-4 mr-4 transition-all rounded-full closeSubredditMenu bg-nord11 hover:bg-nord12"
-					@click="createSubredditOn = false"
-				>
-					<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" class="fill-current text-nord4 ">
-						<path
-							d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"
-						/>
-					</svg>
-				</button>
-			</div>
-			<div class="content">
-				<form @submit.prevent>
-					<div class="w-full mt-10 mb-10 subredditName">
-						<h1 class="text-3xl text-nord6 whitespace-nowrap">
-							Subreddit Name
-						</h1>
-						<input
-							type="text"
-							placeholder="Subreddit Name (required)"
-							class="block w-full h-12 px-5 mx-auto mt-5 text-xl transition-all border-none outline-none focus:outline-none focus:border-none bg-nord3 rounded-xl text-nord6 focus:shadow-md placeholder-nord4"
-							maxlength="25"
-							required
-							v-model="currentInput.name"
-							pattern=".*\S+.*"
-							title="Required"
-						/>
-					</div>
-					<div class="subredditDesc">
-						<h1 class="text-3xl text-nord6 whitespace-nowrap">
-							Subreddit Description
-						</h1>
-						<textarea
-							placeholder="Subreddit Description"
-							class="block w-full px-5 pt-3 mx-auto mt-5 text-xl transition-all border-none outline-none focus:outline-none focus:border-none descText bg-nord3 rounded-xl text-nord6 focus:shadow-md placeholder-nord4"
-							maxlength="100"
-							required
-							v-model="currentInput.description"
-							pattern=".*\S+.*"
-							title="Required"
-						/>
-					</div>
-					<button
-						class="block px-4 py-2 mx-auto mt-10 text-xl font-medium transition-colors rounded-md shadow-sm noOutline button bg-nord8 hover:bg-nord7 text-nord5 createSubredditButton"
-						@click="createSubreddit"
-					>
-						Create Subreddit
-					</button>
-				</form>
-			</div>
-		</div>
-	</div>
 </template>
 
 <script lang="ts">
@@ -135,6 +103,7 @@
 			const currentInput = reactive({
 				name: '',
 				description: '',
+				user_id: '',
 			});
 
 			const getDate = (unix: number) => new Date(unix * 1000).toLocaleDateString();
@@ -149,9 +118,12 @@
 					return alert('This subreddit already exists.');
 
 				currentInput.description = currentInput.description.replace(/\r?\n|\r/g, ' ');
+				currentInput.user_id = store.auth.state.user.id || '';
 
-				console.log(currentInput);
-				console.log(store.auth.state.user);
+				await store.subreddits.actions.submitNewSubreddit(currentInput);
+				currentInput.name = '';
+				currentInput.description = '';
+				createSubredditOn.value = false;
 			}
 
 			return {
@@ -167,6 +139,8 @@
 </script>
 
 <style lang="stylus" scoped>
+	@import '../assets/styles.styl';
+
 	.hideOnMd {
 		@media screen and (min-width: 768px) {
 			visibility: visible
@@ -184,55 +158,5 @@
 			visibility: hidden
 			display: none
 		}
-	}
-
-	.createSubredditWrapper {
-		width 1000px
-		height 65vh
-		left 50%
-		right 50%
-		top 50%
-		transform translate(-50%, -50%)
-		@media (max-width 1000px) {
-			width 95vw
-			height 85vh
-		}
-		.top {
-			display inline-block
-			flex-direction column
-			justify-content center
-		}
-		.closeSubredditMenu {
-			display flex
-			justify-content center
-			align-items center
-			border 0
-			outline 0
-			&:active {
-				background-color nord13
-			}
-			&:hover {
-				transform: rotate(90deg);
-			}
-		}
-		.content {
-			width 60%
-			position absolute
-			left 50%
-			right 50%
-			transform translate(-50%, 0%)
-			.descText {
-				min-height 9rem
-				max-height 9rem
-				@media (max-width 1000px) {
-					min-height 16rem
-					max-height 16rem
-				}
-			}
-		}
-	}
-	.noOutline {
-		border: 0 !important
-		outline: 0 !important
 	}
 </style>

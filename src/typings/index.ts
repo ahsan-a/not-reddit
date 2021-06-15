@@ -10,3 +10,12 @@ export interface User {
 	verified?: boolean;
 	email?: string;
 }
+
+interface subreddit {
+	approved: boolean;
+	created_at: firebase.firestore.FieldValue;
+	description: string;
+	id: string;
+	name: string;
+	user_id: string;
+}

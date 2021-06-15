@@ -16,7 +16,7 @@
 				<a href="https://v3.vuejs.org/" class="text-nord8">Vue.js</a>,
 				<a href="https://tailwindcss.com/" class="text-nord8">Tailwind</a>
 				and
-				<a href="https://firebase.google.com/" class="text-nord8">Firebase</a>. Get the source code and
+				<a href="https://firebase.google.com/" class="text-nord8">Firebase</a>. Get the source
 				<a href="https://github.com/ahsan-a/not-reddit-next" class="text-nord8">here</a>.
 			</p></div
 		>

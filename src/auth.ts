@@ -1,16 +1,10 @@
 import firebase from './firebase';
 import store from './store';
 import db from '@/db';
-import { User } from '@/typings';
-
-interface currentUser extends Omit<User, 'createdAt' | 'lastLoggedIn'> {
-	createdAt?: firebase.firestore.FieldValue;
-	lastLoggedIn?: firebase.firestore.FieldValue;
-}
 
 firebase.auth().onAuthStateChanged(async (user) => {
 	if (user) {
-		let currentUser: currentUser = {};
+		let currentUser: any = {};
 		const doc = await db
 			.collection('users')
 			.doc(user.uid)
