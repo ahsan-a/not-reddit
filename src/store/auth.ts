@@ -1,7 +1,20 @@
 import { reactive } from 'vue';
 import firebase from '@/firebase';
 
-const state = reactive({
+export interface User {
+	admin?: boolean;
+	createdAt?: firebase.firestore.Timestamp;
+	id?: string;
+	image?: string;
+	lastLoggedIn?: firebase.firestore.Timestamp;
+	name?: string;
+	verified?: boolean;
+}
+interface authState {
+	isLoggedIn: boolean;
+	user: User;
+}
+const state: authState = reactive({
 	isLoggedIn: false,
 	user: {},
 });
@@ -18,7 +31,7 @@ const actions = {
 };
 
 const mutations = {
-	setUser(user: firebase.auth.UserMetadata | null) {
+	setUser(user: User | null): void {
 		if (user) {
 			state.user = user;
 			state.isLoggedIn = true;

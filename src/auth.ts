@@ -1,21 +1,27 @@
 import firebase from './firebase';
 import store from './store';
-import router from './router';
 import db from '@/db';
+import { User } from '@/typings';
+
+interface currentUser extends Omit<User, 'createdAt' | 'lastLoggedIn'> {
+	createdAt?: firebase.firestore.FieldValue;
+	lastLoggedIn?: firebase.firestore.FieldValue;
+}
 
 firebase.auth().onAuthStateChanged(async (user) => {
 	if (user) {
-		let currentUser: any = {};
+		let currentUser: currentUser = {};
 		const doc = await db
 			.collection('users')
 			.doc(user.uid)
 			.get();
 
 		if (!doc.exists) {
+			// new user
 			currentUser = {
 				id: user.uid,
 				email: user.email,
-				name: user.displayName,
+				name: user.displayName || 'New User',
 				image: user.photoURL || 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg',
 				admin: false,
 				verified: user.emailVerified,
