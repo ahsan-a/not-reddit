@@ -17,9 +17,15 @@ const routes: Array<RouteRecordRaw> = [
 		component: () => import('@/views/Subreddits.vue'),
 	},
 	{
-		path: '/r/:id',
+		path: '/r/:name',
 		name: 'Subreddit',
 		component: () => import('@/views/Subreddit.vue'),
+	},
+
+	{
+		path: '/:catchAll(.*)',
+		name: '404',
+		component: () => import('@/views/404.vue'),
 	},
 ];
 

@@ -70,6 +70,7 @@
 			Navbar,
 		},
 		setup() {
+			document.title = 'login | (not) reddit';
 			const router = useRouter();
 			async function loginWithProvider(type: string) {
 				let authProvider;

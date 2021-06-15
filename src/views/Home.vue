@@ -31,6 +31,9 @@
 		components: {
 			Navbar,
 		},
+		setup() {
+			document.title = '(not) reddit';
+		},
 	});
 </script>
 

@@ -2,11 +2,11 @@
 	<div class="fixed w-screen h-screen bg-nord0 -z-1"></div>
 	<Navbar :padding="true" />
 	<div class="flex flex-col w-11/12 mx-auto xl:w-4/6 lg:w-5/6 subreddits">
-		<button class="mx-auto my-5 button-blue" @click="createSubredditOn = !createSubredditOn" v-if="store.auth.state.isLoggedIn">
+		<button class="mx-auto mt-5 button-blue" @click="createSubredditOn = !createSubredditOn" v-if="store.auth.state.isLoggedIn">
 			Create a Subreddit
 		</button>
 
-		<div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+		<div class="inline-block min-w-full py-2 mt-5 align-middle sm:px-6 lg:px-8">
 			<div v-if="createSubredditOn" class="px-4 py-5 mb-6 rounded-lg lg:px-32 md:py-10 bg-nord1">
 				<h1 class="text-3xl font-semibold text-nord6">Create a Subreddit</h1>
 
@@ -97,6 +97,7 @@
 			Navbar,
 		},
 		setup() {
+			document.title = 'subreddits | (not) reddit';
 			store.subreddits.actions.bindSubreddits();
 			const router = useRouter();
 			const createSubredditOn = ref(false);
