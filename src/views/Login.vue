@@ -1,6 +1,6 @@
 <template>
 	<title>Login | not-reddit</title>
-	<div class="fixed w-screen h-screen bg-nord0 -z-1"></div>
+	<div class="bg" />
 	<div class="h-screen">
 		<Navbar class="absolute" />
 		<!-- Container -->

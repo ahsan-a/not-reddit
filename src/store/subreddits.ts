@@ -1,19 +1,13 @@
 import db from '@/db';
 import { reactive } from 'vue';
 import firebase from '../firebase';
+import { Subreddit } from '@/typings';
 
 const state = reactive({
 	subreddits: Array(),
 });
 const actions = {
-	async submitNewSubreddit(subreddit: {
-		name: string;
-		description: string;
-		user_id: string;
-		id?: string;
-		created_at?: any;
-		approved?: boolean;
-	}): Promise<void> {
+	async submitNewSubreddit(subreddit: Partial<Subreddit>): Promise<void> {
 		const result = db.collection('subreddits').doc();
 		subreddit.id = result.id;
 		subreddit.created_at = firebase.firestore.FieldValue.serverTimestamp();

@@ -1,5 +1,5 @@
 <template>
-	<div class="fixed w-screen h-screen bg-nord0 -z-1"></div>
+	<div class="bg" />
 	<Navbar :padding="true" />
 	<div class="flex flex-col w-11/12 mx-auto xl:w-4/6 lg:w-5/6 subreddits">
 		<button class="mx-auto mt-5 button-blue" @click="createSubredditOn = !createSubredditOn" v-if="store.auth.state.isLoggedIn">
@@ -64,7 +64,7 @@
 									</div>
 								</div>
 							</td>
-							<td class="px-4 py-4 hideOnSm">
+							<td class="px-4 py-4 overflow-y-hidden hideOnSm">
 								<div class="text-sm break-words text-nord4 description">
 									{{ subreddit.description }}
 								</div>

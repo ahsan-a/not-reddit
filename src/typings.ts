@@ -20,11 +20,22 @@ export interface Subreddit {
 
 export interface Post {
 	content: string;
-	created_at: firebase.firestore.FieldValue | firebase.firestore.Timestamp;
+	created_at: firebase.firestore.Timestamp;
 	id: string;
 	subreddit_id: string;
 	title: string;
-	updated_at: firebase.firestore.FieldValue | firebase.firestore.Timestamp;
+	updated_at: firebase.firestore.Timestamp;
+	user_id: string;
+	user?: Partial<User>;
+}
+
+export interface CreatePost {
+	content: string;
+	created_at: firebase.firestore.FieldValue;
+	id: string;
+	subreddit_id: string;
+	title: string;
+	updated_at: firebase.firestore.FieldValue;
 	user_id: string;
 	user?: Partial<User>;
 }

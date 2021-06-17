@@ -1,33 +1,33 @@
 <template>
-	<nav class="fixed w-full nav bg-nord0">
+	<nav class="fixed w-full z-5 nav bg-nord0">
 		<div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
 			<div class="flex items-center justify-between h-16">
 				<div class="flex items-center">
-					<button class="flex-shrink-0 noOutline" @click="router.push({ path: '/' })">
+					<router-link class="flex-shrink-0 noOutline" to="/">
 						<img class="h-12 cursor-pointer" src="../assets/logo.png" alt="not reddit" />
-					</button>
-					<button class="px-5 text-3xl cursor-pointer text-nord6 navbarLogoText noOutline" @click="router.push({ path: '/' })">
+					</router-link>
+					<router-link class="px-5 text-3xl cursor-pointer text-nord6 navbarLogoText noOutline" to="/">
 						(not) reddit
-					</button>
+					</router-link>
 
 					<div class="hidden md:block">
 						<div class="flex items-baseline ml-10 space-x-4 text-sm font-medium tracking-wider text-nord4">
-							<button
+							<router-link
 								class="px-3 py-2 text-sm font-medium uppercase transition-colors rounded-md cursor-pointer text-nord5 hover:bg-nord3 noOutline"
-								@click="router.push({ path: '/subreddits' })"
+								to="/subreddits"
 							>
 								Subreddits
-							</button>
+							</router-link>
 						</div>
 					</div>
 					<div class="hidden md:block" v-if="store.auth.state.user?.admin">
 						<div class="flex items-baseline ml-10 space-x-4 text-sm font-medium tracking-wider uppercase text-nord4">
-							<a
+							<router-link
 								class="px-3 py-2 text-sm font-medium transition-colors rounded-md cursor-pointer text-nord5 hover:bg-nord3"
-								@click="router.push({ path: '/admin' })"
+								to="/admin"
 							>
 								Admin
-							</a>
+							</router-link>
 						</div>
 					</div>
 				</div>
@@ -72,9 +72,9 @@
 
 						<div class="relative ml-3" v-else>
 							<div class="flex ml-10 space-x-4">
-								<button
+								<router-link
 									class="py-1 pl-2 pr-4 space-x-4 text-sm font-medium transition-colors rounded-md text-nord6 googleButton noOutline"
-									@click="router.push({ path: '/login' })"
+									to="/login"
 									@mousedown.middle="newtab('/login')"
 								>
 									<svg
@@ -88,7 +88,7 @@
 											d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm7.753 18.305c-.261-.586-.789-.991-1.871-1.241-2.293-.529-4.428-.993-3.393-2.945 3.145-5.942.833-9.119-2.489-9.119-3.388 0-5.644 3.299-2.489 9.119 1.066 1.964-1.148 2.427-3.393 2.945-1.084.25-1.608.658-1.867 1.246-1.405-1.723-2.251-3.919-2.251-6.31 0-5.514 4.486-10 10-10s10 4.486 10 10c0 2.389-.845 4.583-2.247 6.305z"
 										/>
 									</svg>
-								</button>
+								</router-link>
 							</div>
 						</div>
 					</div>

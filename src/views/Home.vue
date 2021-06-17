@@ -1,5 +1,5 @@
 <template>
-	<div class="fixed w-screen h-screen bg-nord0 -z-1"></div>
+	<div class="bg" />
 	<img src="../assets/logo.png" class="z-0 h-auto mainLogo md:w-64" />
 	<Navbar />
 	<div class="container flex flex-col flex-wrap items-center px-6 pt-24 mx-auto md:pt-48 md:flex-row z-1">

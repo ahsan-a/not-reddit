@@ -13,10 +13,13 @@
     "core-js": "^3.6.5",
     "dompurify": "^2.2.9",
     "firebase": "^8.6.5",
+    "highlight.js": "^10.7.3",
     "postcss": "^7",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
+    "timeago.js": "^4.0.2",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0"
+    "vue-router": "^4.0.0-0",
+    "vue3-markdown-it": "^1.0.9"
   },
   "devDependencies": {
     "@types/dompurify": "^2.2.2",
