@@ -4,24 +4,20 @@
 
 <style lang="stylus">
 	@import './assets/styles.styl';
-	.bg {
-		position: fixed
-		width: 1000vw
-		height: 1000vh
-		background-color: #2e3440
-		z-index: -10
-	}
-	::-webkit-scrollbar {
+	body::-webkit-scrollbar {
 		width: 10px;
 	}
-	::-webkit-scrollbar-track {
+	body::-webkit-scrollbar-track {
 		background: nord0
 	}
-	::-webkit-scrollbar-thumb {
+	body::-webkit-scrollbar-thumb {
 		background: nord3
 		border-radius: 10px;
 	}
-	::-webkit-scrollbar-thumb:hover {
+	body::-webkit-scrollbar-thumb:hover {
 		background: nord2;
+	}
+	html {
+		scroll-behavior: smooth;
 	}
 </style>

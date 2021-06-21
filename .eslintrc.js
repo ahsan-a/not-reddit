@@ -15,5 +15,6 @@ module.exports = {
 		'@typescript-eslint/no-array-constructor': 'off',
 		'@typescript-eslint/ban-ts-comment': 'off',
 		'vue/no-unused-components': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+		'@typescript-eslint/no-explicit-any': 'off',
 	},
 };

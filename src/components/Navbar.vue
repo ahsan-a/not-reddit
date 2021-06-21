@@ -4,12 +4,22 @@
 			<div class="flex items-center justify-between h-16">
 				<div class="flex items-center">
 					<router-link class="flex-shrink-0 noOutline" to="/">
-						<img class="h-12 cursor-pointer" src="../assets/logo.png" alt="not reddit" />
+						<img class="h-12 cursor-pointer" src="../assets/logo.webp" alt="not reddit" />
 					</router-link>
 					<router-link class="px-5 text-3xl cursor-pointer text-nord6 navbarLogoText noOutline" to="/">
 						(not) reddit
 					</router-link>
 
+					<div class="hidden lg:block">
+						<div class="flex items-baseline ml-10 space-x-4 text-sm font-medium tracking-wider text-nord4">
+							<router-link
+								class="px-3 py-2 text-sm font-medium uppercase transition-colors rounded-md cursor-pointer text-nord5 hover:bg-nord3 noOutline"
+								to="/"
+							>
+								Home
+							</router-link>
+						</div>
+					</div>
 					<div class="hidden md:block">
 						<div class="flex items-baseline ml-10 space-x-4 text-sm font-medium tracking-wider text-nord4">
 							<router-link
@@ -17,6 +27,16 @@
 								to="/subreddits"
 							>
 								Subreddits
+							</router-link>
+						</div>
+					</div>
+					<div class="hidden md:block">
+						<div class="flex items-baseline ml-10 space-x-4 text-sm font-medium tracking-wider text-nord4">
+							<router-link
+								class="px-3 py-2 text-sm font-medium uppercase transition-colors rounded-md cursor-pointer text-nord5 hover:bg-nord3 noOutline"
+								to="/create"
+							>
+								Create
 							</router-link>
 						</div>
 					</div>

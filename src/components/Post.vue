@@ -1,16 +1,23 @@
 <template>
 	<div
-		class="flex flex-col w-full px-5 pt-5 my-5 overflow-hidden transition-all border rounded-lg shadow-md md:px-8 hover:shadow-xl bg-nord1 border-nord2 text-nord4 hover:text-nord5"
+		class="flex flex-col w-full px-5 pt-5 mb-8 overflow-hidden transition-all border rounded-lg shadow-md md:px-8 hover:shadow-xl bg-nord1 border-nord2 text-nord4 hover:text-nord5"
 	>
 		<div class="flex flex-row items-stretch justify-between w-full mb-5">
-			<div class="flex flex-row items-end">
-				<h1 class="overflow-hidden text-4xl font-bold break-words text-nord6">{{ post.title }}</h1>
+			<div class="flex flex-row items-end titleMaxW ">
+				<h1 class="overflow-hidden text-3xl font-bold break-words md:text-4xl lh50 text-nord6">{{ post.title }}</h1>
 			</div>
-			<div class="float-right w-auto ml-10 justify-self-end min-w-max">
+			<div class="float-right w-auto ml-1 md:ml-10 justify-self-end min-w-max" v-if="homepage">
+				<span class="font-medium text-nord6">r/{{ subreddit.name }}</span>
+				<img
+					:src="subreddit.image || require('../assets/defaultSub.svg')"
+					class="hidden object-cover ml-2 rounded-full sm:inline md:ml-4 h-9 w-9"
+				/>
+			</div>
+			<div class="float-right w-auto ml-1 md:ml-10 justify-self-end min-w-max" v-else>
 				<span class="font-medium text-nord6">{{ post.user.name }}</span>
 				<img
 					:src="post.user.image || 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'"
-					class="inline h-auto ml-4 rounded-full w-9"
+					class="inline ml-2 rounded-full md:ml-4 obejct-cover h-9 w-9"
 				/>
 			</div>
 		</div>
@@ -48,12 +55,27 @@
 					wink: [],
 				},
 			}"
-			class="overflow-hidden postContent"
+			class="max-w-full overflow-hidden break-words PostpostContent"
 		/>
 		<div class="mt-10 mb-3">
 			<router-link
-				:to="`${route.fullPath}/${post.id}`"
+				:to="`/r/${subreddit.name}/${post.id}`"
 				class="inline px-2 py-1 pb-2 transition-all rounded-md group hover:bg-nord2 text-nord4 hover:text-nord6"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					class="inline w-5 h-auto transition-all fill-current text-nord8 group-hover:text-nord7"
+				>
+					<path d="M18 0h6v6h-6v-6zm-18 24h16v-24h-16v24zm18-9h6v-6h-6v6zm0 9h6v-6h-6v6z" />
+				</svg>
+				<span class="ml-2 text-sm font-medium">View</span>
+			</router-link>
+			<router-link
+				:to="`/r/${subreddit.name}/${post.id}#comments`"
+				class="hidden px-2 py-1 pb-2 ml-2 transition-all rounded-md md:ml-4 sm:inline group hover:bg-nord2 text-nord4 hover:text-nord6"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +92,7 @@
 			</router-link>
 
 			<button
-				class="inline px-2 py-1 ml-4 transition-all rounded-md hover:bg-nord2 text-nord4 hover:text-nord6 group noOutline"
+				class="hidden px-2 py-1 ml-2 transition-all border rounded-md sm:inline md:ml-4 hover:bg-nord2 text-nord4 hover:text-nord6 group noOutline"
 				@click="shareEnabled = !shareEnabled"
 			>
 				<svg
@@ -88,8 +110,9 @@
 			</button>
 
 			<button
-				class="inline px-2 py-1 ml-4 transition-all rounded-md hover:bg-nord2 text-nord4 hover:text-nord6 group noOutline"
-				v-if="(store.auth.state.user.isLoggedIn && store.auth.state.user.admin) || post.user_id === store.auth.state.user.id"
+				class="inline px-2 py-1 ml-2 transition-all rounded-md md:ml-4 hover:bg-nord2 text-nord4 hover:text-nord6 group noOutline"
+				v-if="store.auth.state.user.admin || post.user_id === store.auth.state.user.id"
+				@click="deletePost()"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -103,7 +126,10 @@
 
 				<span class="ml-2 text-sm font-medium">Delete</span>
 			</button>
-			<span class="inline float-right pt-1.5 text-sm transition-all rounded-md text-nord5">{{ createDateText(post.created_at.toDate()) }}</span>
+			<span class="float-right pt-1.5 text-sm text-nord5 sm:ml-1.5">
+				<span class="hidden sm:inline">{{ createDateText(post.created_at.toDate()) }} {{ homepage ? 'by ' : '' }}</span>
+				<span class="ml-0.5 font-semibold" v-if="homepage">{{ post.user.name }}</span>
+			</span>
 		</div>
 
 		<div class="flex flex-row items-center mb-6 just" v-if="shareEnabled">
@@ -114,7 +140,7 @@
 				readonly
 			/>
 			<button
-				class="inline float-right px-2 py-1 ml-6 transition-all rounded-md min-w-max hover:bg-nord2 text-nord4 hover:text-nord6 group noOutline"
+				class="inline float-right px-2 py-1 ml-6 transition-all rounded-md min-w-max hover:bg-nord2 text-nord4 hover:text-nord6 group"
 				@click="shareEnabled = !shareEnabled"
 			>
 				<svg
@@ -147,14 +173,23 @@
 				type: Object as PropType<Post>,
 				required: true,
 			},
+			homepage: {
+				type: Boolean,
+			},
+			fullDate: {
+				type: Boolean,
+			},
 		},
 		setup(props) {
 			const route = useRoute();
 			const shareEnabled = ref(false);
+			const subreddit = ref(store.subreddits.state.subreddits.find((x) => x.id === props.post.subreddit_id));
 
 			function createDateText(date: Date) {
 				return timeago.format(date);
 			}
+
+			const deletePost = async () => await store.post.actions.deletePost(props.post.id);
 
 			return {
 				route,
@@ -162,99 +197,36 @@
 				createDateText,
 				shareEnabled,
 				store,
+				deletePost,
+				subreddit,
 			};
 		},
 	});
 </script>
 
+<style lang="stylus" scoped>
+	.lh50 {
+		line-height: 50px
+	}
+	.titleMaxW {
+		max-width: 80%
+	}
+</style>
+
 <style lang="stylus">
 	@import '../assets/styles.styl';
+	@import '../assets/post.styl';
 	.shareinput::selection {
 		background-color: nord9
 	}
-
-	.postContent {
-		font-size: 15px
-		display: -webkit-box;
-		-webkit-line-clamp: 15;
-		-webkit-box-orient: vertical;
-		max-height: 940px
-
-		h1 {
-			margin: 15px 0px
-			font-size: 32px
-			font-weight: 500
+	.PostpostContent {
+		@media (max-width: 1023px) {
+			max-height: 400px
 		}
-		h2 {
-			margin: 15px 0px
-			font-size: 24px
-			font-weight: 500
-		}
-		h3 {
-			margin: 15px 0px
-			font-size: 18.72px
-			font-weight: 500
-		}
-		h4 {
-			margin: 15px 0px
-			font-size: 16px
-			font-weight: 500
-		}
-		h5 {
-			margin: 15px 0px
-			font-size: 13.28px
-			font-weight: 500
-		}
-		h6 {
-			margin: 15px 0px
-			font-size: 10.72px
-			font-weight: 500
-		}
-		blockquote {
-			border-left: 2px solid nord3
-			padding-left: 20px
-		}
-		ul {
-			list-style: inside
-			padding-left: 20px
-			margin-bottom: 10px
-		}
-
-		ol {
-			list-style: decimal
-			padding-left: 20px
-		}
-		li::marker {
-			font-weight: 600
-		}
-		table {
-			width: 100%
-			margin: 15px 0px
-		}
-		th {
-			border: 2px solid nord0
-			padding: 5px 15px
-		}
-		td {
-			border: 2px solid nord0
-			padding: 5px 15px
-		}
-		a {
-			color: nord8
-			&:visited {
-				color: nord7
-			}
-		}
-		img {
-			max-width: 300px
-			margin: 20px auto
-		}
-		mark {
-			background-color: nord9
-			padding: 0px 10px
-		}
-		dd {
-			padding: 0px 30px
+		@media (min-width: 1024px) {
+			display: -webkit-box;
+			-webkit-line-clamp: 15;
+			-webkit-box-orient: vertical;
 		}
 	}
 </style>

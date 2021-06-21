@@ -16,6 +16,8 @@ export interface Subreddit {
 	id: string;
 	name: string;
 	user_id: string;
+	image?: string;
+	name_lowercase?: string;
 }
 
 export interface Post {
@@ -26,16 +28,15 @@ export interface Post {
 	title: string;
 	updated_at: firebase.firestore.Timestamp;
 	user_id: string;
-	user?: Partial<User>;
+	user?: User;
 }
 
 export interface CreatePost {
-	content: string;
-	created_at: firebase.firestore.FieldValue;
-	id: string;
-	subreddit_id: string;
 	title: string;
-	updated_at: firebase.firestore.FieldValue;
+	content: string;
+	subreddit_id: string;
 	user_id: string;
-	user?: Partial<User>;
+	id: string;
+	created_at: firebase.firestore.FieldValue;
+	updated_at: firebase.firestore.FieldValue;
 }

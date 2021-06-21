@@ -12,7 +12,7 @@
 						<!-- Col -->
 						<img
 							class="hidden object-cover w-full h-auto bg-gray-400 bg-cover rounded-l-lg lg:block lg:w-1/2"
-							src="../assets/images/winxp.png"
+							src="../assets/images/winxp.webp"
 						/>
 						<!-- Col -->
 						<div class="w-full h-full p-5 rounded-lg lg:w-1/2 bg-nord1 lg:rounded-l-none" v-if="!store.auth?.state.isLoggedIn">
@@ -83,7 +83,7 @@
 						break;
 				}
 				await store.auth.actions.loginPrompt(authProvider);
-				router.push({ path: '/subreddits' });
+				router.push({ path: '/' });
 			}
 
 			return {

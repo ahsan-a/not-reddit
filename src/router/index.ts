@@ -22,6 +22,11 @@ const routes: Array<RouteRecordRaw> = [
 		component: () => import('@/views/Subreddit.vue'),
 	},
 	{
+		path: '/create/:r?/:subreddit?',
+		name: 'Create Post',
+		component: () => import('@/views/CreatePost.vue'),
+	},
+	{
 		path: '/r/:subreddit/:id',
 		name: 'Post',
 		component: () => import('@/views/Post.vue'),

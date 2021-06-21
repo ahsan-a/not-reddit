@@ -8,28 +8,39 @@
 
 		<div class="inline-block min-w-full py-2 mt-5 align-middle sm:px-6 lg:px-8">
 			<div v-if="createSubredditOn" class="px-4 py-5 mb-6 rounded-lg lg:px-32 md:py-10 bg-nord1">
-				<h1 class="text-3xl font-semibold text-nord6">Create a Subreddit</h1>
+				<h1 class="text-3xl font-semibold mb-7 text-nord6">Create a Subreddit</h1>
 
 				<form @submit.prevent="createSubreddit">
-					<h2 class="mt-4 text-lg font-semibold text-nord5">Subreddit Name</h2>
+					<span class="text-lg font-semibold text-nord5">Subreddit Name</span>
+					<span class="text-lg font-semibold text-red-400"> *</span>
 					<input
 						type="text"
 						placeholder="Subreddit Name"
-						class="block w-full h-12 px-5 mx-auto mt-2 font-semibold transition-all border-none rounded-md shadow-sm outline-none text-md focus:outline-none focus:border-none bg-nord3 text-nord6 focus:shadow-md placeholder-nord4 focus:placeholder-nord5"
+						class="block w-full h-12 px-5 mx-auto mt-2 mb-4 font-semibold transition-all border-none rounded-md shadow-sm outline-none text-md focus:outline-none focus:border-none bg-nord2 focus:bg-nord3 text-nord6 focus:shadow-md placeholder-nord4 focus:placeholder-nord5"
 						maxlength="25"
 						required
 						v-model="currentInput.name"
-						pattern=".*\S+.*"
+						@keydown.space.prevent
 						title="Required"
 					/>
-					<h2 class="mt-6 text-lg font-semibold text-nord5">Subreddit Description</h2>
+					<span class="text-lg font-semibold text-nord5">Subreddit Description</span>
+					<span class="text-lg font-semibold text-red-400"> *</span>
 					<textarea
 						placeholder="Subreddit Description"
-						class="block w-full h-24 px-5 pt-3 mx-auto mt-2 font-semibold transition-all border-none rounded-md outline-none resize-none text-md focus:outline-none focus:border-none bg-nord3 text-nord6 focus:shadow-md placeholder-nord4 focus:placeholder-nord5"
+						class="block w-full h-24 px-5 pt-3 mx-auto mt-2 font-semibold transition-all border-none rounded-md outline-none resize-none text-md focus:outline-none focus:border-none bg-nord2 focus:bg-nord3 text-nord6 focus:shadow-md placeholder-nord4 focus:placeholder-nord5"
 						maxlength="150"
 						required
 						v-model="currentInput.description"
-						pattern=".*\S+.*"
+						title="Required"
+					/>
+
+					<h2 class="mt-4 text-lg font-semibold text-nord5">Subreddit Image URL</h2>
+					<input
+						type="text"
+						placeholder="Subreddit Image"
+						class="block w-full h-12 px-5 mx-auto mt-2 font-semibold transition-all border-none rounded-md shadow-sm outline-none text-md focus:outline-none focus:border-none bg-nord2 focus:bg-nord3 text-nord6 focus:shadow-md placeholder-nord4 focus:placeholder-nord5"
+						v-model="currentInput.image"
+						@keydown.space.prevent
 						title="Required"
 					/>
 					<button type="submit" class="block mx-auto mt-6 button-green">Submit</button>
@@ -57,11 +68,13 @@
 							class="transition duration-150 ease-out cursor-pointer hover:bg-nord3"
 							@click="router.push({ path: `/r/${subreddit.name}` })"
 						>
-							<td class="px-4 py-4">
-								<div class="flex items-center">
-									<div class="ml-4">
-										<div class="text-sm font-medium break-words text-nord4 subreddit"> r/{{ subreddit.name }} </div>
-									</div>
+							<td class="px-4 py-2">
+								<div class="flex flex-row items-center">
+									<img
+										:src="subreddit.image || require('../assets/defaultSub.svg')"
+										class="object-cover w-10 h-10 ml-4 mr-4 rounded-full"
+									/>
+									<div class="text-sm font-medium break-words text-nord4 subreddit"> r/{{ subreddit.name }} </div>
 								</div>
 							</td>
 							<td class="px-4 py-4 overflow-y-hidden hideOnSm">
@@ -76,8 +89,6 @@
 								</span>
 							</td>
 						</tr>
-
-						<!-- More items... -->
 					</tbody>
 				</table>
 			</div>
@@ -105,6 +116,7 @@
 				name: '',
 				description: '',
 				user_id: '',
+				image: '',
 			});
 
 			const getDate = (unix: number) => new Date(unix * 1000).toLocaleDateString();
@@ -115,15 +127,21 @@
 				if (!/^[0-9a-zA-Z]+$/.test(currentInput.name)) return alert('Your title must not contain special characters.');
 				if (!currentInput.name.replace(/\s/g, '').length) return alert('Your title cannot be empty.');
 				if (!currentInput.description.replace(/\s/g, '').length) return alert('Your description must not be empty.');
+				if (currentInput.image.length && !currentInput.image.match(/^https:\/\/cdn.discordapp.com\/attachments\/\d+\/.+.\w+$/gi))
+					return alert(`Your image must be blank or a  discord image link with no url parameters.
+				Example: https://cdn.discordapp.com/attachments/840294039861723166/855395382720331776/maxresdefault.png
+				To do this you can send an image to someone in a DM, click on the image, and copy the "Open Original" URL.
+				`);
 				if (store.subreddits.state.subreddits.some((x) => x.name.toLowerCase() === currentInput.name.toLowerCase()))
 					return alert('This subreddit already exists.');
 
 				currentInput.description = currentInput.description.replace(/\r?\n|\r/g, ' ');
-				currentInput.user_id = store.auth.state.user.id || '';
+				currentInput.user_id = store.auth.state.user.id || '3zmYQVHUzPPIp7mBeDV8O7ujMNr1';
 
 				await store.subreddits.actions.submitNewSubreddit(currentInput);
 				currentInput.name = '';
 				currentInput.description = '';
+				currentInput.image = '';
 				createSubredditOn.value = false;
 			}
 

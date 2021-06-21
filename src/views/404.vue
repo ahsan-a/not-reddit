@@ -21,7 +21,7 @@
 			Navbar,
 		},
 		setup() {
-			document.title = '(not) reddit';
+			document.title = '404 | (not) reddit';
 		},
 	});
 </script>
@@ -31,7 +31,7 @@
 
 	.main {
 		position fixed
-		background nord0 url('../assets/logo.png') no-repeat center center
+		background nord0 url('../assets/logo.webp') no-repeat center center
 		z-index -1
 	}
 </style>
