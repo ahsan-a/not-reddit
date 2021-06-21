@@ -1,48 +1,112 @@
 <template>
-	<div class="fixed w-screen h-screen bg-nord0 -z-1"></div>
-	<img src="../assets/logo.png" class="z-0 h-auto mainLogo md:w-64" />
+	<div class="bg" />
 	<Navbar />
-	<div class="container flex flex-col flex-wrap items-center px-6 pt-24 mx-auto md:pt-48 md:flex-row z-1">
-		<div class="flex flex-col justify-center w-full overflow-y-hidden xl:w-2/5 lg:items-start">
-			<h1 class="my-4 text-3xl font-bold leading-tight text-center md:text-5xl text-nord4 md:text-left">
-				This isn't Reddit.
-			</h1>
-			<p class="mb-8 text-base leading-normal text-center md:text-2xl md:text-left text-nord4">
-				Please don't file a cease and desist letter.
-			</p>
+	<div class="h-16" id="scrollTop"></div>
+	<div class="fixed w-full transition-all" :style="{ marginTop: store.subreddit.state.scrollNotif ? '5px' : '-140px' }">
+		<div class="flex w-full mx-auto xl:w-9/12 lg:w-11/12">
+			<div class="w-full sm:mx-5 lg:w-2/3 xl:w-9/12">
+				<button
+					@click="newPostScroll"
+					class="flex flex-row items-center p-1 mx-auto transition-all rounded-full shadow-md group hover:bg-nord7 noOutline bg-nord8 z-1"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						class="w-8 h-auto transition-all fill-current group-hover:text-nord4 text-nord6"
+					>
+						<path
+							d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z"
+						/>
+					</svg>
+					<h1 class="px-3 font-semibold text-nord6 group-hover:text-nord4">New Posts</h1>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="w-full pt-6 mx-auto xl:w-9/12 lg:w-11/12 bg-nord0 z-2">
+		<div class="pb-2 border shadow-md px-9 lg:rounded-t-lg sm:mx-5 pt-7 bg-nord1 border-nord2">
+			<div class="pl-3">
+				<h1 class="text-4xl font-bold text-nord5">Welcome to not-reddit</h1>
+				<p class="mt-6 overflow-x-visible overflow-y-hidden break-words text-md text-nord4">(this isn't reddit)</p>
+			</div>
 
-			<p class="pb-8 font-bold text-center lg:pb-6 md:text-left fade-in text-nord4">
-				Built with
-				<a href="https://v3.vuejs.org/" class="text-nord8">Vue.js</a>,
-				<a href="https://tailwindcss.com/" class="text-nord8">Tailwind</a>
-				and
-				<a href="https://firebase.google.com/" class="text-nord8">Firebase</a>. Get the source code and
-				<a href="https://github.com/ahsan-a/not-reddit-next" class="text-nord8">here</a>.
-			</p></div
-		>
+			<div class="flex flex-row items-center w-full mt-5">
+				<router-link class="px-2 py-1 transition-all rounded-md hover:bg-nord2 text-nord4 hover:text-nord6 group noOutline" :to="`/create`">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						class="inline w-5 h-auto transition-all fill-current text-nord8 group-hover:text-nord7"
+					>
+						<path d="M24 9h-9v-9h-6v9h-9v6h9v9h6v-9h9z" />
+					</svg>
+
+					<span class="ml-2 text-sm font-medium">Create Post</span>
+				</router-link>
+			</div>
+		</div>
+	</div>
+	<div class="flex w-full pt-2 mx-auto xl:w-9/12 lg:w-11/12">
+		<transition-group name="posts" tag="div" class="w-full mt-6 sm:mx-5 lg:w-2/3 xl:w-9/12">
+			<Post v-for="post in store.subreddit.state.posts" :key="post.id" :post="post" :homepage="true" />
+			<div class="w-full h-1" id="sB" key="bottomScrollCalc"></div>
+		</transition-group>
+		<SubredditSidebar class="hidden lg:w-1/3 lg:block xl:w-3/12" />
 	</div>
 </template>
 
 <script lang="ts">
-	import { defineComponent } from 'vue';
+	import { defineComponent, ref } from 'vue';
+	import store from '@/store';
+
 	import Navbar from '@/components/Navbar.vue';
+	import Post from '@/components/Post.vue';
+	import SubredditSidebar from '@/components/SubredditSidebar.vue';
 
 	export default defineComponent({
 		components: {
 			Navbar,
+			Post,
+			SubredditSidebar,
+		},
+		setup() {
+			document.title = '(not) reddit';
+
+			store.subreddit.actions.bindAllPosts();
+
+			document.addEventListener('scroll', () => {
+				if (window.scrollY < 10 && store.subreddit.state.scrollNotif) store.subreddit.state.scrollNotif = false;
+			});
+
+			function newPostScroll() {
+				window.scrollTo(0, 0);
+				store.subreddit.state.scrollNotif = false;
+			}
+
+			return {
+				store,
+				newPostScroll,
+			};
 		},
 	});
 </script>
 
-<style lang="stylus" scoped>
-	.mainLogo {
-		position: absolute
+<style lang="stylus">
+	.fixedCenter {
 		left: 50%
-		right: -50%
-		top: 50%
-		transform: translate(-50%, -50%)
-		@media screen and (max-width: 768px){
-			transform: translate(-50%, 0%)
-		}
+		margin-right: -50%
+		transform: translate(0%, -50%)
+	}
+	.posts-enter-active,
+	.posts-leave-active {
+		transition: all 1s ease
+	}
+	.posts-enter-from,
+	.posts-leave-to {
+		opacity: 0
+		margin-top: -190px
 	}
 </style>

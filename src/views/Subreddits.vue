@@ -1,17 +1,52 @@
 <template>
-	<div class="fixed w-screen h-screen bg-nord0 -z-1"></div>
+	<div class="bg" />
 	<Navbar :padding="true" />
 	<div class="flex flex-col w-11/12 mx-auto xl:w-4/6 lg:w-5/6 subreddits">
-		<button
-			class="block px-4 py-2 mx-auto mb-5 text-xl font-medium transition-colors rounded-md shadow-sm outline-none button bg-nord8 hover:bg-nord7 text-nord5 createSubredditButton"
-			@click="createSubredditOn = !createSubredditOn"
-			v-if="store.auth.state.isLoggedIn"
-		>
-			Create Subreddit
+		<button class="mx-auto mt-5 button-blue" @click="createSubredditOn = !createSubredditOn" v-if="store.auth.state.isLoggedIn">
+			Create a Subreddit
 		</button>
 
-		<div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-			<div class="overflow-hidden border-b md:rounded-lg border-nord2">
+		<div class="inline-block min-w-full py-2 mt-5 align-middle sm:px-6 lg:px-8">
+			<div v-if="createSubredditOn" class="px-4 py-5 mb-6 rounded-lg lg:px-32 md:py-10 bg-nord1">
+				<h1 class="text-3xl font-semibold mb-7 text-nord6">Create a Subreddit</h1>
+
+				<form @submit.prevent="createSubreddit">
+					<span class="text-lg font-semibold text-nord5">Subreddit Name</span>
+					<span class="text-lg font-semibold text-red-400"> *</span>
+					<input
+						type="text"
+						placeholder="Subreddit Name"
+						class="block w-full h-12 px-5 mx-auto mt-2 mb-4 font-semibold transition-all border-none rounded-md shadow-sm outline-none text-md focus:outline-none focus:border-none bg-nord2 focus:bg-nord3 text-nord6 focus:shadow-md placeholder-nord4 focus:placeholder-nord5"
+						maxlength="25"
+						required
+						v-model="currentInput.name"
+						@keydown.space.prevent
+						title="Required"
+					/>
+					<span class="text-lg font-semibold text-nord5">Subreddit Description</span>
+					<span class="text-lg font-semibold text-red-400"> *</span>
+					<textarea
+						placeholder="Subreddit Description"
+						class="block w-full h-24 px-5 pt-3 mx-auto mt-2 font-semibold transition-all border-none rounded-md outline-none resize-none text-md focus:outline-none focus:border-none bg-nord2 focus:bg-nord3 text-nord6 focus:shadow-md placeholder-nord4 focus:placeholder-nord5"
+						maxlength="150"
+						required
+						v-model="currentInput.description"
+						title="Required"
+					/>
+
+					<h2 class="mt-4 text-lg font-semibold text-nord5">Subreddit Image URL</h2>
+					<input
+						type="text"
+						placeholder="Subreddit Image"
+						class="block w-full h-12 px-5 mx-auto mt-2 font-semibold transition-all border-none rounded-md shadow-sm outline-none text-md focus:outline-none focus:border-none bg-nord2 focus:bg-nord3 text-nord6 focus:shadow-md placeholder-nord4 focus:placeholder-nord5"
+						v-model="currentInput.image"
+						@keydown.space.prevent
+						title="Required"
+					/>
+					<button type="submit" class="block mx-auto mt-6 button-green">Submit</button>
+				</form>
+			</div>
+			<div class="overflow-hidden border-b rounded-lg border-nord2">
 				<table class="min-w-full mx-auto divide-y shadow divide-nord1">
 					<thead class="bg-nord1">
 						<tr>
@@ -33,14 +68,16 @@
 							class="transition duration-150 ease-out cursor-pointer hover:bg-nord3"
 							@click="router.push({ path: `/r/${subreddit.name}` })"
 						>
-							<td class="px-4 py-4">
-								<div class="flex items-center">
-									<div class="ml-4">
-										<div class="text-sm font-medium break-words text-nord4 subreddit"> r/{{ subreddit.name }} </div>
-									</div>
+							<td class="px-4 py-2">
+								<div class="flex flex-row items-center">
+									<img
+										:src="subreddit.image || require('../assets/defaultSub.svg')"
+										class="object-cover w-10 h-10 ml-4 mr-4 rounded-full"
+									/>
+									<div class="text-sm font-medium break-words text-nord4 subreddit"> r/{{ subreddit.name }} </div>
 								</div>
 							</td>
-							<td class="px-4 py-4 hideOnSm">
+							<td class="px-4 py-4 overflow-y-hidden hideOnSm">
 								<div class="text-sm break-words text-nord4 description">
 									{{ subreddit.description }}
 								</div>
@@ -52,8 +89,6 @@
 								</span>
 							</td>
 						</tr>
-
-						<!-- More items... -->
 					</tbody>
 				</table>
 			</div>
@@ -62,7 +97,7 @@
 </template>
 
 <script lang="ts">
-	import { defineComponent } from 'vue';
+	import { defineComponent, ref, reactive } from 'vue';
 	import { useRouter } from 'vue-router';
 	import store from '@/store';
 
@@ -73,20 +108,58 @@
 			Navbar,
 		},
 		setup() {
+			document.title = 'subreddits | (not) reddit';
 			store.subreddits.actions.bindSubreddits();
 			const router = useRouter();
+			const createSubredditOn = ref(false);
+			const currentInput = reactive({
+				name: '',
+				description: '',
+				user_id: '',
+				image: '',
+			});
 
 			const getDate = (unix: number) => new Date(unix * 1000).toLocaleDateString();
+
+			async function createSubreddit() {
+				if (!store.auth.state.isLoggedIn) return alert('Please make an account or sign in to make a subreddit.');
+				if (/\s/g.test(currentInput.name)) return alert('Your title must not have any spaces.');
+				if (!/^[0-9a-zA-Z]+$/.test(currentInput.name)) return alert('Your title must not contain special characters.');
+				if (!currentInput.name.replace(/\s/g, '').length) return alert('Your title cannot be empty.');
+				if (!currentInput.description.replace(/\s/g, '').length) return alert('Your description must not be empty.');
+				if (currentInput.image.length && !currentInput.image.match(/^https:\/\/cdn.discordapp.com\/attachments\/\d+\/.+.\w+$/gi))
+					return alert(`Your image must be blank or a  discord image link with no url parameters.
+				Example: https://cdn.discordapp.com/attachments/840294039861723166/855395382720331776/maxresdefault.png
+				To do this you can send an image to someone in a DM, click on the image, and copy the "Open Original" URL.
+				`);
+				if (store.subreddits.state.subreddits.some((x) => x.name.toLowerCase() === currentInput.name.toLowerCase()))
+					return alert('This subreddit already exists.');
+
+				currentInput.description = currentInput.description.replace(/\r?\n|\r/g, ' ');
+				currentInput.user_id = store.auth.state.user.id || '3zmYQVHUzPPIp7mBeDV8O7ujMNr1';
+
+				await store.subreddits.actions.submitNewSubreddit(currentInput);
+				currentInput.name = '';
+				currentInput.description = '';
+				currentInput.image = '';
+				createSubredditOn.value = false;
+			}
+
 			return {
 				store,
 				router,
 				getDate,
+				createSubredditOn,
+				currentInput,
+				createSubreddit,
 			};
 		},
 	});
 </script>
 
 <style lang="stylus" scoped>
+	@import '../assets/styles.styl';
+
 	.hideOnMd {
 		@media screen and (min-width: 768px) {
 			visibility: visible

@@ -16,6 +16,27 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'Subreddits',
 		component: () => import('@/views/Subreddits.vue'),
 	},
+	{
+		path: '/r/:name',
+		name: 'Subreddit',
+		component: () => import('@/views/Subreddit.vue'),
+	},
+	{
+		path: '/create/:r?/:subreddit?',
+		name: 'Create Post',
+		component: () => import('@/views/CreatePost.vue'),
+	},
+	{
+		path: '/r/:subreddit/:id',
+		name: 'Post',
+		component: () => import('@/views/Post.vue'),
+	},
+
+	{
+		path: '/:catchAll(.*)',
+		name: '404',
+		component: () => import('@/views/404.vue'),
+	},
 ];
 
 const router = createRouter({

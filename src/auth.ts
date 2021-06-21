@@ -1,6 +1,5 @@
 import firebase from './firebase';
 import store from './store';
-import router from './router';
 import db from '@/db';
 
 firebase.auth().onAuthStateChanged(async (user) => {
@@ -12,10 +11,11 @@ firebase.auth().onAuthStateChanged(async (user) => {
 			.get();
 
 		if (!doc.exists) {
+			// new user
 			currentUser = {
 				id: user.uid,
 				email: user.email,
-				name: user.displayName,
+				name: user.displayName || 'New User',
 				image: user.photoURL || 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg',
 				admin: false,
 				verified: user.emailVerified,
