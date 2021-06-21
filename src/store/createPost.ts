@@ -1,7 +1,7 @@
 import firebase from '../firebase';
 import db from '@/db';
 import { reactive } from 'vue';
-import { Post, CreatePost, Subreddit, User } from '@/typings';
+import { CreatePost } from '@/typings';
 import DOMPurify from 'dompurify';
 // import store from '.';
 
@@ -26,7 +26,7 @@ const actions = {
 			.set(post);
 	},
 
-	purifyWithPatch: function(text: string) {
+	purifyWithPatch: function(text: string): string {
 		return DOMPurify.sanitize(text)
 			.replace(/&gt;/g, '>')
 			.replace(/&lt;/g, '>');
