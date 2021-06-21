@@ -35,7 +35,7 @@
 					type="text"
 					placeholder="Post Title"
 					class="block w-full px-5 mx-auto mt-2 mb-4 font-semibold transition-all border-none rounded-md shadow-sm outline-none h-11 text-md focus:outline-none focus:border-none bg-nord2 focus:bg-nord3 text-nord6 focus:shadow-md placeholder-nord4 focus:placeholder-nord5"
-					maxlength="25"
+					maxlength="80"
 					required
 					v-model="postInput.title"
 					title="Required"
