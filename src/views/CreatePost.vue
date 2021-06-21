@@ -38,7 +38,6 @@
 					maxlength="25"
 					required
 					v-model="postInput.title"
-					@keydown.space.prevent
 					title="Required"
 				/>
 				<h2 class="mt-6 mb-4 text-lg font-semibold text-nord5"

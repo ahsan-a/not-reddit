@@ -1,9 +1,7 @@
-import firebase from '../firebase';
 import db from '@/db';
 import { reactive } from 'vue';
 import router from '@/router';
-import { Post, CreatePost, Subreddit, User } from '@/typings';
-import DOMPurify from 'dompurify';
+import { Post, Subreddit, User } from '@/typings';
 import store from '.';
 
 const posts = db.collection('posts');
@@ -27,10 +25,6 @@ const activeSubListener: {
 	id?: string;
 	listener?: () => void;
 } = {};
-
-function fixPurify(text: string) {
-	return text.replace(/&gt;/g, '>').replace(/&lt;/g, '>');
-}
 
 const actions = {
 	async bindPosts(name: string, id?: boolean): Promise<any> {
