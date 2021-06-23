@@ -27,9 +27,7 @@ const actions = {
 	},
 
 	purifyWithPatch: function(text: string): string {
-		return DOMPurify.sanitize(text)
-			.replace(/&gt;/g, '>')
-			.replace(/&lt;/g, '<');
+		return DOMPurify.sanitize(text);
 	},
 };
 

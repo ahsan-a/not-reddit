@@ -137,6 +137,7 @@ export default defineComponent({
 
 			currentInput.description = currentInput.description.replace(/\r?\n|\r/g, ' ');
 			currentInput.user_id = store.auth.state.user.id || '3zmYQVHUzPPIp7mBeDV8O7ujMNr1';
+			currentInput.name = currentInput.name.replace(/\s/g, '');
 
 			await store.subreddits.actions.submitNewSubreddit(currentInput);
 			currentInput.name = '';
