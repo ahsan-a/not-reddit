@@ -14,11 +14,9 @@ firebase.auth().onAuthStateChanged(async (user) => {
 			// new user
 			currentUser = {
 				id: user.uid,
-				email: user.email,
 				name: user.displayName || 'New User',
 				image: user.photoURL || 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg',
 				admin: false,
-				verified: user.emailVerified,
 				createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 				lastLoggedIn: firebase.firestore.FieldValue.serverTimestamp(),
 			};

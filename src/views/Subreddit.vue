@@ -27,7 +27,13 @@
 	<div class="w-full pt-6 mx-auto xl:w-9/12 lg:w-11/12 bg-nord0 z-2">
 		<div class="pb-2 border shadow-md px-9 lg:rounded-t-lg sm:mx-5 pt-7 bg-nord1 border-nord2">
 			<div class="pl-3">
-				<h1 class="text-4xl font-bold text-nord5">r/{{ store.subreddit.state.subreddit.name }}</h1>
+				<span class="text-4xl font-bold text-nord5">
+					<img
+						:src="store.subreddit.state.subreddit.image || require('../assets/defaultSub.svg')"
+						class="inline object-cover w-10 h-10 mr-3 rounded-full"
+					/>
+					r/{{ store.subreddit.state.subreddit.name }}
+				</span>
 				<p class="mt-6 overflow-x-visible overflow-y-hidden break-words text-md text-nord4">{{
 					store.subreddit.state.subreddit.description
 				}}</p>
@@ -80,70 +86,69 @@
 </template>
 
 <script lang="ts">
-	import { defineComponent, watch, ref } from 'vue';
-	import { useRoute } from 'vue-router';
-	import store from '@/store';
+import { defineComponent, watch, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import store from '@/store';
 
-	import Navbar from '@/components/Navbar.vue';
-	import Post from '@/components/Post.vue';
-	import SubredditSidebar from '@/components/SubredditSidebar.vue';
+import Navbar from '@/components/Navbar.vue';
+import Post from '@/components/Post.vue';
+import SubredditSidebar from '@/components/SubredditSidebar.vue';
 
-	export default defineComponent({
-		components: {
-			Navbar,
-			Post,
-			SubredditSidebar,
-		},
-		setup() {
-			const route = useRoute();
-			const notifMarginTop = ref();
+export default defineComponent({
+	components: {
+		Navbar,
+		Post,
+		SubredditSidebar,
+	},
+	setup() {
+		const route = useRoute();
+		const notifMarginTop = ref();
 
-			function init(name?: string) {
-				document.title = `r/${name ?? route.params.name} | (not) reddit`;
-				store.subreddit.actions.bindPosts(name || route.params.name.toString());
-			}
-			init();
-			watch(
-				() => route.params.name,
-				(name) => {
-					if (!name) return;
-					store.subreddit.state.posts = [];
-					init(name.toString());
-					window.scrollTo(0, 0);
-				}
-			);
-
-			document.addEventListener('scroll', () => {
-				if (window.scrollY < 10 && store.subreddit.state.scrollNotif) store.subreddit.state.scrollNotif = false;
-			});
-
-			function newPostScroll() {
+		function init(name?: string) {
+			document.title = `r/${name ?? route.params.name} | (not) reddit`;
+			store.subreddit.actions.bindPosts(name || route.params.name.toString());
+		}
+		init();
+		watch(
+			() => route.params.name,
+			(name) => {
+				if (!name) return;
+				store.subreddit.state.posts = [];
+				init(name.toString());
 				window.scrollTo(0, 0);
-				store.subreddit.state.scrollNotif = false;
 			}
+		);
 
-			return {
-				store,
-				newPostScroll,
-				notifMarginTop,
-			};
-		},
-	});
+		document.addEventListener('scroll', () => {
+			if (window.scrollY < 10 && store.subreddit.state.scrollNotif) store.subreddit.state.scrollNotif = false;
+		});
+
+		function newPostScroll() {
+			window.scrollTo(0, 0);
+			store.subreddit.state.scrollNotif = false;
+		}
+
+		return {
+			store,
+			newPostScroll,
+			notifMarginTop,
+		};
+	},
+});
 </script>
 
 <style lang="stylus">
-	.fixedCenter {
-		left: 50%
-		margin-right: -50%
-		transform: translate(0%, -50%)
-	}
-	.posts-enter-active,
-	.posts-leave-active {
-		transition: all 0.5s ease
-	}
-	.posts-enter-from,
-	.posts-leave-to {
-		opacity: 0
-		margin-top: -190px
-	}
+.fixedCenter {
+	left: 50%
+	margin-right: -50%
+	transform: translate(0%, -50%)
+}
+.posts-enter-active,
+.posts-leave-active {
+	transition: all 0.5s ease
+}
+.posts-leave-to {
+	opacity: 0
+	margin-top: -190px
+}
 </style>

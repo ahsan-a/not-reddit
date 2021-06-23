@@ -58,40 +58,42 @@
 </template>
 
 <script lang="ts">
-	import { defineComponent } from 'vue';
-	import Navbar from '@/components/Navbar.vue';
-	import { useRouter } from 'vue-router';
+import { defineComponent } from 'vue';
+import Navbar from '@/components/Navbar.vue';
+import { useRouter } from 'vue-router';
 
-	import firebase from '@/firebase';
-	import store from '@/store';
+import firebase from '@/firebase';
+import store from '@/store';
 
-	export default defineComponent({
-		components: {
-			Navbar,
-		},
-		setup() {
-			document.title = 'login | (not) reddit';
-			const router = useRouter();
-			async function loginWithProvider(type: string) {
-				let authProvider;
-				switch (type.toLowerCase()) {
-					case 'github':
-						authProvider = new firebase.auth.GithubAuthProvider();
-						break;
-					default:
-						authProvider = new firebase.auth.GoogleAuthProvider();
-						break;
-				}
-				await store.auth.actions.loginPrompt(authProvider);
-				router.push({ path: '/' });
+export default defineComponent({
+	components: {
+		Navbar,
+	},
+	setup() {
+		document.title = 'login | (not) reddit';
+		const router = useRouter();
+		async function loginWithProvider(type: string) {
+			let authProvider;
+			switch (type.toLowerCase()) {
+				case 'github':
+					authProvider = new firebase.auth.GithubAuthProvider();
+					break;
+				default:
+					authProvider = new firebase.auth.GoogleAuthProvider();
+					break;
 			}
+			await store.auth.actions.loginPrompt(authProvider);
 
-			return {
-				firebase,
-				store,
-				loginWithProvider,
-				router,
-			};
-		},
-	});
+			if (window.history.state.back) router.go(-1);
+			else router.push({ path: '/' });
+		}
+
+		return {
+			firebase,
+			store,
+			loginWithProvider,
+			router,
+		};
+	},
+});
 </script>

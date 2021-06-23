@@ -1,0 +1,8 @@
+{
+	"headers": [
+		{
+			"source": "/",
+			"headers": [{ "key": "x-frame-options", "value": "DENY" }]
+		}
+	]
+}
