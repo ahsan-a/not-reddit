@@ -7,11 +7,13 @@
 				<h1 class="overflow-hidden text-3xl font-bold break-words md:text-4xl lh50 text-nord6">{{ post.title }}</h1>
 			</div>
 			<div class="float-right w-auto ml-1 md:ml-10 justify-self-end min-w-max" v-if="location === 'home'">
-				<span class="font-medium text-nord6">r/{{ subreddit.name }}</span>
-				<img
-					:src="subreddit.image || require('../assets/defaultSub.svg')"
-					class="hidden object-cover ml-2 rounded-full sm:inline md:ml-4 h-9 w-9"
-				/>
+				<router-link :to="`/r/${subreddit.name}`" class="inline font-medium text-nord6 hover:underline">r/{{ subreddit.name }}</router-link>
+				<router-link :to="`/r/${subreddit.name}`">
+					<img
+						:src="subreddit.image || require('../assets/defaultSub.svg')"
+						class="hidden object-cover ml-2 rounded-full sm:inline md:ml-4 h-9 w-9"
+					/>
+				</router-link>
 			</div>
 			<div class="float-right w-auto ml-1 md:ml-10 justify-self-end min-w-max" v-else>
 				<span class="font-medium text-nord6">{{ post.deletedUser ? '[deleted]' : post.user?.name }}</span>
@@ -137,7 +139,9 @@
 					>{{ createDateText(post.created_at?.toDate()) }} {{ location === 'home' ? 'by ' : location === 'post' ? 'on ' : '' }}</span
 				>
 				<span class="ml-0.5 font-semibold" v-if="location === 'home'">{{ post.deletedUser ? '[deleted]' : post.user?.name }}</span>
-				<span class="ml-0.5 font-semibold" v-if="location === 'post'">r/{{ subreddit.name }}</span>
+				<router-link class="ml-0.5 font-semibold hover:underline" :to="`/r/${subreddit?.name}`" v-if="location === 'post'"
+					>r/{{ subreddit?.name }}</router-link
+				>
 			</span>
 		</div>
 
