@@ -1,6 +1,6 @@
 @import './styles.styl'
 
-.postContent {
+.markdownRender {
 	font-size: 15px
     h1 {
 		margin: 15px 0px
@@ -76,5 +76,12 @@
 	}
 	dd {
 		padding: 0px 30px
+	}
+	ul.contains-task-list {
+		list-style: none
+	}
+	.task-list-item-checkbox {
+		cursor: pointer
+		pointer-events: none
 	}
 }

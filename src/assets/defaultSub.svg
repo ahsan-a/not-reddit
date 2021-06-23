@@ -47,7 +47,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -61,17 +61,19 @@
        cx="49.87373"
        cy="50.12627"
        r="45.73138" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:54.8772px;line-height:1.25;font-family:sans-serif;letter-spacing:-3.65851px;opacity:0.99800004;fill:#eceff4;fill-opacity:1;stroke:none;stroke-width:1.37193;"
-       x="23.201008"
-       y="65.44445"
+    <g
+       aria-label="r/"
+       transform="scale(0.97850335,1.0219689)"
        id="text2570"
-       transform="scale(0.97850335,1.0219689)"><tspan
-         sodipodi:role="line"
-         id="tspan2568"
-         x="23.201008"
-         y="65.44445"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas;fill:#eceff4;fill-opacity:1;stroke-width:1.37193;">r/</tspan></text>
+       style="font-style:normal;font-weight:normal;font-size:54.8772px;line-height:1.25;font-family:sans-serif;letter-spacing:-3.65851px;opacity:0.998;fill:#eceff4;fill-opacity:1;stroke:none;stroke-width:1.37193">
+      <path
+         d="m 28.586905,38.54176 h 4.260486 l 0.133977,4.957169 q 2.384801,-2.867119 4.689214,-4.153304 2.33121,-1.286184 4.689214,-1.286184 4.1801,0 6.32374,2.706346 2.170436,2.706347 2.009663,8.038653 H 45.97719 q 0.08039,-3.537007 -1.045025,-5.117942 -1.098616,-1.607731 -3.242256,-1.607731 -0.937843,0 -1.902481,0.348342 -0.937843,0.321546 -1.956073,1.07182 -0.991433,0.723479 -2.116845,1.875686 -1.125411,1.152206 -2.411596,2.786732 V 65.44445 h -4.716009 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas;fill:#eceff4;fill-opacity:1;stroke-width:1.37193"
+         id="path834" />
+      <path
+         d="M 75.625496,27.582397 57.243777,71.205485 H 52.795723 L 71.177441,27.582397 Z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas;fill:#eceff4;fill-opacity:1;stroke-width:1.37193"
+         id="path836" />
+    </g>
   </g>
 </svg>

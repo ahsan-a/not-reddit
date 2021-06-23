@@ -13,25 +13,25 @@
 </template>
 
 <script lang="ts">
-	import { defineComponent } from 'vue';
-	import Navbar from '@/components/Navbar.vue';
+import { defineComponent } from 'vue';
+import Navbar from '@/components/Navbar.vue';
 
-	export default defineComponent({
-		components: {
-			Navbar,
-		},
-		setup() {
-			document.title = '404 | (not) reddit';
-		},
-	});
+export default defineComponent({
+	components: {
+		Navbar,
+	},
+	setup() {
+		document.title = '404 | (not) reddit';
+	},
+});
 </script>
 
 <style lang="stylus" scoped>
-	nord0 = #2e3440
+nord0 = #2e3440
 
-	.main {
-		position fixed
-		background nord0 url('../assets/logo.webp') no-repeat center center
-		z-index -1
-	}
+.main {
+	position fixed
+	background nord0 url('../assets/logo.webp') no-repeat center center
+	z-index -1
+}
 </style>

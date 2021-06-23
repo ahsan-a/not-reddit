@@ -97,85 +97,85 @@
 </template>
 
 <script lang="ts">
-	import { defineComponent, ref, reactive } from 'vue';
-	import { useRouter } from 'vue-router';
-	import store from '@/store';
+import { defineComponent, ref, reactive } from 'vue';
+import { useRouter } from 'vue-router';
+import store from '@/store';
 
-	import Navbar from '@/components/Navbar.vue';
+import Navbar from '@/components/Navbar.vue';
 
-	export default defineComponent({
-		components: {
-			Navbar,
-		},
-		setup() {
-			document.title = 'subreddits | (not) reddit';
-			store.subreddits.actions.bindSubreddits();
-			const router = useRouter();
-			const createSubredditOn = ref(false);
-			const currentInput = reactive({
-				name: '',
-				description: '',
-				user_id: '',
-				image: '',
-			});
+export default defineComponent({
+	components: {
+		Navbar,
+	},
+	setup() {
+		document.title = 'subreddits | (not) reddit';
+		store.subreddits.actions.bindSubreddits();
+		const router = useRouter();
+		const createSubredditOn = ref(false);
+		const currentInput = reactive({
+			name: '',
+			description: '',
+			user_id: '',
+			image: '',
+		});
 
-			const getDate = (unix: number) => new Date(unix * 1000).toLocaleDateString();
+		const getDate = (unix: number) => new Date(unix * 1000).toLocaleDateString();
 
-			async function createSubreddit() {
-				if (!store.auth.state.isLoggedIn) return alert('Please make an account or sign in to make a subreddit.');
-				if (/\s/g.test(currentInput.name)) return alert('Your title must not have any spaces.');
-				if (!/^[0-9a-zA-Z]+$/.test(currentInput.name)) return alert('Your title must not contain special characters.');
-				if (!currentInput.name.replace(/\s/g, '').length) return alert('Your title cannot be empty.');
-				if (!currentInput.description.replace(/\s/g, '').length) return alert('Your description must not be empty.');
-				if (currentInput.image.length && !currentInput.image.match(/^https:\/\/cdn.discordapp.com\/attachments\/\d+\/.+.\w+$/gi))
-					return alert(`Your image must be blank or a  discord image link with no url parameters.
+		async function createSubreddit() {
+			if (!store.auth.state.isLoggedIn) return alert('Please make an account or sign in to make a subreddit.');
+			if (/\s/g.test(currentInput.name)) return alert('Your title must not have any spaces.');
+			if (!/^[0-9a-zA-Z]+$/.test(currentInput.name)) return alert('Your title must not contain special characters.');
+			if (!currentInput.name.replace(/\s/g, '').length) return alert('Your title cannot be empty.');
+			if (!currentInput.description.replace(/\s/g, '').length) return alert('Your description must not be empty.');
+			if (currentInput.image.length && !currentInput.image.match(/^https:\/\/cdn.discordapp.com\/attachments\/\d+\/.+.\w+$/gi))
+				return alert(`Your image must be blank or a  discord image link with no url parameters.
 				Example: https://cdn.discordapp.com/attachments/840294039861723166/855395382720331776/maxresdefault.png
 				To do this you can send an image to someone in a DM, click on the image, and copy the "Open Original" URL.
 				`);
-				if (store.subreddits.state.subreddits.some((x) => x.name.toLowerCase() === currentInput.name.toLowerCase()))
-					return alert('This subreddit already exists.');
+			if (store.subreddits.state.subreddits.some((x) => x.name.toLowerCase() === currentInput.name.toLowerCase()))
+				return alert('This subreddit already exists.');
 
-				currentInput.description = currentInput.description.replace(/\r?\n|\r/g, ' ');
-				currentInput.user_id = store.auth.state.user.id || '3zmYQVHUzPPIp7mBeDV8O7ujMNr1';
+			currentInput.description = currentInput.description.replace(/\r?\n|\r/g, ' ');
+			currentInput.user_id = store.auth.state.user.id || '3zmYQVHUzPPIp7mBeDV8O7ujMNr1';
 
-				await store.subreddits.actions.submitNewSubreddit(currentInput);
-				currentInput.name = '';
-				currentInput.description = '';
-				currentInput.image = '';
-				createSubredditOn.value = false;
-			}
+			await store.subreddits.actions.submitNewSubreddit(currentInput);
+			currentInput.name = '';
+			currentInput.description = '';
+			currentInput.image = '';
+			createSubredditOn.value = false;
+		}
 
-			return {
-				store,
-				router,
-				getDate,
-				createSubredditOn,
-				currentInput,
-				createSubreddit,
-			};
-		},
-	});
+		return {
+			store,
+			router,
+			getDate,
+			createSubredditOn,
+			currentInput,
+			createSubreddit,
+		};
+	},
+});
 </script>
 
 <style lang="stylus" scoped>
-	@import '../assets/styles.styl';
+@import '../assets/styles.styl';
 
-	.hideOnMd {
-		@media screen and (min-width: 768px) {
-			visibility: visible
-		}
-		@media screen and (max-width: 767px) {
-			visibility: hidden
-			display: none
-		}
+.hideOnMd {
+	@media screen and (min-width: 768px) {
+		visibility: visible
 	}
-	.hideOnSm {
-		@media screen and (min-width: 640px) {
-			visibility: visible
-		}
-		@media screen and (max-width: 639px) {
-			visibility: hidden
-			display: none
-		}
+	@media screen and (max-width: 767px) {
+		visibility: hidden
+		display: none
 	}
+}
+.hideOnSm {
+	@media screen and (min-width: 640px) {
+		visibility: visible
+	}
+	@media screen and (max-width: 639px) {
+		visibility: hidden
+		display: none
+	}
+}
 </style>

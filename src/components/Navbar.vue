@@ -182,78 +182,78 @@
 </template>
 
 <script lang="ts">
-	import { defineComponent, ref } from 'vue';
-	import { useRouter } from 'vue-router';
+import { defineComponent, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-	import firebase from '@/firebase';
-	import store from '@/store';
+import firebase from '@/firebase';
+import store from '@/store';
 
-	export default defineComponent({
-		props: {
-			padding: Boolean,
-		},
-		setup(props) {
-			const profileHover = ref(false);
-			const router = useRouter();
-			const newtab = (location: string) => window.open(location);
-			function PHFalse() {
-				setTimeout(() => {
-					profileHover.value = false;
-				}, 150);
-			}
-			return {
-				profileHover,
-				PHFalse,
-				router,
-				store,
-				firebase,
-				newtab,
-				props,
-			};
-		},
-	});
+export default defineComponent({
+	props: {
+		padding: Boolean,
+	},
+	setup(props) {
+		const profileHover = ref(false);
+		const router = useRouter();
+		const newtab = (location: string) => window.open(location);
+		function PHFalse() {
+			setTimeout(() => {
+				profileHover.value = false;
+			}, 150);
+		}
+		return {
+			profileHover,
+			PHFalse,
+			router,
+			store,
+			firebase,
+			newtab,
+			props,
+		};
+	},
+});
 </script>
 
 <style lang="stylus" scoped>
-	@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500');
-	// nord0 = #2e3440
-	// nord1 = #3b4252
-	// nord2 = #434c5e
-	// nord3 = #4c566a
-	nord4 = #d8dee9
-	// nord5 = #e5e9f0
-	// nord6 = #eceff4
-	// nord7 = #8fbcbb
-	// nord8 = #88c0d0
-	// nord9 = #81a1c1
-	// nord10 = #5e81ac
-	// nord11 = #bf616a
-	// nord12 = #d08770
-	// nord13 = #ebcb8b
-	// nord14 = #a3be8c
-	// nord15 = #b48ead
-	.navbarLogoText {
-		font-family 'Quicksand', sans-serif
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500');
+// nord0 = #2e3440
+// nord1 = #3b4252
+// nord2 = #434c5e
+// nord3 = #4c566a
+nord4 = #d8dee9
+// nord5 = #e5e9f0
+// nord6 = #eceff4
+// nord7 = #8fbcbb
+// nord8 = #88c0d0
+// nord9 = #81a1c1
+// nord10 = #5e81ac
+// nord11 = #bf616a
+// nord12 = #d08770
+// nord13 = #ebcb8b
+// nord14 = #a3be8c
+// nord15 = #b48ead
+.navbarLogoText {
+	font-family 'Quicksand', sans-serif
+}
+.userMenu {
+	margin-left -8.2vw
+	margin-top 20px
+	@media (max-width 1325px) {
+		margin-left -16vw
 	}
-	.userMenu {
-		margin-left -8.2vw
-		margin-top 20px
-		@media (max-width 1325px) {
-			margin-left -16vw
-		}
-	}
-	.gooogleButton:focus {
-		border none
-		outline none
-	}
-	.noOutline {
-		border 0
-		outline 0
-	}
-	.nav {
-		overflow-x: hidden !important
-	}
-	.space {
-		padding-top: 64px
-	}
+}
+.gooogleButton:focus {
+	border none
+	outline none
+}
+.noOutline {
+	border 0
+	outline 0
+}
+.nav {
+	overflow-x: hidden !important
+}
+.space {
+	padding-top: 64px
+}
 </style>

@@ -65,8 +65,14 @@
 								wink: [],
 							},
 						}"
-						class="w-11/12 h-full px-3 mx-auto overflow-x-hidden overflow-y-scroll break-words text-nord5 postContent"
+						class="w-full h-full px-3 mx-3 overflow-x-hidden overflow-y-scroll break-words text-nord5 markdownRender"
 						id="mdPreview"
+						:plugins="[
+							{
+								plugin: taskLists,
+								options: { enabled: true },
+							},
+						]"
 					/>
 				</div>
 			</div>
@@ -75,148 +81,153 @@
 </template>
 
 <script lang="ts">
-	import { defineComponent, ref, Ref, onMounted } from 'vue';
+import { defineComponent, ref, Ref, onMounted } from 'vue';
 
-	import store from '@/store';
-	export default defineComponent({
-		setup() {
-			const mdEditor: Ref<HTMLTextAreaElement | null> = ref(null);
+import store from '@/store';
 
-			onMounted(() => {
-				mdEditor.value?.addEventListener('scroll', () => {
-					if (!mdEditor.value) return;
-					const mdPreview = document.getElementById('mdPreview');
-					if (mdPreview) mdPreview.scrollTop = mdEditor.value.scrollTop;
-				});
-			});
+// @ts-ignore
+import taskLists from 'markdown-it-task-lists';
 
-			function textAreaHandler(e: KeyboardEvent) {
+export default defineComponent({
+	setup() {
+		const mdEditor: Ref<HTMLTextAreaElement | null> = ref(null);
+
+		onMounted(() => {
+			mdEditor.value?.addEventListener('scroll', () => {
 				if (!mdEditor.value) return;
-				let contentArr = [...mdEditor.value.value];
-				const delimiters: any = {
-					//let's me use [] without writing a type
-					always: {
-						'"': '"',
-						'(': ')',
-						'{': '}',
-						'[': ']',
-						'<': '>',
-						'`': '`',
-					},
-					nextToWhitespace: {
-						"'": "'",
-						_: '_',
-						'*': '*',
-						'~': '~',
-					},
-				};
+				const mdPreview = document.getElementById('mdPreview');
+				if (mdPreview) mdPreview.scrollTop = mdEditor.value.scrollTop;
+			});
+		});
 
-				const ctrlChars: any = {
-					b: '**',
-					i: '_',
-				};
+		function textAreaHandler(e: KeyboardEvent) {
+			if (!mdEditor.value) return;
+			let contentArr = [...mdEditor.value.value];
+			const delimiters: any = {
+				//let's me use [] without writing a type
+				always: {
+					'"': '"',
+					'(': ')',
+					'{': '}',
+					'[': ']',
+					'<': '>',
+					'`': '`',
+				},
+				nextToWhitespace: {
+					"'": "'",
+					_: '_',
+					'*': '*',
+					'~': '~',
+				},
+			};
 
-				const cursorStart = mdEditor.value.selectionStart;
-				const cursorEnd = mdEditor.value.selectionEnd;
+			const ctrlChars: any = {
+				b: '**',
+				i: '_',
+			};
 
-				// handle selection delimiters
-				if (cursorStart !== cursorEnd) {
-					if (e.key === 'Backspace') return;
+			const cursorStart = mdEditor.value.selectionStart;
+			const cursorEnd = mdEditor.value.selectionEnd;
 
-					if (e.ctrlKey) {
-						if (!(e.key in ctrlChars)) return;
+			// handle selection delimiters
+			if (cursorStart !== cursorEnd) {
+				if (e.key === 'Backspace') return;
 
-						e.preventDefault();
-						contentArr.splice(cursorStart, 0, ctrlChars[e.key]);
-						contentArr.splice(cursorEnd + 1, 0, ctrlChars[e.key]);
-						mdEditor.value.value = contentArr.join('');
-						mdEditor.value.selectionStart = cursorStart;
-						mdEditor.value.selectionEnd = cursorEnd + ctrlChars[e.key].length * 2;
-						return;
-					}
+				if (e.ctrlKey) {
+					if (!(e.key in ctrlChars)) return;
 
-					if (!(e.key in delimiters.always || e.key in delimiters.nextToWhitespace)) return;
 					e.preventDefault();
-					const delimiter1 = delimiters.always[e.key] || delimiters.nextToWhitespace[e.key];
-
-					contentArr.splice(cursorStart, 0, e.key);
-					contentArr.splice(cursorEnd + 1, 0, delimiter1);
+					contentArr.splice(cursorStart, 0, ctrlChars[e.key]);
+					contentArr.splice(cursorEnd + 1, 0, ctrlChars[e.key]);
 					mdEditor.value.value = contentArr.join('');
-
 					mdEditor.value.selectionStart = cursorStart;
-					mdEditor.value.selectionEnd = cursorEnd + 2;
-
+					mdEditor.value.selectionEnd = cursorEnd + ctrlChars[e.key].length * 2;
 					return;
 				}
 
-				// handle regular delimiters
-				if (e.key === 'Backspace') {
-					if (
-						!(
-							(contentArr[cursorStart] in delimiters.always || contentArr[cursorStart] in delimiters.nextToWhitespace) &&
-							(contentArr[cursorStart - 1] in delimiters.always || contentArr[cursorStart - 1] in delimiters.nextToWhitespace)
-						)
-					)
-						return;
-					contentArr.splice(cursorStart, 1);
-				} else if (e.ctrlKey) {
-					if (!(e.key in ctrlChars)) return;
-					e.preventDefault();
-					contentArr.splice(cursorStart, 0, ctrlChars[e.key] + ctrlChars[e.key]);
-					mdEditor.value.value = contentArr.join('');
-					mdEditor.value.selectionStart = cursorStart + ctrlChars[e.key].length;
-					mdEditor.value.selectionEnd = cursorStart + ctrlChars[e.key].length;
-					return;
-				} else if (e.key in delimiters.always) {
-					contentArr.splice(cursorStart, 0, delimiters.always[e.key]);
-				} else if (e.key in delimiters.nextToWhitespace) {
-					if (/^\S$/g.test(contentArr[cursorStart - 1])) return;
-					contentArr.splice(cursorStart, 0, delimiters.nextToWhitespace[e.key]);
-				} else return;
+				if (!(e.key in delimiters.always || e.key in delimiters.nextToWhitespace)) return;
+				e.preventDefault();
+				const delimiter1 = delimiters.always[e.key] || delimiters.nextToWhitespace[e.key];
 
+				contentArr.splice(cursorStart, 0, e.key);
+				contentArr.splice(cursorEnd + 1, 0, delimiter1);
 				mdEditor.value.value = contentArr.join('');
-				mdEditor.value.selectionEnd = cursorStart;
+
 				mdEditor.value.selectionStart = cursorStart;
+				mdEditor.value.selectionEnd = cursorEnd + 2;
+
+				return;
 			}
 
-			return {
-				store,
-				mdEditor,
-				textAreaHandler,
-			};
-		},
-	});
+			// handle regular delimiters
+			if (e.key === 'Backspace') {
+				if (
+					!(
+						(contentArr[cursorStart] in delimiters.always || contentArr[cursorStart] in delimiters.nextToWhitespace) &&
+						(contentArr[cursorStart - 1] in delimiters.always || contentArr[cursorStart - 1] in delimiters.nextToWhitespace)
+					)
+				)
+					return;
+				contentArr.splice(cursorStart, 1);
+			} else if (e.ctrlKey) {
+				if (!(e.key in ctrlChars)) return;
+				e.preventDefault();
+				contentArr.splice(cursorStart, 0, ctrlChars[e.key] + ctrlChars[e.key]);
+				mdEditor.value.value = contentArr.join('');
+				mdEditor.value.selectionStart = cursorStart + ctrlChars[e.key].length;
+				mdEditor.value.selectionEnd = cursorStart + ctrlChars[e.key].length;
+				return;
+			} else if (e.key in delimiters.always) {
+				contentArr.splice(cursorStart, 0, delimiters.always[e.key]);
+			} else if (e.key in delimiters.nextToWhitespace) {
+				if (/^\S$/g.test(contentArr[cursorStart - 1])) return;
+				contentArr.splice(cursorStart, 0, delimiters.nextToWhitespace[e.key]);
+			} else return;
+
+			mdEditor.value.value = contentArr.join('');
+			mdEditor.value.selectionEnd = cursorStart;
+			mdEditor.value.selectionStart = cursorStart;
+		}
+
+		return {
+			store,
+			mdEditor,
+			textAreaHandler,
+			taskLists,
+		};
+	},
+});
 </script>
 
 <style lang="stylus">
-	@import '../assets/post.styl';
+@import '../assets/markdown.styl';
 
-	::-webkit-scrollbar {
-		width: 10px;
+::-webkit-scrollbar {
+	width: 10px;
+}
+.mdEditor {
+	::-webkit-scrollbar-track {
+		background: nord2
 	}
-	.mdEditor {
-		::-webkit-scrollbar-track {
-			background: nord2
-		}
-		::-webkit-scrollbar-thumb {
-			background: nord3
-			border-radius: 10px;
-		}
-			::-webkit-scrollbar-thumb:hover {
-			background: nord7;
-			}
+	::-webkit-scrollbar-thumb {
+		background: nord3
+		border-radius: 10px;
 	}
+	::-webkit-scrollbar-thumb:hover {
+		background: nord7;
+	}
+}
 
-	.mdPreview {
-		::-webkit-scrollbar-track {
-			background: nord1
-		}
-		::-webkit-scrollbar-thumb {
-			background: nord2
-			border-radius: 10px;
-		}
-		::-webkit-scrollbar-thumb:hover {
-			background: nord7;
-		}
+.mdPreview {
+	::-webkit-scrollbar-track {
+		background: nord1
 	}
+	::-webkit-scrollbar-thumb {
+		background: nord2
+		border-radius: 10px;
+	}
+	::-webkit-scrollbar-thumb:hover {
+		background: nord7;
+	}
+}
 </style>

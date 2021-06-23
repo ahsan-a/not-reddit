@@ -28,7 +28,9 @@ export interface Post {
 	title: string;
 	updated_at: firebase.firestore.Timestamp;
 	user_id: string;
+	deletedUser?: boolean;
 	user?: User;
+	comments: Comment[];
 }
 
 export interface CreatePost {
@@ -39,4 +41,29 @@ export interface CreatePost {
 	id: string;
 	created_at: firebase.firestore.FieldValue;
 	updated_at: firebase.firestore.FieldValue;
+}
+
+export interface Comment {
+	content: string;
+	id: string;
+	parent_id: string | null;
+	post_id: string;
+	subreddit_id: string;
+	user_id: string;
+	created_at: firebase.firestore.Timestamp;
+	updated_at: firebase.firestore.Timestamp;
+	user?: User;
+	deletedUser?: true;
+	comments?: Comment[];
+}
+
+export interface CreateComment {
+	content: string;
+	id?: string;
+	parent_id: string | null;
+	post_id: string;
+	subreddit_id: string;
+	user_id: string;
+	created_at?: firebase.firestore.FieldValue;
+	updated_at?: firebase.firestore.FieldValue;
 }

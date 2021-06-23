@@ -1,7 +1,7 @@
 import db from '@/db';
 import { reactive } from 'vue';
 import router from '@/router';
-import { Post, Subreddit, User } from '@/typings';
+import { Post, Subreddit } from '@/typings';
 import store from '.';
 
 const posts = db.collection('posts');
@@ -70,23 +70,9 @@ const actions = {
 					const post = serverPosts.docs[i].data();
 					if (post.content) post.content = store.createPost.actions.purifyWithPatch(post.content);
 
-					const potentialUser = store.users.state.users.find((x) => x.id === post.user_id);
-					if (potentialUser) {
-						post.user = potentialUser;
-					} else {
-						post.user = {};
-						const user = await db
-							.collection('users')
-							.doc(post.user_id)
-							.get();
-
-						if (!user.exists) {
-							post.user.name = '[deleted]';
-						} else {
-							post.user = user.data();
-							store.users.state.users.push(user.data() as User);
-						}
-					}
+					const user = await store.users.actions.getUser(post.user_id);
+					if (user) post.user = user;
+					else post.deletedUser = true;
 
 					postsToUpdate.push(post as Post);
 				}
@@ -106,30 +92,17 @@ const actions = {
 		if (activeSubListener.listener) activeSubListener.listener();
 		let firstLoad = true;
 		globalListener = posts.orderBy('created_at', 'desc').onSnapshot(async (serverPosts) => {
-			if (router.currentRoute.value.fullPath !== '/') globalListener?.();
+			if (router.currentRoute.value.fullPath !== '/') return globalListener?.();
 
 			const postsToUpdate: Post[] = [];
 			for (let i = 0; i < serverPosts.docs.length; i++) {
 				const post = serverPosts.docs[i].data();
+				post.user = {};
 				if (post.content) post.content = store.createPost.actions.purifyWithPatch(post.content);
 
-				const potentialUser = store.users.state.users.find((x) => x.id === post.user_id);
-				if (potentialUser) {
-					post.user = potentialUser;
-				} else {
-					post.user = {};
-					const user = await db
-						.collection('users')
-						.doc(post.user_id)
-						.get();
-
-					if (!user.exists) {
-						post.user.name = '[deleted]';
-					} else {
-						post.user = user.data();
-						store.users.state.users.push(user.data() as User);
-					}
-				}
+				const user = await store.users.actions.getUser(post.user_id);
+				if (!user) post.deletedUser = true;
+				else post.user = user;
 
 				postsToUpdate.push(post as Post);
 			}
@@ -149,7 +122,8 @@ const actions = {
 	async homeScrollCheck(): Promise<any> {
 		if (!(Math.abs(window.innerHeight - (document.getElementById('sB')?.getBoundingClientRect().bottom ?? 0)) <= 1000)) return;
 		if (router.currentRoute.value.fullPath !== '/') return document.removeEventListener('scroll', actions.homeScrollCheck);
-		state.posts = state.allPosts.slice(0, state.posts.length + 1);
+
+		state.posts = state.allPosts.slice(0, state.posts.length + 4);
 	},
 };
 

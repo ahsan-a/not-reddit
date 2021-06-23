@@ -1,12 +1,12 @@
 <template>
 	<div
-		class="flex flex-col w-full px-5 pt-5 mb-8 overflow-hidden transition-all border rounded-lg shadow-md md:px-8 hover:shadow-xl bg-nord1 border-nord2 text-nord4 hover:text-nord5"
+		class="flex flex-col w-full px-5 pt-5 mb-8 overflow-hidden transition-all rounded-lg shadow-md md:px-8 hover:shadow-xl bg-nord1 border-nord2 text-nord4 hover:text-nord5"
 	>
 		<div class="flex flex-row items-stretch justify-between w-full mb-5">
 			<div class="flex flex-row items-end titleMaxW ">
 				<h1 class="overflow-hidden text-3xl font-bold break-words md:text-4xl lh50 text-nord6">{{ post.title }}</h1>
 			</div>
-			<div class="float-right w-auto ml-1 md:ml-10 justify-self-end min-w-max" v-if="homepage">
+			<div class="float-right w-auto ml-1 md:ml-10 justify-self-end min-w-max" v-if="location === 'home'">
 				<span class="font-medium text-nord6">r/{{ subreddit.name }}</span>
 				<img
 					:src="subreddit.image || require('../assets/defaultSub.svg')"
@@ -14,11 +14,8 @@
 				/>
 			</div>
 			<div class="float-right w-auto ml-1 md:ml-10 justify-self-end min-w-max" v-else>
-				<span class="font-medium text-nord6">{{ post.user.name }}</span>
-				<img
-					:src="post.user.image || 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'"
-					class="inline ml-2 rounded-full md:ml-4 obejct-cover h-9 w-9"
-				/>
+				<span class="font-medium text-nord6">{{ post.deletedUser ? '[deleted]' : post.user?.name }}</span>
+				<img :src="post.user?.image || require('../assets/defaultPfp.webp')" class="inline ml-2 rounded-full md:ml-4 obejct-cover h-9 w-9" />
 			</div>
 		</div>
 		<vue3-markdown-it
@@ -55,12 +52,20 @@
 					wink: [],
 				},
 			}"
-			class="max-w-full overflow-hidden break-words PostpostContent"
+			:plugins="[
+				{
+					plugin: taskLists,
+					options: { enabled: true },
+				},
+			]"
+			class="max-w-full overflow-hidden break-words markdownRender"
+			:class="{ postClipped: location !== 'post' }"
 		/>
 		<div class="mt-10 mb-3">
 			<router-link
 				:to="`/r/${subreddit.name}/${post.id}`"
 				class="inline px-2 py-1 pb-2 transition-all rounded-md group hover:bg-nord2 text-nord4 hover:text-nord6"
+				v-if="location !== 'post'"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +80,8 @@
 			</router-link>
 			<router-link
 				:to="`/r/${subreddit.name}/${post.id}#comments`"
-				class="hidden px-2 py-1 pb-2 ml-2 transition-all rounded-md md:ml-4 sm:inline group hover:bg-nord2 text-nord4 hover:text-nord6"
+				class="hidden px-2 py-1 pb-2 mx-2 transition-all rounded-md md:mx-4 sm:inline group hover:bg-nord2 text-nord4 hover:text-nord6"
+				v-if="location !== 'post'"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -92,7 +98,7 @@
 			</router-link>
 
 			<button
-				class="hidden px-2 py-1 ml-2 transition-all border rounded-md sm:inline md:ml-4 hover:bg-nord2 text-nord4 hover:text-nord6 group noOutline"
+				class="hidden px-2 py-1 transition-all rounded-md sm:inline hover:bg-nord2 text-nord4 hover:text-nord6 group noOutline"
 				@click="shareEnabled = !shareEnabled"
 			>
 				<svg
@@ -103,10 +109,10 @@
 					class="inline w-5 h-auto transition-all fill-current text-nord8 group-hover:text-nord7"
 				>
 					<path
-						d="M17.026 22.957c10.957-11.421-2.326-20.865-10.384-13.309l2.464 2.352h-9.106v-8.947l2.232 2.229c14.794-13.203 31.51 7.051 14.794 17.675z"
+						d="M5 7c2.761 0 5 2.239 5 5s-2.239 5-5 5-5-2.239-5-5 2.239-5 5-5zm11.122 12.065c-.073.301-.122.611-.122.935 0 2.209 1.791 4 4 4s4-1.791 4-4-1.791-4-4-4c-1.165 0-2.204.506-2.935 1.301l-5.488-2.927c-.23.636-.549 1.229-.943 1.764l5.488 2.927zm7.878-15.065c0-2.209-1.791-4-4-4s-4 1.791-4 4c0 .324.049.634.122.935l-5.488 2.927c.395.535.713 1.127.943 1.764l5.488-2.927c.731.795 1.77 1.301 2.935 1.301 2.209 0 4-1.791 4-4z"
 					/>
 				</svg>
-				<span class="ml-2 text-sm font-medium">Share</span>
+				<span class="ml-3 text-sm font-medium">Share</span>
 			</button>
 
 			<button
@@ -127,20 +133,23 @@
 				<span class="ml-2 text-sm font-medium">Delete</span>
 			</button>
 			<span class="float-right pt-1.5 text-sm text-nord5 sm:ml-1.5">
-				<span class="hidden sm:inline">{{ createDateText(post.created_at.toDate()) }} {{ homepage ? 'by ' : '' }}</span>
-				<span class="ml-0.5 font-semibold" v-if="homepage">{{ post.user.name }}</span>
+				<span class="hidden sm:inline"
+					>{{ createDateText(post.created_at?.toDate()) }} {{ location === 'home' ? 'by ' : location === 'post' ? 'on ' : '' }}</span
+				>
+				<span class="ml-0.5 font-semibold" v-if="location === 'home'">{{ post.deletedUser ? '[deleted]' : post.user?.name }}</span>
+				<span class="ml-0.5 font-semibold" v-if="location === 'post'">r/{{ subreddit.name }}</span>
 			</span>
 		</div>
 
 		<div class="flex flex-row items-center mb-6 just" v-if="shareEnabled">
 			<input
 				type="text"
-				:value="`https://not-reddit.vercel.app${route.fullPath}/${post.id}`"
+				:value="`https://not-reddit.vercel.app/r/${subreddit.name}/${post.id}`"
 				class="w-full px-3 py-2 mx-auto rounded-md shadow-sm bg-nord2 text-nord4 focus:text-nord5 noOutline shareinput"
 				readonly
 			/>
 			<button
-				class="inline float-right px-2 py-1 ml-6 transition-all rounded-md min-w-max hover:bg-nord2 text-nord4 hover:text-nord6 group"
+				class="inline float-right px-2 py-1 ml-6 transition-all rounded-md min-w-max noOutline hover:bg-nord2 text-nord4 hover:text-nord6 group"
 				@click="shareEnabled = !shareEnabled"
 			>
 				<svg
@@ -161,72 +170,79 @@
 </template>
 
 <script lang="ts">
-	import { defineComponent, PropType, ref } from 'vue';
-	import { useRoute } from 'vue-router';
-	import { Post } from '@/typings';
-	import * as timeago from 'timeago.js';
-	import store from '@/store';
+import { defineComponent, PropType, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { Post } from '@/typings';
+import * as timeago from 'timeago.js';
+import store from '@/store';
 
-	export default defineComponent({
-		props: {
-			post: {
-				type: Object as PropType<Post>,
-				required: true,
-			},
-			homepage: {
-				type: Boolean,
-			},
-			fullDate: {
-				type: Boolean,
-			},
+// @ts-ignore
+import taskLists from 'markdown-it-task-lists';
+
+export default defineComponent({
+	props: {
+		post: {
+			type: Object as PropType<Post>,
+			required: true,
 		},
-		setup(props) {
-			const route = useRoute();
-			const shareEnabled = ref(false);
-			const subreddit = ref(store.subreddits.state.subreddits.find((x) => x.id === props.post.subreddit_id));
-
-			function createDateText(date: Date) {
-				return timeago.format(date);
-			}
-
-			const deletePost = async () => await store.post.actions.deletePost(props.post.id);
-
-			return {
-				route,
-				props,
-				createDateText,
-				shareEnabled,
-				store,
-				deletePost,
-				subreddit,
-			};
+		location: {
+			type: String,
 		},
-	});
+		fullDate: {
+			type: Boolean,
+		},
+	},
+	setup(props) {
+		const route = useRoute();
+		const router = useRouter();
+		const shareEnabled = ref(false);
+
+		const subreddit = ref(store.subreddits.state.subreddits.find((x) => x.id === props.post.subreddit_id));
+
+		const createDateText = (date: Date) => timeago.format(date);
+
+		async function deletePost() {
+			await store.post.actions.deletePost(props.post.id);
+			if (props.location === 'post') router.push({ path: `/r/${subreddit.value?.name}` });
+		}
+
+		return {
+			route,
+			props,
+			createDateText,
+			shareEnabled,
+			store,
+			deletePost,
+			subreddit,
+			taskLists,
+		};
+	},
+});
 </script>
 
 <style lang="stylus" scoped>
-	.lh50 {
-		line-height: 50px
-	}
-	.titleMaxW {
-		max-width: 80%
-	}
+.lh50 {
+	line-height: 50px
+}
+.titleMaxW {
+	max-width: 80%
+}
 </style>
 
 <style lang="stylus">
-	@import '../assets/styles.styl';
-	@import '../assets/post.styl';
-	.shareinput::selection {
-		background-color: nord9
+@import '../assets/styles.styl';
+@import '../assets/markdown.styl';
+.shareinput::selection {
+	background-color: nord9
+}
+.postClipped {
+	@media (max-width: 1023px) {
+		max-height: 400px
 	}
-	.PostpostContent {
-		@media (max-width: 1023px) {
-			max-height: 400px
-		}
-		@media (min-width: 1024px) {
-			display: -webkit-box;
-			-webkit-line-clamp: 15;
-			-webkit-box-orient: vertical;
-		}
+	@media (min-width: 1024px) {
+		display: -webkit-box;
+		-webkit-line-clamp: 15;
+		-webkit-box-orient: vertical;
 	}
+}
 </style>
