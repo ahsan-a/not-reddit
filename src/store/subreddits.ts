@@ -15,9 +15,11 @@ const actions = {
 		const result = db.collection('subreddits').doc();
 		subreddit.id = result.id;
 		subreddit.created_at = firebase.firestore.FieldValue.serverTimestamp();
+		subreddit.name = subreddit.name?.replace(/\s/g, '');
 		subreddit.name_lowercase = subreddit.name?.toLowerCase() ?? '';
-
+		subreddit.description = subreddit.description?.replace(/\r?\n|\r/g, ' ');
 		subreddit.approved = false;
+
 		await db
 			.collection('subreddits')
 			.doc(subreddit.id)

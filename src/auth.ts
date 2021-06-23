@@ -27,7 +27,6 @@ firebase.auth().onAuthStateChanged(async (user) => {
 		} else {
 			currentUser = doc.data();
 			currentUser.lastLoggedIn = firebase.firestore.FieldValue.serverTimestamp();
-			currentUser.verified = user.emailVerified;
 			await db
 				.collection('users')
 				.doc(user.uid)
