@@ -14,7 +14,7 @@
 
 			<vue3-markdown-it
 				:source="store.createPost.actions.purifyWithPatch(comment.content)"
-				:html="true"
+				:html="false"
 				:breaks="true"
 				:linkify="true"
 				:emoji="{

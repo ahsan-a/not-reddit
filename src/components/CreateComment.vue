@@ -30,7 +30,7 @@
 			</h1>
 			<vue3-markdown-it
 				:source="store.createPost.actions.purifyWithPatch(commentInput)"
-				:html="true"
+				:html="false"
 				:breaks="true"
 				:linkify="true"
 				:emoji="{

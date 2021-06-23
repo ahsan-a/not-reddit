@@ -33,7 +33,7 @@
 					<h1 class="mb-3 text-xl font-semibold text-nord5">Preview</h1>
 					<vue3-markdown-it
 						:source="store.createPost.actions.purifyWithPatch(store.createPost.state.newPost.content)"
-						:html="true"
+						:html="false"
 						:breaks="true"
 						:linkify="true"
 						:emoji="{

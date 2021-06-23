@@ -20,7 +20,7 @@
 		</div>
 		<vue3-markdown-it
 			:source="post.content"
-			:html="true"
+			:html="false"
 			:breaks="true"
 			:linkify="true"
 			:emoji="{
