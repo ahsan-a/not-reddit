@@ -31,6 +31,11 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'Post',
 		component: () => import('@/views/Post.vue'),
 	},
+	{
+		path: '/admin',
+		name: 'Admin',
+		component: () => import('@/views/Admin.vue'),
+	},
 
 	{
 		path: '/:catchAll(.*)',

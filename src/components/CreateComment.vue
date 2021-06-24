@@ -85,6 +85,9 @@ import { defineComponent, ref, onMounted } from 'vue';
 
 import store from '@/store';
 
+// @ts-ignore
+import taskLists from 'markdown-it-task-lists';
+
 export default defineComponent({
 	props: {
 		parent_id: {
@@ -116,6 +119,7 @@ export default defineComponent({
 			mdPreview,
 			commentInput,
 			createComment,
+			taskLists,
 		};
 	},
 });
