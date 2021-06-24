@@ -106,13 +106,14 @@ const actions = {
 
 				postsToUpdate.push(post as Post);
 			}
+			const scrollNeeded = state.allPosts.length < postsToUpdate.length;
 			state.allPosts = postsToUpdate;
-
 			state.posts = state.allPosts.slice(0, state.posts.length || 5);
+
 			if (firstLoad) {
 				document.addEventListener('scroll', actions.homeScrollCheck);
 				firstLoad = false;
-			} else if (postsToUpdate.length > state.posts.length && window.innerWidth / 4 < window.scrollY) {
+			} else if (scrollNeeded && window.innerWidth / 4 < window.scrollY) {
 				state.scrollNotif = true;
 			}
 		});
