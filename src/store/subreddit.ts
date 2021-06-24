@@ -107,10 +107,9 @@ const actions = {
 				postsToUpdate.push(post as Post);
 			}
 			state.allPosts = postsToUpdate;
-			state.posts = state.allPosts.slice(0, state.posts.length - 1);
 
+			state.posts = state.allPosts.slice(0, state.posts.length || 5);
 			if (firstLoad) {
-				state.posts = state.allPosts.slice(0, 5);
 				document.addEventListener('scroll', actions.homeScrollCheck);
 				firstLoad = false;
 			} else if (postsToUpdate.length > state.posts.length && window.innerWidth / 4 < window.scrollY) {
