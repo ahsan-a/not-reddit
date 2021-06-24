@@ -88,7 +88,7 @@
 				<h1 class="mb-4 overflow-hidden text-3xl font-bold break-words md:text-4xl lh50 text-nord6">{{ postInput.title }}</h1>
 				<vue3-markdown-it
 					:source="store.createPost.actions.purifyWithPatch(postInput.content)"
-					:html="false"
+					:html="true"
 					:breaks="true"
 					:linkify="true"
 					:emoji="{

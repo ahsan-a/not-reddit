@@ -59,7 +59,7 @@
 					</h1>
 					<vue3-markdown-it
 						:source="store.createPost.actions.purifyWithPatch(commentInput)"
-						:html="false"
+						:html="true"
 						:breaks="true"
 						:linkify="true"
 						:emoji="{
@@ -250,7 +250,7 @@ export default defineComponent({
 
 		function backButton() {
 			if (window.history.state.back) router.go(-1);
-			else router.push({ path: `/r/${store}` });
+			else router.push({ path: `/r/${route.params.subreddit.toString()}` });
 		}
 
 		return {

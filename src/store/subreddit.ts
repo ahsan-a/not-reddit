@@ -1,5 +1,5 @@
 import db from '@/db';
-import { reactive } from 'vue';
+import { reactive, Ref } from 'vue';
 import router from '@/router';
 import { Post, Subreddit } from '@/typings';
 import store from '.';
