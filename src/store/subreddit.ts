@@ -1,5 +1,5 @@
 import db from '@/db';
-import { reactive, Ref } from 'vue';
+import { reactive } from 'vue';
 import router from '@/router';
 import { Post, Subreddit } from '@/typings';
 import store from '.';
@@ -68,7 +68,7 @@ const actions = {
 				const postsToUpdate: Post[] = [];
 				for (let i = 0; i < serverPosts.docs.length; i++) {
 					const post = serverPosts.docs[i].data();
-					if (post.content) post.content = store.createPost.actions.purifyWithPatch(post.content);
+					if (post.content) post.content = store.createPost.actions.purify(post.content);
 
 					const user = await store.users.actions.getUser(post.user_id);
 					if (user) post.user = user;
@@ -98,7 +98,7 @@ const actions = {
 			for (let i = 0; i < serverPosts.docs.length; i++) {
 				const post = serverPosts.docs[i].data();
 				post.user = {};
-				if (post.content) post.content = store.createPost.actions.purifyWithPatch(post.content);
+				if (post.content) post.content = store.createPost.actions.purify(post.content);
 
 				const user = await store.users.actions.getUser(post.user_id);
 				if (!user) post.deletedUser = true;

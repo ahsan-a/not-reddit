@@ -26,7 +26,7 @@ const actions = {
 			.set(post);
 	},
 
-	purifyWithPatch: (text: string): string => DOMPurify.sanitize(text).replace(/&gt; /g, '> '),
+	purify: (text: string): string => DOMPurify.sanitize(text),
 };
 
 export default {

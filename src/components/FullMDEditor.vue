@@ -32,7 +32,7 @@
 				<div class="ml-5 h-5/6 mdPreview">
 					<h1 class="mb-3 text-xl font-semibold text-nord5">Preview</h1>
 					<vue3-markdown-it
-						:source="store.createPost.actions.purifyWithPatch(store.createPost.state.newPost.content)"
+						:source="store.createPost.actions.purify(store.createPost.state.newPost.content)"
 						:html="true"
 						:breaks="true"
 						:linkify="true"

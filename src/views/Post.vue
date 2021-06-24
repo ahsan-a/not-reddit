@@ -58,7 +58,7 @@
 						Markdown Preview
 					</h1>
 					<vue3-markdown-it
-						:source="store.createPost.actions.purifyWithPatch(commentInput)"
+						:source="store.createPost.actions.purify(commentInput)"
 						:html="true"
 						:breaks="true"
 						:linkify="true"

@@ -38,7 +38,7 @@
 					type="text"
 					placeholder="Post Title"
 					class="block w-full px-5 mx-auto mt-2 mb-4 font-semibold transition-all border-none rounded-md shadow-sm outline-none h-11 text-md focus:outline-none focus:border-none bg-nord2 focus:bg-nord3 text-nord6 focus:shadow-md placeholder-nord4 focus:placeholder-nord5"
-					maxlength="80"
+					maxlength="100"
 					required
 					v-model="postInput.title"
 					title="Required"
@@ -87,7 +87,7 @@
 			<div class="w-full px-6 py-5 border rounded-lg shadow-sm bg-nord1 border-nord2">
 				<h1 class="mb-4 overflow-hidden text-3xl font-bold break-words md:text-4xl lh50 text-nord6">{{ postInput.title }}</h1>
 				<vue3-markdown-it
-					:source="store.createPost.actions.purifyWithPatch(postInput.content)"
+					:source="store.createPost.actions.purify(postInput.content)"
 					:html="true"
 					:breaks="true"
 					:linkify="true"
@@ -305,7 +305,7 @@ export default defineComponent({
 
 			await store.createPost.actions.createPost({
 				title: postInput.value.title,
-				content: store.createPost.actions.purifyWithPatch(postInput.value.content),
+				content: store.createPost.actions.purify(postInput.value.content),
 				subreddit_id: subreddit.id,
 				user_id: store.auth.state.user?.id,
 			});

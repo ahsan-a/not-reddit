@@ -21,7 +21,7 @@
 			</div>
 		</div>
 		<vue3-markdown-it
-			:source="store.createPost.actions.purifyWithPatch(post.content)"
+			:source="store.createPost.actions.purify(post.content)"
 			:html="true"
 			:breaks="true"
 			:linkify="true"
