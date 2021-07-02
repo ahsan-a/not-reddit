@@ -15,7 +15,7 @@
 								<div class="flex flex-row items-center">
 									<img
 										:src="subreddit.image || require('../assets/defaultSub.svg')"
-										class="hidden object-cover w-10 h-10 ml-4 mr-4 rounded-full"
+										class="hidden object-cover w-10 h-10 ml-4 mr-4 rounded-full md:inline-block"
 									/>
 									<div class="text-sm font-medium break-words text-nord4 subreddit"> r/{{ subreddit.name }} </div>
 								</div>
