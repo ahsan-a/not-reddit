@@ -32,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
 		component: () => import('@/views/Post.vue'),
 	},
 	{
-		path: '/admin',
+		path: '/not-admin',
 		name: 'Admin',
 		component: () => import('@/views/Admin.vue'),
 	},

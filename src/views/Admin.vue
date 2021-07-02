@@ -2,7 +2,7 @@
 	<div class="bg" />
 	<Navbar :padding="true" />
 	<div class="flex w-full mx-auto xl:w-9/12 lg:w-11/12">
-		<div class="w-full px-6 py-5 mx-1 mt-6 rounded-lg shadow-sm md:mx-10 lg:w-9/12 lg:mr-10 bg-nord1">
+		<div class="w-full px-6 py-5 mx-1 mt-6 rounded-lg shadow-sm md:mx-10 lg:w-9/12 lg:mr-10 bg-nord1" v-if="store.auth.state.user?.admin">
 			<h1 class="text-2xl font-bold text-nord6">Admin</h1>
 
 			<h1 class="mt-5 text-xl font-semibold text-nord6">Moderate Subreddits</h1>
@@ -64,6 +64,9 @@
 					</tbody>
 				</table>
 			</div>
+		</div>
+		<div class="w-full px-6 py-5 mx-1 mt-6 rounded-lg shadow-sm md:mx-10 lg:w-9/12 lg:mr-10 bg-nord1" v-else>
+			<h1 class="font-bold text-8xl text-nord4">ayo wtf</h1>
 		</div>
 		<SubredditSidebar class="hidden lg:w-1/3 lg:block xl:w-3/12" />
 	</div>

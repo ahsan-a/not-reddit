@@ -44,7 +44,7 @@
 						<div class="flex items-baseline ml-10 space-x-4 text-sm font-medium tracking-wider uppercase text-nord4">
 							<router-link
 								class="px-3 py-2 text-sm font-medium transition-colors rounded-md cursor-pointer text-nord5 hover:bg-nord3"
-								to="/admin"
+								to="/not-admin"
 							>
 								Admin
 							</router-link>
