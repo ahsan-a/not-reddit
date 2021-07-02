@@ -18,6 +18,7 @@ export interface Subreddit {
 	user_id: string;
 	image?: string;
 	name_lowercase?: string;
+	user?: User;
 }
 
 export interface Post {

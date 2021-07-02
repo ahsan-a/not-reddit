@@ -6,6 +6,7 @@ import subreddit from './subreddit';
 import users from './users';
 import post from './post';
 import createPost from './createPost';
+import admin from './admin';
 
 const store = reactive({
 	auth,
@@ -14,6 +15,7 @@ const store = reactive({
 	users,
 	post,
 	createPost,
+	admin,
 });
 
 export default store;

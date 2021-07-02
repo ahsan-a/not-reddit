@@ -3,15 +3,74 @@
 	<Navbar :padding="true" />
 	<div class="flex w-full mx-auto xl:w-9/12 lg:w-11/12">
 		<div class="w-full px-6 py-5 mx-1 mt-6 rounded-lg shadow-sm md:mx-10 lg:w-9/12 lg:mr-10 bg-nord1">
-			<h1 class="text-xl font-semibold text-nord6">Admin</h1>
+			<h1 class="text-2xl font-bold text-nord6">Admin</h1>
+
+			<h1 class="mt-5 text-xl font-semibold text-nord6">Moderate Subreddits</h1>
+
+			<div class="mt-6 overflow-hidden border-b rounded-lg border-nord2">
+				<table class="min-w-full mx-auto divide-y shadow divide-nord1">
+					<tbody class="divide-y bg-nord2 divide-nord1">
+						<tr v-for="subreddit in store.admin.state.subreddits" :key="subreddit.id" class="transition duration-150 ease-out ">
+							<td class="px-4 py-2">
+								<div class="flex flex-row items-center">
+									<img
+										:src="subreddit.image || require('../assets/defaultSub.svg')"
+										class="hidden object-cover w-10 h-10 ml-4 mr-4 rounded-full"
+									/>
+									<div class="text-sm font-medium break-words text-nord4 subreddit"> r/{{ subreddit.name }} </div>
+								</div>
+							</td>
+							<td class="hidden px-4 py-4 overflow-y-hidden sm:block">
+								<div class="text-sm break-words text-nord4 description">
+									{{ subreddit.description }}
+								</div>
+							</td>
+							<td class="px-4 text-center py hideOnMd">
+								<span class="text-sm font-medium text-center text-nord4">
+									{{ subreddit.user?.name || 'Deleted User' }}
+									<br />
+								</span>
+							</td>
+							<td class="px-4 py-4 overflow-y-hidden">
+								<div class="flex flex-row items-center text-nord4">
+									<button class="noOutline" @click="store.admin.actions.denySubreddit(subreddit.id)">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											class="w-5 transition-all fill-current hover:text-nord12 text-nord11"
+										>
+											<path
+												d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"
+											/>
+										</svg>
+									</button>
+
+									<button class="ml-3 noOutline" @click="store.admin.actions.approveSubreddit(subreddit.id)">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											class="w-5 transition-all fill-current hover:text-nord7 text-nord14"
+										>
+											<path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z" />
+										</svg>
+									</button>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 		<SubredditSidebar class="hidden lg:w-1/3 lg:block xl:w-3/12" />
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { defineComponent } from 'vue';
 import store from '@/store';
 
 import Navbar from '@/components/Navbar.vue';
@@ -23,6 +82,8 @@ export default defineComponent({
 		SubredditSidebar,
 	},
 	setup() {
+		store.admin.actions.bindSubreddits();
+
 		return {
 			store,
 		};
@@ -30,18 +91,4 @@ export default defineComponent({
 });
 </script>
 
-<style lang="stylus">
-.fixedCenter {
-	left: 50%
-	margin-right: -50%
-	transform: translate(0%, -50%)
-}
-.posts-enter-active,
-.posts-leave-active {
-	transition: all 0.5s ease
-}
-.posts-leave-to {
-	opacity: 0
-	margin-top: -190px
-}
-</style>
+<style lang="stylus"></style>
