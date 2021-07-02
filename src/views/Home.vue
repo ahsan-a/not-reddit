@@ -53,7 +53,7 @@
 						</router-link>
 					</div>
 				</div>
-				<img src="../assets/logo.webp" class="hidden w-32 md:block" />
+				<img src="../assets/logo.webp" class="hidden w-20 md:block" />
 			</div>
 		</div>
 	</div>

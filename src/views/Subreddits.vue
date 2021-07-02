@@ -56,7 +56,7 @@
 							<th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left uppercase text-nord5 hideOnSm">
 								Description
 							</th>
-							<th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left uppercase text-nord5 createdAt hideOnMd">
+							<th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left uppercase text-nord5 hideOnMd">
 								Created At
 							</th>
 						</tr>
@@ -82,9 +82,9 @@
 									{{ subreddit.description }}
 								</div>
 							</td>
-							<td class="px-4 text-center py createdAt hideOnMd">
-								<span class="text-sm font-medium text-center text-nord4 createdAt">
-									{{ getDate(subreddit.created_at.seconds) }}
+							<td class="px-4 text-center py hideOnMd">
+								<span class="text-sm font-medium text-center text-nord4 ">
+									{{ subreddit.created_at.toDate().toLocaleDateString() }}
 									<br />
 								</span>
 							</td>
@@ -119,8 +119,6 @@ export default defineComponent({
 			image: '',
 		});
 
-		const getDate = (unix: number) => new Date(unix * 1000).toLocaleDateString();
-
 		async function createSubreddit() {
 			if (!store.auth.state.isLoggedIn) return alert('Please make an account or sign in to make a subreddit.');
 			if (/\s/g.test(currentInput.name)) return alert('Your title must not have any spaces.');
@@ -148,7 +146,6 @@ export default defineComponent({
 		return {
 			store,
 			router,
-			getDate,
 			createSubredditOn,
 			currentInput,
 			createSubreddit,
