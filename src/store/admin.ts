@@ -18,7 +18,7 @@ const actions = {
 			.where('approved', '==', false)
 			.orderBy('created_at', 'desc')
 			.onSnapshot(async (data) => {
-				if (router.currentRoute.value.fullPath !== '/admin') return listener();
+				if (router.currentRoute.value.fullPath !== '/not-admin') return listener();
 				state.subreddits = [];
 				for (const doc of data.docs) {
 					const subreddit = doc.data() as Subreddit;
