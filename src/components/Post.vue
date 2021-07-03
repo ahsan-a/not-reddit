@@ -81,7 +81,7 @@
 				<span class="ml-2 text-sm font-medium">View</span>
 			</router-link>
 			<router-link
-				:to="`/r/${subreddit.name}/${post.id}#comments`"
+				:to="`/r/${subreddit.name}/${post.id}#comment`"
 				class="hidden px-2 py-1 pb-2 mx-2 transition-all rounded-md md:mx-4 sm:inline group hover:bg-nord2 text-nord4 hover:text-nord6"
 				v-if="location !== 'post'"
 			>

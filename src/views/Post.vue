@@ -30,6 +30,7 @@
 			<div
 				class="flex flex-col w-full px-5 py-5 mb-8 overflow-hidden transition-all rounded-lg shadow-md md:px-8 hover:shadow-xl bg-nord1 border-nord2"
 				v-if="store.auth.state.isLoggedIn"
+				id="comment"
 			>
 				<div v-if="!mdPreview">
 					<h1 class="mb-5 text-3xl font-semibold text-nord6">
