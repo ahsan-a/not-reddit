@@ -5,7 +5,7 @@
 	<div class="flex w-full mx-auto xl:w-9/12 lg:w-11/12">
 		<div class="w-full sm:mx-5 lg:w-2/3 xl:w-9/12">
 			<button
-				class="sticky flex flex-row items-center justify-between w-full px-3 py-2 mb-3 transition-all rounded-b-lg shadow-lg noOutline active:bg-nord3 hover:bg-nord2 group top-16 bg-nord1 border-nord2"
+				class="sticky flex flex-row items-center justify-between w-full px-3 py-2 mb-3 transition-all rounded-b-lg shadow-lg z-5 noOutline active:bg-nord3 hover:bg-nord2 group top-16 bg-nord1 border-nord2"
 				@click="backButton"
 			>
 				<svg
