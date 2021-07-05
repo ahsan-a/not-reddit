@@ -2,13 +2,15 @@
 	<div class="flex ml-1 border-l-2 xl:ml-3 border-nord3 bg-nord1" :class="{ 'mt-6': location !== 'user', 'pb-8': location === 'user' }">
 		<div class="w-full ml-2 rounded-lg xl:ml-4">
 			<div class="flex flex-row items-center justify-between">
-				<div class="overflow-y-hidden">
+				<router-link :to="`/u/${comment.user?.id}`" class="overflow-y-hidden cursor-default">
 					<img
 						:src="comment.user?.image || require('../assets/defaultPfp.webp')"
-						class="hidden object-cover w-8 h-8 rounded-full md:inline"
+						class="hidden object-cover w-8 h-8 rounded-full cursor-pointer md:inline"
 					/>
-					<span class="font-semibold md:ml-3 text-md text-nord6">{{ comment.user?.name ?? '[deleted]' }}</span>
-				</div>
+					<span class="font-semibold cursor-pointer md:ml-3 text-md text-nord6 hover:underline">{{
+						comment.user?.name ?? '[deleted]'
+					}}</span>
+				</router-link>
 				<span class="float-right text-sm font-medium text-nord6">{{ createDateText(comment.created_at?.toDate()) }}</span>
 			</div>
 
