@@ -125,11 +125,7 @@ export default defineComponent({
 			if (!/^[0-9a-zA-Z]+$/.test(currentInput.name)) return alert('Your title must not contain special characters.');
 			if (!currentInput.name.replace(/\s/g, '').length) return alert('Your title cannot be empty.');
 			if (!currentInput.description.replace(/\s/g, '').length) return alert('Your description must not be empty.');
-			if (currentInput.image.length && !currentInput.image.match(/^https:\/\/cdn.discordapp.com\/\w+\/\d+\/.+.\w+$/gi))
-				return alert(`Your image must be blank or a  discord image link with no url parameters.
-				Example: https://cdn.discordapp.com/attachments/840294039861723166/855395382720331776/maxresdefault.png
-				To do this you can send an image to someone in a DM, click on the image, and copy the "Open Original" URL.
-				`);
+			if (currentInput.image.length && !currentInput.image.match(/^https:\/\//gi)) return alert(`Your image must be an https link.`);
 			if (store.subreddits.state.subreddits.some((x) => x.name.toLowerCase() === currentInput.name.toLowerCase()))
 				return alert('This subreddit already exists.');
 

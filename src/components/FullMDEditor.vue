@@ -1,5 +1,5 @@
 <template>
-	<div class="fixed z-20 hidden w-screen h-screen px-5 pt-5 border shadow-md border-nord2 rounded-xl bg-nord1 xl:block">
+	<div class="fixed z-50 hidden w-screen h-screen px-5 pt-5 border shadow-md border-nord2 rounded-xl bg-nord1 xl:block">
 		<span class="flex items-center justify-between w-full rounded-t-xl">
 			<h1 class="text-2xl font-semibold text-nord6">Markdown Editor</h1>
 			<button @click="store.createPost.state.fullscreen = false" class="noOutline">
