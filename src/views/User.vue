@@ -148,15 +148,26 @@ export default defineComponent({
 		const local = reactive({
 			menu: 'posts',
 			optionsInput: {
-				name: '',
-				image: '',
-				about: '',
-				admin: false,
+				name: store.user.state.currentUser?.name ?? 'New User',
+				image:
+					store.user.state.currentUser?.image ??
+					'https://cdn.discordapp.com/attachments/840294039861723166/855395382720331776/maxresdefault.png',
+				about: store.user.state.currentUser?.about ?? '',
+				admin: store.user.state.currentUser?.admin ?? false,
 			},
 		});
 
 		const user = toRefs(store.user.state).currentUser;
 		async function init() {
+			local.optionsInput = {
+				name: store.user.state.currentUser?.name ?? 'New User',
+				image:
+					store.user.state.currentUser?.image ||
+					'https://cdn.discordapp.com/attachments/840294039861723166/855395382720331776/maxresdefault.png',
+				about: store.user.state.currentUser?.about || '',
+				admin: store.user.state.currentUser?.admin || false,
+			};
+
 			local.menu = 'posts';
 			if (pages.some((x) => x === route.value.params.page)) local.menu = route.value.params.page.toString();
 
@@ -167,13 +178,6 @@ export default defineComponent({
 			user.value = null;
 			user.value = await store.users.actions.getUser(route.value.params.id.toString());
 			if (!store.user.state.currentUser) return router.push({ path: '/404' });
-
-			local.optionsInput = {
-				name: user.value?.name || 'error?!?!',
-				image: user.value?.image || '',
-				about: user.value?.about || '',
-				admin: user.value?.admin || false,
-			};
 
 			store.user.actions.bindSubmissions((route.value.params.id as string) || '');
 		}

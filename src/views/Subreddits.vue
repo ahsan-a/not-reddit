@@ -134,7 +134,7 @@ export default defineComponent({
 				return alert('This subreddit already exists.');
 
 			currentInput.description = currentInput.description.replace(/\r?\n|\r/g, ' ');
-			currentInput.user_id = store.auth.state.user.id || '3zmYQVHUzPPIp7mBeDV8O7ujMNr1';
+			currentInput.user_id = store.auth.state.user?.id || '3zmYQVHUzPPIp7mBeDV8O7ujMNr1';
 
 			await store.subreddits.actions.submitNewSubreddit(currentInput);
 			currentInput.name = '';

@@ -244,7 +244,7 @@ export default defineComponent({
 				post_id: store.post.state.currentPost.id || '',
 				parent_id: null,
 				subreddit_id: store.post.state.currentPost.subreddit_id || '',
-				user_id: store.auth.state.user.id || '',
+				user_id: store.auth.state.user?.id || '',
 			});
 
 			commentInput.value = '';
