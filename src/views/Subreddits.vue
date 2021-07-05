@@ -71,7 +71,7 @@
 							<td class="px-4 py-2">
 								<div class="flex flex-row items-center">
 									<img
-										:src="subreddit.image || require('../assets/defaultSub.svg')"
+										:src="subreddit.image ? `${subreddit.image}?size=64` : require('../assets/defaultSub.svg')"
 										class="object-cover w-10 h-10 ml-4 mr-4 rounded-full"
 									/>
 									<div class="text-sm font-medium break-words text-nord4 subreddit"> r/{{ subreddit.name }} </div>
@@ -125,7 +125,7 @@ export default defineComponent({
 			if (!/^[0-9a-zA-Z]+$/.test(currentInput.name)) return alert('Your title must not contain special characters.');
 			if (!currentInput.name.replace(/\s/g, '').length) return alert('Your title cannot be empty.');
 			if (!currentInput.description.replace(/\s/g, '').length) return alert('Your description must not be empty.');
-			if (currentInput.image.length && !currentInput.image.match(/^https:\/\/cdn.discordapp.com\/attachments\/\d+\/.+.\w+$/gi))
+			if (currentInput.image.length && !currentInput.image.match(/^https:\/\/cdn.discordapp.com\/\w+\/\d+\/.+.\w+$/gi))
 				return alert(`Your image must be blank or a  discord image link with no url parameters.
 				Example: https://cdn.discordapp.com/attachments/840294039861723166/855395382720331776/maxresdefault.png
 				To do this you can send an image to someone in a DM, click on the image, and copy the "Open Original" URL.

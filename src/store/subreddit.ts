@@ -89,7 +89,16 @@ const actions = {
 			state.subreddit = {};
 			state.posts = [];
 		}
-		if (activeSubListener.listener) activeSubListener.listener();
+		activeSubListener.listener?.();
+
+		if (store.user.state.currentUser) {
+			store.user.state = {
+				comments: [],
+				currentUser: null,
+				posts: [],
+			};
+		}
+
 		let firstLoad = true;
 		globalListener = posts.orderBy('created_at', 'desc').onSnapshot(async (serverPosts) => {
 			if (router.currentRoute.value.fullPath !== '/') return globalListener?.();
@@ -108,7 +117,8 @@ const actions = {
 			}
 			const scrollNeeded = state.allPosts.length < postsToUpdate.length;
 			state.allPosts = postsToUpdate;
-			state.posts = state.allPosts.slice(0, state.posts.length || 5);
+
+			state.posts = state.allPosts.slice(0, state.posts.length < 5 ? 5 : state.posts.length);
 
 			if (firstLoad) {
 				document.addEventListener('scroll', actions.homeScrollCheck);
@@ -123,7 +133,26 @@ const actions = {
 		if (!(Math.abs(window.innerHeight - (document.getElementById('sB')?.getBoundingClientRect().bottom ?? 0)) <= 1000)) return;
 		if (router.currentRoute.value.fullPath !== '/') return document.removeEventListener('scroll', actions.homeScrollCheck);
 
-		state.posts = state.allPosts.slice(0, state.posts.length + 4);
+		state.posts = state.allPosts.slice(0, state.posts.length + 5);
+	},
+
+	async getPost(id: string): Promise<Post | null> {
+		let post = state.allPosts.find((x) => x.id === id) ?? state.posts.find((x) => x.id === id);
+		if (post) return post;
+
+		const dbPost = await db
+			.collection('posts')
+			.doc(id)
+			.get();
+		if (!dbPost.exists) return null;
+
+		post = dbPost.data() as Post;
+
+		const user = await store.users.actions.getUser(post.user_id);
+		if (!user) post.deletedUser = true;
+		else post.user = user;
+
+		return post;
 	},
 };
 

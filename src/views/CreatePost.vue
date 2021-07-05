@@ -148,7 +148,6 @@ import { Subreddit } from '@/typings';
 import store from '@/store';
 
 import Navbar from '@/components/Navbar.vue';
-import Post from '@/components/Post.vue';
 import SubredditSidebar from '@/components/SubredditSidebar.vue';
 import Multiselect from '@vueform/multiselect';
 import FullMDEditor from '@/components/FullMDEditor.vue';
@@ -159,7 +158,6 @@ import taskLists from 'markdown-it-task-lists';
 export default defineComponent({
 	components: {
 		Navbar,
-		Post,
 		SubredditSidebar,
 		Multiselect,
 		FullMDEditor,

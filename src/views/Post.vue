@@ -132,6 +132,7 @@ export default defineComponent({
 	setup() {
 		const route = useRoute();
 		const router = useRouter();
+
 		const newCommentTextarea: Ref<HTMLTextAreaElement | null> = ref(null);
 		store.post.actions.getPost(route.params.id.toString(), true, true);
 
