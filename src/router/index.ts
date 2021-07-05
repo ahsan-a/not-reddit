@@ -27,13 +27,13 @@ const routes: Array<RouteRecordRaw> = [
 		component: () => import('@/views/CreatePost.vue'),
 	},
 	{
-		path: '/r/:subreddit/:id',
+		path: '/r/:subreddit/:id/:comment?',
 		name: 'Post',
 		component: () => import('@/views/Post.vue'),
 	},
 	{
-		path: '/u/:id',
-		name: 'Post',
+		path: '/u/:id/:page?',
+		name: 'User',
 		component: () => import('@/views/User.vue'),
 	},
 	{

@@ -1,9 +1,17 @@
 <template>
 	<div class="flex mb-3">
-		<img :src="comment.user?.image || require('../assets/defaultPfp.webp')" class="hidden object-cover w-10 h-10 rounded-full md:block" />
+		<div>
+			<router-link :to="`/u/${comment.user?.id}`" v-if="comment.user?.name" class="hidden w-10 h-10 md:block">
+				<img :src="comment.user?.image || require('../assets/defaultPfp.webp')" class="object-cover w-10 h-10 rounded-full" />
+			</router-link>
+			<img src="../assets/defaultPfp.webp" class="hidden object-cover w-10 h-10 rounded-full md:block" v-else />
+		</div>
 		<div class="w-full px-5 pt-3 mx-2 rounded-lg shadow-md bg-nord1 border-nord2">
-			<div class="flex flex-row items-center justify-between">
-				<span class="font-semibold text-md text-nord6">{{ comment.user?.name ?? '[deleted]' }}</span>
+			<div class="flex flex-row items-center justify-between overflow-y-hidden">
+				<span class="text-base font-semibold text-nord6" v-if="!comment.user?.name">[deleted]</span>
+				<router-link class="inline font-semibold z-1 text-md text-nord6 hover:underline" :to="`/u/${comment.user.id}`" v-else>{{
+					comment.user?.name
+				}}</router-link>
 				<span class="float-right text-sm font-medium text-nord6">{{ createDateText(comment.created_at?.toDate()) }}</span>
 			</div>
 
@@ -64,7 +72,7 @@
 				</button>
 				<button
 					class="inline px-2 py-1 ml-2 transition-all rounded-md group hover:bg-nord2 text-nord4 hover:text-nord6 noOutline"
-					v-if="store.auth.state.user?.admin"
+					v-if="store.auth.state.user?.admin || store.auth.state.user?.id === comment.user_id"
 					@click="store.post.actions.deleteComment(comment.id)"
 				>
 					<svg
@@ -109,7 +117,7 @@ export default defineComponent({
 			type: Object as PropType<Comment>,
 		},
 	},
-	setup(props) {
+	setup() {
 		const createDateText = (date: Date) => timeago.format(date);
 		const createCommentVisible = ref(false);
 

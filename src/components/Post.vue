@@ -15,10 +15,18 @@
 					/>
 				</router-link>
 			</div>
-			<div class="float-right w-auto ml-1 md:ml-10 justify-self-end min-w-max" v-else>
-				<span class="font-medium text-nord6">{{ post.deletedUser ? '[deleted]' : post.user?.name }}</span>
-				<img :src="post.user?.image || require('../assets/defaultPfp.webp')" class="inline ml-2 rounded-full md:ml-4 obejct-cover h-9 w-9" />
+			<div class="float-right w-auto ml-1 md:ml-10 justify-self-end min-w-max" v-else-if="post.deletedUser">
+				<span class="font-medium text-nord6">[deleted]</span>
+				<img :src="require('../assets/defaultPfp.webp')" class="inline ml-2 rounded-full md:ml-4 obejct-cover h-9 w-9" />
 			</div>
+			<router-link
+				class="float-right w-auto ml-1 overflow-y-hidden md:ml-10 justify-self-end min-w-max group"
+				v-else-if="!post.deletedUser"
+				:to="`/u/${post.user_id}`"
+			>
+				<span class="text-base font-medium text-nord6 group-hover:underline">{{ post.user.name }}</span>
+				<img :src="post.user.image || require('../assets/defaultPfp.webp')" class="inline ml-2 rounded-full md:ml-4 obejct-cover h-9 w-9" />
+			</router-link>
 		</div>
 		<vue3-markdown-it
 			:source="store.createPost.actions.purify(post.content)"
@@ -63,7 +71,7 @@
 			class="max-w-full overflow-hidden break-words markdownRender"
 			:class="{ postClipped: location !== 'post' }"
 		/>
-		<div class="mt-10 mb-3">
+		<div class="mt-10 mb-3 overflow-hidden">
 			<router-link
 				:to="`/r/${subreddit.name}/${post.id}`"
 				class="inline px-2 py-1 pb-2 transition-all rounded-md group hover:bg-nord2 text-nord4 hover:text-nord6"
@@ -134,12 +142,15 @@
 
 				<span class="ml-2 text-sm font-medium">Delete</span>
 			</button>
-			<span class="float-right pt-1.5 text-sm text-nord5 sm:ml-1.5">
+			<span class="float-right pt-1.5 text-sm text-nord5 sm:ml-1.5 overflow-y-hidden">
 				<span class="hidden sm:inline"
 					>{{ createDateText(post.created_at?.toDate()) }} {{ location === 'home' ? 'by ' : location === 'post' ? 'on ' : '' }}</span
 				>
-				<span class="ml-0.5 font-semibold" v-if="location === 'home'">{{ post.deletedUser ? '[deleted]' : post.user?.name }}</span>
-				<router-link class="ml-0.5 font-semibold hover:underline" :to="`/r/${subreddit?.name}`" v-if="location === 'post'"
+				<span class="ml-0.5 font-semibold" v-if="location === 'home' && post.deletedUser">[deleted] </span>
+				<router-link class="hover:underline ml-0.5 font-semibold text-sm" v-else-if="location === 'home'" :to="`/u/${post.user_id}`">{{
+					post.user.name
+				}}</router-link>
+				<router-link class="ml-0.5 font-semibold hover:underline" :to="`/r/${subreddit?.name}`" v-else-if="location === 'post'"
 					>r/{{ subreddit?.name }}</router-link
 				>
 			</span>
@@ -207,7 +218,10 @@ export default defineComponent({
 
 		async function deletePost() {
 			await store.post.actions.deletePost(props.post.id);
-			if (props.location === 'post') router.push({ path: `/r/${subreddit.value?.name}` });
+			if (props.location === 'post') {
+				if (window.history.state.back) router.go(-1);
+				else router.push({ path: `/r/${subreddit.value?.name}` });
+			}
 		}
 
 		return {

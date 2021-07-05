@@ -103,7 +103,7 @@ const actions = {
 
 		await result.set(comment);
 	},
-	async deleteComment(id: string) {
+	async deleteComment(id: string): Promise<void> {
 		const data = await db
 			.collection('comments')
 			.where('parent_id', '==', id)

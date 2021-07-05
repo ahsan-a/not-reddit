@@ -1,8 +1,8 @@
 <template>
-	<div class="flex mt-6 ml-1 border-l-2 xl:ml-3 border-nord3">
-		<div class="w-full ml-2 rounded-lg xl:ml-4 bg-nord1 border-nord2">
+	<div class="flex ml-1 border-l-2 xl:ml-3 border-nord3 bg-nord1" :class="{ 'mt-6': location !== 'user', 'pb-8': location === 'user' }">
+		<div class="w-full ml-2 rounded-lg xl:ml-4">
 			<div class="flex flex-row items-center justify-between">
-				<div>
+				<div class="overflow-y-hidden">
 					<img
 						:src="comment.user?.image || require('../assets/defaultPfp.webp')"
 						class="hidden object-cover w-8 h-8 rounded-full md:inline"
@@ -55,7 +55,7 @@
 				class="max-w-full mt-4 overflow-hidden break-words text-md text-nord4 markdownRender"
 			/>
 
-			<div class="flex flex-row mt-3 mb-2">
+			<div class="flex flex-row mt-3 mb-2" v-if="location !== 'user'">
 				<button
 					class="inline px-2 py-1 transition-all rounded-md group hover:bg-nord2 text-nord4 hover:text-nord6 noOutline"
 					v-if="store.auth.state.isLoggedIn"
@@ -115,14 +115,14 @@ export default defineComponent({
 		comment: {
 			type: Object as PropType<Comment>,
 		},
-		imageOutside: {
-			type: Boolean,
+		location: {
+			type: String as PropType<'user' | 'post'>,
 		},
 	},
 	components: {
 		CreateComment,
 	},
-	setup(props) {
+	setup() {
 		const createDateText = (date: Date) => timeago.format(date);
 		const createCommentVisible = ref(false);
 

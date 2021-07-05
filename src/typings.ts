@@ -7,6 +7,7 @@ export interface User {
 	image: string;
 	lastLoggedIn?: firebase.firestore.FieldValue | firebase.firestore.Timestamp;
 	name: string;
+	about?: string;
 }
 
 export interface Subreddit {
@@ -54,8 +55,11 @@ export interface Comment {
 	created_at: firebase.firestore.Timestamp;
 	updated_at: firebase.firestore.Timestamp;
 	user?: User;
-	deletedUser?: true;
 	comments?: Comment[];
+	post?: Post;
+	subreddit?: Subreddit;
+	deletedUser?: true;
+	deletedPost?: true;
 }
 
 export interface CreateComment {
