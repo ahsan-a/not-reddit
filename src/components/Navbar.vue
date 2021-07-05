@@ -13,7 +13,7 @@
 					<div class="hidden lg:block">
 						<div class="flex items-baseline ml-10 space-x-4 text-sm font-medium tracking-wider text-nord4">
 							<router-link
-								class="px-3 py-2 text-sm font-medium uppercase transition-colors rounded-md cursor-pointer text-nord5 hover:bg-nord3 noOutline"
+								class="px-3 py-2 text-sm font-medium uppercase transition-colors rounded-md cursor-pointer text-nord5 hover:bg-nord3"
 								to="/"
 							>
 								Home
@@ -23,7 +23,7 @@
 					<div class="hidden md:block">
 						<div class="flex items-baseline ml-10 space-x-4 text-sm font-medium tracking-wider text-nord4">
 							<router-link
-								class="px-3 py-2 text-sm font-medium uppercase transition-colors rounded-md cursor-pointer text-nord5 hover:bg-nord3 noOutline"
+								class="px-3 py-2 text-sm font-medium uppercase transition-colors rounded-md cursor-pointer text-nord5 hover:bg-nord3"
 								to="/subreddits"
 							>
 								Subreddits
@@ -33,7 +33,7 @@
 					<div class="hidden md:block">
 						<div class="flex items-baseline ml-10 space-x-4 text-sm font-medium tracking-wider text-nord4">
 							<router-link
-								class="px-3 py-2 text-sm font-medium uppercase transition-colors rounded-md cursor-pointer text-nord5 hover:bg-nord3 noOutline"
+								class="px-3 py-2 text-sm font-medium uppercase transition-colors rounded-md cursor-pointer text-nord5 hover:bg-nord3"
 								to="/create"
 							>
 								Create
@@ -74,9 +74,12 @@
 								aria-labelledby="user-menu"
 								v-if="profileHover"
 							>
-								<p class="block px-4 py-2 text-sm font-semibold text-nord6">
+								<router-link
+									:to="`/u/${store.auth.state.user.id}`"
+									class="block px-4 py-2 text-sm font-semibold transition-colors hover:bg-nord2 text-nord6"
+								>
 									{{ store.auth.state.user.name }}
-								</p>
+								</router-link>
 								<a
 									href="#"
 									class="block px-4 py-2 text-sm transition-colors rounded-md text-nord6 hover:bg-nord2"
@@ -146,35 +149,48 @@
 		<!-- Mobile menu, show/hide based on menu state. -->
 		<div class="fixed w-screen shadow-lg md:hidden bg-nord1" id="mobile-menu" v-if="profileHover">
 			<div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-				<button
-					class="block px-3 py-2 text-base font-medium text-center transition-colors rounded-md text-nord5 hover:bg-nord2 noOutline"
-					@click="
-						PHFalse();
-						router.push({ path: '/subreddits' });
-					"
+				<router-link
+					class="block px-3 py-2 text-base font-medium transition-colors rounded-md text-nord5 hover:bg-nord2 noOutline"
+					to="/subreddits"
+					@click="PHFalse"
 				>
 					Subreddits
-				</button>
-				<button
-					class="block px-3 py-2 text-base font-medium text-center transition-colors rounded-md text-nord5 hover:bg-nord2 noOutline"
-					@click="
-						PHFalse();
-						router.push({ path: '/login' });
-					"
+				</router-link>
+				<router-link
+					class="block px-3 py-2 text-base font-medium transition-colors rounded-md text-nord5 hover:bg-nord2 "
+					to="/not-admin"
+					@click="PHFalse"
+					v-if="store.auth.state.user?.admin"
+				>
+					Admin
+				</router-link>
+				<router-link
+					class="block px-3 py-2 text-base font-medium transition-colors rounded-md text-nord5 hover:bg-nord2"
+					@click="PHFalse()"
+					to="/login"
 					v-if="!store.auth.state.isLoggedIn"
 				>
 					Sign In
-				</button>
-				<button
-					class="block px-3 py-2 text-base font-medium text-center transition-colors rounded-md text-nord5 hover:bg-nord2 noOutline"
+				</router-link>
+				<router-link
+					class="flex flex-row items-center px-3 py-2 text-base font-medium transition-colors border-t rounded-md border-nord0 text-nord5 hover:bg-nord2 "
+					@click="PHFalse()"
+					:to="`/u/${store.auth.state.user?.id}`"
+					v-if="store.auth.state.isLoggedIn"
+				>
+					<img :src="store.auth.state.user?.image || require('../assets/defaultPfp.webp')" class="object-cover h-auto mr-3 w-9" />
+					View Profile
+				</router-link>
+				<a
+					class="block px-3 py-2 text-base font-medium transition-colors rounded-md text-nord5 hover:bg-nord2 "
 					@click="
 						PHFalse();
 						firebase.auth().signOut();
 					"
-					v-else
+					v-if="store.auth.state.isLoggedIn"
 				>
 					Sign Out
-				</button>
+				</a>
 			</div>
 		</div>
 	</nav>

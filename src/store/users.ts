@@ -1,7 +1,6 @@
 import { reactive } from 'vue';
 import { User } from '@/typings';
 import db from '@/db';
-import firebase from '@/firebase';
 
 interface State {
 	users: User[];

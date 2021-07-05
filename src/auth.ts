@@ -19,6 +19,7 @@ firebase.auth().onAuthStateChanged(async (user) => {
 				admin: false,
 				createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 				lastLoggedIn: firebase.firestore.FieldValue.serverTimestamp(),
+				about: '',
 			};
 			await db
 				.collection('users')
