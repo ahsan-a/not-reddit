@@ -127,7 +127,7 @@
 
 			<button
 				class="inline px-2 py-1 ml-2 transition-all rounded-md md:ml-4 hover:bg-nord2 text-nord4 hover:text-nord6 group noOutline"
-				v-if="store.auth.state.user.admin || post.user_id === store.auth.state.user.id"
+				v-if="store.auth.state.user?.admin || post.user_id === store.auth.state.user?.id"
 				@click="deletePost()"
 			>
 				<svg

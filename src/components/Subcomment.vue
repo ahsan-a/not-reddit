@@ -51,7 +51,7 @@
 				:plugins="[
 					{
 						plugin: taskLists,
-						options: { label: true },
+						options: { enabled: true },
 					},
 				]"
 				class="max-w-full mt-4 overflow-hidden break-words text-md text-nord4 markdownRender"

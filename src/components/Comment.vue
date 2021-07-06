@@ -49,6 +49,12 @@
 						wink: [],
 					},
 				}"
+				:plugins="[
+					{
+						plugin: taskLists,
+						options: { enabled: true },
+					},
+				]"
 				class="max-w-full mt-4 overflow-hidden break-words text-md text-nord4 markdownRender"
 			/>
 			<div class="flex flex-row mt-3 mb-2">
