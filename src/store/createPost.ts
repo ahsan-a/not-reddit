@@ -112,6 +112,7 @@ const actions = {
 				// and if you do the URL is checked for safety
 				img: ['src'],
 				video: ['src', 'controls', 'poster'],
+				marquee: ['behaviour'],
 			},
 			// Lots of these won't come up by default because we don't allow them
 			selfClosing: ['img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta'],
