@@ -2,10 +2,18 @@ import { reactive } from 'vue';
 // import firebase from '@/firebase';
 import db from '@/db';
 import store from '.';
-import { Post, User, Comment, CreateComment } from '@/typings';
+import { Post, User, Comment } from '@/typings';
 import router from '@/router';
 import firebase from '@/firebase';
 
+interface CreateComment {
+	content: string;
+	parent_id: string | null;
+	post_id: string;
+	subreddit_id: string;
+	user_id: string;
+	id_token?: string;
+}
 interface State {
 	currentPost: Partial<Post>;
 }
@@ -95,13 +103,20 @@ const actions = {
 
 		return comment;
 	},
-	async createComment(comment: CreateComment): Promise<void> {
-		const result = db.collection('comments').doc();
-		comment.id = result.id;
-		comment.created_at = firebase.firestore.FieldValue.serverTimestamp();
-		comment.updated_at = firebase.firestore.FieldValue.serverTimestamp();
+	async createComment(comment: CreateComment): Promise<boolean> {
+		comment.id_token = (await firebase.auth().currentUser?.getIdToken()) || '';
+		const data = await fetch(`${process.env.VUE_APP_backend}comment/createComment`, {
+			method: 'POST',
+			body: JSON.stringify(comment),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((res) => res.json())
+			.catch((e) => alert(e));
 
-		await result.set(comment);
+		if (!data.success) alert(`Server Error: ${data.error}`);
+		return Boolean(data.success);
 	},
 	async deleteComment(id: string): Promise<void> {
 		const data = await db

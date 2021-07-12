@@ -10,22 +10,29 @@ interface State {
 const state: State = reactive({
 	subreddits: [],
 });
+
+interface CreateSubreddit {
+	name: string;
+	description: string;
+	user_id: string;
+	image?: string;
+	id_token?: string;
+}
 const actions = {
-	async submitNewSubreddit(subreddit: Partial<Subreddit>): Promise<void> {
-		const result = db.collection('subreddits').doc();
-		subreddit.id = result.id;
-		subreddit.created_at = firebase.firestore.FieldValue.serverTimestamp();
-		subreddit.name = subreddit.name?.replace(/\s/g, '');
-		subreddit.name_lowercase = subreddit.name?.toLowerCase() ?? '';
-		subreddit.description = subreddit.description?.replace(/\r?\n|\r/g, ' ');
-		subreddit.approved = false;
+	async submitNewSubreddit(subreddit: CreateSubreddit): Promise<void> {
+		subreddit.id_token = (await firebase.auth().currentUser?.getIdToken()) || '';
+		const data = await fetch(`${process.env.VUE_APP_backend}subreddit/createSubreddit`, {
+			method: 'POST',
+			body: JSON.stringify(subreddit),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((res) => res.json())
+			.catch((e) => alert(e));
 
-		await db
-			.collection('subreddits')
-			.doc(subreddit.id)
-			.set(subreddit);
-
-		alert('Subreddits have to be approved by a human moderator. Contact ahsan#4403 if you want a higher chance of approval.');
+		if (data.success) alert('Subreddits have to be approved by a human moderator. Contact ahsan#4403 if you want a higher chance of approval.');
+		else alert(`Server Error: ${data.error}`);
 	},
 	async bindSubreddits(): Promise<void> {
 		if (state.snapshot) return;

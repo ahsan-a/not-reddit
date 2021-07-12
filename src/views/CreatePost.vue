@@ -77,7 +77,7 @@
 				<span class="flex flex-row items-center justify-center mt-6">
 					<div class="flex flex-row items-center">
 						<button class="mx-3 button-blue" type="button" @click="local.mdPreview = true">Preview</button>
-						<button class="mx-3 button-green" type="submit">Submit</button>
+						<button class="mx-3 button-green" type="submit" id="submitPost">Submit</button>
 					</div>
 				</span>
 			</form>
@@ -205,6 +205,7 @@ export default defineComponent({
 			});
 		});
 
+		// minimise this
 		function textAreaHandler(e: KeyboardEvent) {
 			if (!mdEditor.value) return;
 			let contentArr = [...mdEditor.value.value];
@@ -291,6 +292,7 @@ export default defineComponent({
 			mdEditor.value.selectionEnd = cursorStart;
 			mdEditor.value.selectionStart = cursorStart;
 		}
+		// lol
 
 		async function createPost() {
 			if (!store.auth.state.isLoggedIn) return;
@@ -301,20 +303,29 @@ export default defineComponent({
 
 			if (!subreddit) return alert("This subreddit doesn't exist or could not be found.");
 
-			await store.createPost.actions.createPost({
+			const submitButton = document.getElementById('submitPost') as HTMLButtonElement;
+			submitButton.disabled = true;
+
+			const res = await store.createPost.actions.createPost({
 				title: postInput.value.title,
 				content: store.createPost.actions.purify(postInput.value.content),
 				subreddit_id: subreddit.id,
 				user_id: store.auth.state.user?.id,
 			});
-			let subredditToPush = postInput.value.subreddit;
-			postInput.value = {
-				title: '',
-				subreddit: 'r/General',
-				content: '',
-			};
-			router.push({ path: `/${subredditToPush}` });
+
+			submitButton.disabled = false;
+
+			if (res) {
+				let subredditToPush = postInput.value.subreddit;
+				postInput.value = {
+					title: '',
+					subreddit: 'r/General',
+					content: '',
+				};
+				router.push({ path: `/${subredditToPush}` });
+			}
 		}
+
 		return {
 			store,
 			router,

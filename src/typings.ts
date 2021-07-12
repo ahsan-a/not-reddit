@@ -35,16 +35,6 @@ export interface Post {
 	comments: Comment[];
 }
 
-export interface CreatePost {
-	title: string;
-	content: string;
-	subreddit_id: string;
-	user_id: string;
-	id: string;
-	created_at: firebase.firestore.FieldValue;
-	updated_at: firebase.firestore.FieldValue;
-}
-
 export interface Comment {
 	content: string;
 	id: string;
@@ -60,15 +50,4 @@ export interface Comment {
 	subreddit?: Subreddit;
 	deletedUser?: true;
 	deletedPost?: true;
-}
-
-export interface CreateComment {
-	content: string;
-	id?: string;
-	parent_id: string | null;
-	post_id: string;
-	subreddit_id: string;
-	user_id: string;
-	created_at?: firebase.firestore.FieldValue;
-	updated_at?: firebase.firestore.FieldValue;
 }
