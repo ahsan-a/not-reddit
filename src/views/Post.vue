@@ -103,7 +103,9 @@
 				</div>
 			</div>
 
-			<Comment v-for="comment in store.post.state.currentPost.comments" :key="comment.id" :comment="comment" />
+			<div class="max-w-full">
+				<Comment v-for="comment in store.post.state.currentPost.comments" :key="comment.id" :comment="comment" />
+			</div>
 		</div>
 		<SubredditSidebar class="hidden lg:w-1/3 lg:block xl:w-3/12" />
 	</div>
