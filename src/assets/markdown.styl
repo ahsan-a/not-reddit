@@ -67,7 +67,7 @@
 		}
 	}
 	img {
-		max-width: 300px
+		max-width: 600px
 		margin: 20px auto
 	}
 	mark {
@@ -83,5 +83,20 @@
 	.task-list-item-checkbox {
 		cursor: pointer
 		pointer-events: none
+	}
+	pre {
+		::-webkit-scrollbar {
+			height: 11px
+		}
+		::-webkit-scrollbar-track {
+			background: nord0
+		}
+		::-webkit-scrollbar-thumb {
+			background: nord2
+			border-radius: 10px;
+		}
+		::-webkit-scrollbar-thumb:hover {
+			background: nord3;
+		}
 	}
 }
