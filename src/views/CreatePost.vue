@@ -77,7 +77,15 @@
 				<span class="flex flex-row items-center justify-center mt-6">
 					<div class="flex flex-row items-center">
 						<button class="mx-3 button-blue" type="button" @click="local.mdPreview = true">Preview</button>
-						<button class="mx-3 button-green" type="submit" id="submitPost">Submit</button>
+						<div class="flex flex-row items-center ml-3">
+							<button class="button-green" type="submit" id="submitPost">Submit</button>
+							<img
+								v-if="local.submittingPost"
+								src="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif"
+								alt="Submitting Post"
+								class="w-8 h-auto ml-3"
+							/>
+						</div>
 					</div>
 				</span>
 			</form>
@@ -167,9 +175,10 @@ export default defineComponent({
 		const router = useRouter();
 		const mdEditor: Ref<HTMLTextAreaElement | null> = ref(null);
 
-		const local: { subreddit: Subreddit | null } = reactive({
+		const local: { subreddit: Subreddit | null; mdPreview: boolean; submittingPost: boolean } = reactive({
 			subreddit: null,
 			mdPreview: false,
+			submittingPost: false,
 		});
 
 		const postInput = toRefs(store.createPost.state).newPost;
@@ -303,6 +312,8 @@ export default defineComponent({
 
 			if (!subreddit) return alert("This subreddit doesn't exist or could not be found.");
 
+			local.submittingPost = true;
+
 			const submitButton = document.getElementById('submitPost') as HTMLButtonElement;
 			submitButton.disabled = true;
 
@@ -313,6 +324,7 @@ export default defineComponent({
 				user_id: store.auth.state.user?.id,
 			});
 
+			local.submittingPost = false;
 			submitButton.disabled = false;
 
 			if (res) {

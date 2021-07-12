@@ -6,7 +6,7 @@
 			</router-link>
 			<img src="../assets/defaultPfp.webp" class="hidden object-cover w-10 h-10 rounded-full md:block" v-else />
 		</div>
-		<div class="flex flex-col w-11/12 px-5 pt-3 mx-2 rounded-lg shadow-md bg-nord1 border-nord2">
+		<div class="flex flex-col px-5 pt-3 mx-2 rounded-lg shadow-md commentw bg-nord1 border-nord2">
 			<div class="flex flex-row items-center justify-between overflow-y-hidden">
 				<span class="text-base font-semibold text-nord6" v-if="!comment.user?.name">[deleted]</span>
 				<router-link class="inline font-semibold z-1 text-md text-nord6 hover:underline" :to="`/u/${comment.user.id}`" v-else>{{
@@ -137,4 +137,9 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style lang="stylus" scoped>
+// i don't know what this does or why this works, it just does
+.commentw {
+	width: 95%
+}
+</style>
