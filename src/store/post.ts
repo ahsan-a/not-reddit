@@ -89,9 +89,11 @@ const actions = {
 	},
 
 	async getCommentChild(comment: Comment, allComments: Comment[]): Promise<any> {
-		const user = await store.users.actions.getUser(comment.user_id);
-		if (!user) comment.deletedUser = true;
-		else comment.user = user;
+		if (!comment.deleted) {
+			const user = await store.users.actions.getUser(comment.user_id);
+			if (!user) comment.deletedUser = true;
+			else comment.user = user;
+		}
 
 		const comments = allComments.filter((x) => x.parent_id === comment.id);
 		if (!comments.length) return comment;
@@ -118,26 +120,25 @@ const actions = {
 		if (!data.success) alert(`Server Error: ${data.error}`);
 		return Boolean(data.success);
 	},
-	async deleteComment(id: string): Promise<void> {
-		const data = await db
-			.collection('comments')
-			.where('parent_id', '==', id)
-			.get();
+	async deleteComment(id: string): Promise<any> {
+		const data = await fetch(`${process.env.VUE_APP_backend}comment/deleteComment`, {
+			method: 'post',
+			body: JSON.stringify({
+				id,
+				id_token: (await firebase.auth().currentUser?.getIdToken()) || '',
+				user_id: store.auth.state.user?.id,
+			}),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((res) => res.json())
+			.catch((e) => {
+				console.log(e);
+			});
 
-		if (!data.empty) {
-			for (const comment of data.docs) {
-				await this.deleteComment(await comment.data().id);
-			}
-		} else {
-			await db
-				.collection('comments')
-				.doc(id)
-				.delete();
-		}
-
-		db.collection('comments')
-			.doc(id)
-			.delete();
+		if (!data?.success) alert(`Server Error: ${data.error}`);
+		return Boolean(data.success);
 	},
 };
 

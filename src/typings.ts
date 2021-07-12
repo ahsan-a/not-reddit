@@ -44,6 +44,7 @@ export interface Comment {
 	user_id: string;
 	created_at: firebase.firestore.Timestamp;
 	updated_at: firebase.firestore.Timestamp;
+	deleted?: boolean | undefined;
 	user?: User;
 	comments?: Comment[];
 	post?: Post;
