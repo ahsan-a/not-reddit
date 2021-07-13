@@ -55,19 +55,6 @@ const actions = {
 		if (setTitle) document.title = `${state.currentPost.title} | (not) reddit`;
 		if (bindComments) this.bindComments(id);
 	},
-	async deletePost(id: string): Promise<any> {
-		await db
-			.collection('posts')
-			.doc(id)
-			.delete();
-
-		const comments = await db
-			.collection('comments')
-			.where('post_id', '==', id)
-			.get();
-
-		for (const comment of comments.docs) comment.ref.delete();
-	},
 	async bindComments(post_id: string): Promise<any> {
 		commentsSnapshot?.();
 		commentsSnapshot = db
@@ -139,6 +126,25 @@ const actions = {
 
 		if (!data?.success) alert(`Server Error: ${data.error}`);
 		return Boolean(data.success);
+	},
+	async deletePost(id: string): Promise<any> {
+		const data = await fetch(`${process.env.VUE_APP_backend}post/deletePost`, {
+			method: 'post',
+			body: JSON.stringify({
+				id,
+				id_token: (await firebase.auth().currentUser?.getIdToken()) || '',
+				user_id: store.auth.state.user?.id,
+			}),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((res) => res.json())
+			.catch((e) => {
+				console.log(e);
+			});
+
+		if (!data?.success) alert(`Server Error: ${data.error}`);
 	},
 };
 

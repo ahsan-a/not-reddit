@@ -204,7 +204,7 @@ export default defineComponent({
 			input.about = input.about.replace(/\n{3}\n*/g, '\n\n');
 			input.name = input.name.replace(/\n+/g, '');
 
-			const res = await store.user.actions.updateProfile({
+			await store.user.actions.updateProfile({
 				name: input.name,
 				image: input.image,
 				about: input.about,
