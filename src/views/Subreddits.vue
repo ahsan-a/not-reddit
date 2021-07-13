@@ -115,7 +115,6 @@ export default defineComponent({
 		const currentInput = reactive({
 			name: '',
 			description: '',
-			user_id: '',
 			image: '',
 		});
 
@@ -130,9 +129,15 @@ export default defineComponent({
 				return alert('This subreddit already exists.');
 
 			currentInput.description = currentInput.description.replace(/\r?\n|\r/g, ' ');
-			currentInput.user_id = store.auth.state.user?.id || '3zmYQVHUzPPIp7mBeDV8O7ujMNr1';
 
-			await store.subreddits.actions.submitNewSubreddit(currentInput);
+			const newSubreddit: { name: string; description: string; user_id: string; image?: string; id_token?: string } = {
+				name: currentInput.name,
+				description: currentInput.description,
+				user_id: store.auth.state.user?.id || '',
+			};
+
+			if (currentInput.image.replace(/\s/g, '').length) newSubreddit.image = currentInput.image;
+			await store.subreddits.actions.submitNewSubreddit(newSubreddit);
 			currentInput.name = '';
 			currentInput.description = '';
 			currentInput.image = '';

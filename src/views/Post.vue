@@ -49,7 +49,7 @@
 						<span class="flex flex-row items-center justify-center mt-6">
 							<div class="flex flex-row items-center">
 								<button class="mx-3 button-blue" type="button" @click="mdPreview = true">Preview</button>
-								<button class="mx-3 button-green" type="submit">Submit</button>
+								<button class="mx-3 button-green" type="submit" id="submitCommentButton">Submit</button>
 							</div>
 						</span>
 					</form>
@@ -151,6 +151,7 @@ export default defineComponent({
 			newCommentTextarea.value.style.height = `${newCommentTextarea.value.scrollHeight}px`;
 		});
 
+		// minimise this
 		function textAreaHandler(e: KeyboardEvent) {
 			if (!newCommentTextarea.value) return;
 			let contentArr = [...newCommentTextarea.value.value];
@@ -241,6 +242,10 @@ export default defineComponent({
 		async function createComment() {
 			if (!commentInput.value.replace(/\s+/g, '').length) return alert('Your comment must not be empty.');
 
+			const button = document.getElementById('submitCommentButton') as HTMLButtonElement;
+
+			button.disabled = true;
+
 			await store.post.actions.createComment({
 				content: commentInput.value,
 				post_id: store.post.state.currentPost.id || '',
@@ -248,6 +253,8 @@ export default defineComponent({
 				subreddit_id: store.post.state.currentPost.subreddit_id || '',
 				user_id: store.auth.state.user?.id || '',
 			});
+
+			button.disabled = false;
 
 			commentInput.value = '';
 		}

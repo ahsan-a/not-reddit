@@ -125,7 +125,6 @@
 import { defineComponent, toRefs, reactive, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import store from '@/store';
-import { User } from '@/typings';
 import * as timeago from 'timeago.js';
 
 import Navbar from '@/components/Navbar.vue';
@@ -205,10 +204,13 @@ export default defineComponent({
 			input.about = input.about.replace(/\n{3}\n*/g, '\n\n');
 			input.name = input.name.replace(/\n+/g, '');
 
-			let updatedProfile = Object.assign(store.user.state.currentUser || {});
-			Object.assign(updatedProfile, input);
-
-			store.user.actions.updateProfile(updatedProfile as User);
+			await store.user.actions.updateProfile({
+				name: input.name,
+				image: input.image,
+				about: input.about,
+				admin: input.admin,
+				id: user.value.id,
+			});
 		}
 
 		return {

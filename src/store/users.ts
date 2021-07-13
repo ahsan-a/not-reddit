@@ -10,10 +10,11 @@ const state: State = reactive({
 });
 
 const actions = {
-	async getUser(id: string): Promise<User | null> {
-		const user = state.users.find((x) => x.id === id);
-
-		if (user) return user;
+	async getUser(id: string, force?: boolean): Promise<User | null> {
+		if (!force) {
+			const user = state.users.find((x) => x.id === id);
+			if (user) return user;
+		}
 
 		const dbUser = await db
 			.collection('users')

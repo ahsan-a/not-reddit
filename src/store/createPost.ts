@@ -1,7 +1,6 @@
 import firebase from '../firebase';
-import db from '@/db';
+// import db from '@/db';
 import { reactive } from 'vue';
-import { CreatePost } from '@/typings';
 import sanitizeHtml from 'sanitize-html';
 // import store from '.';
 
@@ -13,17 +12,30 @@ const state = reactive({
 	},
 	fullscreen: false,
 });
+interface CreatePost {
+	title: string;
+	content: string;
+	subreddit_id: string;
+	user_id: string;
+	id_token?: string;
+}
 
 const actions = {
-	async createPost(post: Partial<CreatePost>): Promise<void> {
-		const result = db.collection('posts').doc();
-		post.id = result.id;
-		post.created_at = firebase.firestore.FieldValue.serverTimestamp();
-		post.updated_at = firebase.firestore.FieldValue.serverTimestamp();
-		await db
-			.collection('posts')
-			.doc(post.id)
-			.set(post);
+	async createPost(post: Partial<CreatePost>): Promise<boolean> {
+		post.id_token = (await firebase.auth().currentUser?.getIdToken()) || '';
+
+		const data = await fetch(`${process.env.VUE_APP_backend}post/createPost`, {
+			method: 'POST',
+			body: JSON.stringify(post),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((res) => res.json())
+			.catch((e) => alert(e));
+
+		if (!data.success) alert(`Server Error: ${data.error}`);
+		return Boolean(data.success);
 	},
 
 	purify: (text: string): string =>

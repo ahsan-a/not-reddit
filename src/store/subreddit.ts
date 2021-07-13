@@ -101,7 +101,7 @@ const actions = {
 
 		let firstLoad = true;
 		globalListener = posts.orderBy('created_at', 'desc').onSnapshot(async (serverPosts) => {
-			if (router.currentRoute.value.fullPath !== '/') return globalListener?.();
+			if (router.currentRoute.value.name !== 'Home') return globalListener?.();
 
 			const postsToUpdate: Post[] = [];
 			for (let i = 0; i < serverPosts.docs.length; i++) {
