@@ -23,7 +23,6 @@ interface CreatePost {
 const actions = {
 	async createPost(post: Partial<CreatePost>): Promise<boolean> {
 		post.id_token = (await firebase.auth().currentUser?.getIdToken()) || '';
-		console.log(post);
 
 		const data = await fetch(`${process.env.VUE_APP_backend}post/createPost`, {
 			method: 'POST',
