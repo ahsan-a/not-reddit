@@ -3,6 +3,7 @@ import { User, Post, Comment } from '@/typings';
 import db from '@/db';
 import router from '@/router';
 import store from '@/store';
+import firebase from '@/firebase';
 
 interface State {
 	currentUser: User | null;
@@ -86,19 +87,33 @@ const actions = {
 			});
 	},
 
-	async updateProfile(profile: User): Promise<void> {
-		const dbUser = await db
-			.collection('users')
-			.doc(profile.id)
-			.get();
-		if (!dbUser.exists) return;
+	async updateProfile(profile: { name: string; image: string; about: string; admin: boolean; id: string }): Promise<boolean | void> {
+		const body: { [index: string]: any } = {
+			name: profile.name,
+			image: profile.image,
+			admin: profile.admin,
+			about: profile.about,
+			user_id: store.auth.state.user?.id || '',
+			id_token: (await firebase.auth().currentUser?.getIdToken()) || '',
+		};
 
-		await db
-			.collection('users')
-			.doc(profile.id)
-			.set(profile)
-			.then(() => alert('Updated user.'))
-			.catch(() => alert('An error occurred.'));
+		if (store.auth.state.user?.admin) body.target_id = profile.id;
+
+		const res = await fetch(`${process.env.VUE_APP_backend}user/update`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(body),
+		})
+			.then((res) => res.json())
+			.catch((e) => alert(e));
+
+		if (!res.success) return alert(res.error);
+
+		state.currentUser = await store.users.actions.getUser(profile.id, true);
+
+		return true;
 	},
 };
 

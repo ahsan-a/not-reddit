@@ -2,6 +2,7 @@ import { reactive } from 'vue';
 import db from '@/db';
 import router from '@/router';
 import store from '.';
+import firebase from '@/firebase';
 
 import { Subreddit } from '@/typings';
 const state: { subreddits: Subreddit[] } = reactive({
@@ -18,7 +19,7 @@ const actions = {
 			.where('approved', '==', false)
 			.orderBy('created_at', 'desc')
 			.onSnapshot(async (data) => {
-				if (router.currentRoute.value.fullPath !== '/not-admin') return listener();
+				if (router.currentRoute.value.name !== 'Admin') return listener();
 				state.subreddits = [];
 				for (const doc of data.docs) {
 					const subreddit = doc.data() as Subreddit;
@@ -28,14 +29,29 @@ const actions = {
 			});
 	},
 	async denySubreddit(id: string): Promise<void> {
-		db.collection('subreddits')
-			.doc(id)
-			.delete();
+		const res = await fetch(`${process.env.VUE_APP_backend}subreddit/admin/deny`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ id, user_id: store.auth.state.user?.id || '', id_token: (await firebase.auth().currentUser?.getIdToken()) || '' }),
+		})
+			.then((res) => res.json())
+			.catch((e) => alert(e));
+		if (res.success === false) alert(res.error);
 	},
 	async approveSubreddit(id: string): Promise<void> {
-		db.collection('subreddits')
-			.doc(id)
-			.update({ approved: true });
+		const res = await fetch(`${process.env.VUE_APP_backend}subreddit/admin/approve`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ id, user_id: store.auth.state.user?.id || '', id_token: (await firebase.auth().currentUser?.getIdToken()) || '' }),
+		})
+			.then((res) => res.json())
+			.catch((e) => alert(e));
+
+		if (res.success === false) alert(res.error);
 	},
 };
 
