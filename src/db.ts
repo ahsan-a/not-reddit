@@ -1,4 +1,5 @@
 import firebase from './firebase';
-const db = firebase.firestore();
+const firestore = firebase.firestore();
+const rtdb = firebase.database();
 
-export default db;
+export { firestore, rtdb };

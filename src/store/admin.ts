@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
-import db from '@/db';
+import { firestore } from '@/db';
 import router from '@/router';
 import store from '.';
 import firebase from '@/firebase';
@@ -14,7 +14,7 @@ let listener: () => void;
 const actions = {
 	async bindSubreddits(): Promise<void> {
 		listener?.();
-		listener = db
+		listener = firestore
 			.collection('subreddits')
 			.where('approved', '==', false)
 			.orderBy('created_at', 'desc')

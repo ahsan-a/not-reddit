@@ -55,7 +55,28 @@
 					<div class="flex items-center ml-4 md:ml-6">
 						<!-- Profile dropdown -->
 						<div class="ml-3 menu" v-if="store.auth.state.isLoggedIn">
-							<div>
+							<div class="flex flex-row items-center">
+								<router-link
+									class="p-1 mr-5 text-gray-400 rounded-full hover:text-nord4"
+									:class="{ 'text-nord14': store.notifications.state.newNotifs }"
+									to="/notifications"
+								>
+									<svg
+										class="w-6 h-6"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+										aria-hidden="true"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+										/>
+									</svg>
+								</router-link>
 								<button
 									class="flex items-center max-w-xs text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-nord1 focus:ring-nord5"
 									id="user-menu"
@@ -155,6 +176,15 @@
 					@click="PHFalse"
 				>
 					Subreddits
+				</router-link>
+				<router-link
+					class="flex flex-row items-center px-3 py-2 text-base font-medium transition-colors rounded-md text-nord5 hover:bg-nord2 noOutline"
+					to="/notifications"
+					v-if="store.auth.state.isLoggedIn"
+					@click="PHFalse"
+				>
+					<div class="p-1.5 bg-nord14 mr-2 rounded-full inline" v-if="store.notifications.state.newNotifs" />
+					Notifications
 				</router-link>
 				<router-link
 					class="block px-3 py-2 text-base font-medium transition-colors rounded-md text-nord5 hover:bg-nord2 "

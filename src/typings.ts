@@ -52,3 +52,18 @@ export interface Comment {
 	deletedUser?: true;
 	deletedPost?: true;
 }
+
+export interface Notification {
+	title: string;
+	body?: string;
+	type: 'interaction' | 'error' | 'popup';
+	id: string;
+	sent_by?: string;
+	unread: boolean;
+	content_id?: string;
+	content_type?: 'post' | 'comment';
+	created_at: any;
+	url?: string;
+	sender?: User;
+	deletedSender?: true;
+}

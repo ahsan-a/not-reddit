@@ -8,6 +8,7 @@ import post from './post';
 import createPost from './createPost';
 import admin from './admin';
 import user from './user';
+import notifications from './notifications';
 
 const store = reactive({
 	auth,
@@ -18,6 +19,7 @@ const store = reactive({
 	createPost,
 	admin,
 	user,
+	notifications,
 });
 
 export default store;
