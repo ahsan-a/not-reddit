@@ -41,6 +41,11 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'Admin',
 		component: () => import('@/views/Admin.vue'),
 	},
+	{
+		path: '/notifications',
+		name: 'Notifications',
+		component: () => import('@/views/Notifications.vue'),
+	},
 
 	{
 		path: '/:catchAll(.*)',

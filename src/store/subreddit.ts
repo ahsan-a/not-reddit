@@ -1,10 +1,10 @@
-import db from '@/db';
+import { firestore } from '@/db';
 import { reactive } from 'vue';
 import router from '@/router';
 import { Post, Subreddit } from '@/typings';
 import store from '.';
 
-const posts = db.collection('posts');
+const posts = firestore.collection('posts');
 interface stateType {
 	subreddit: Partial<Subreddit>;
 	posts: Post[];
@@ -31,7 +31,7 @@ const actions = {
 		if (!id) {
 			let subInSubreddits = store.subreddits.state.subreddits.find((x) => x.name.toLowerCase() === name.toLowerCase());
 			if (!subInSubreddits) {
-				const subreddit = await db
+				const subreddit = await firestore
 					.collection('subreddits')
 					.where('name_lowercase', '==', name.toLowerCase())
 					.get();
@@ -43,7 +43,7 @@ const actions = {
 		} else {
 			let subInSubreddits = store.subreddits.state.subreddits.find((x) => x.id === name);
 			if (!subInSubreddits) {
-				const subreddit = await db
+				const subreddit = await firestore
 					.collection('subreddits')
 					.doc(name)
 					.get();
@@ -140,7 +140,7 @@ const actions = {
 		let post = state.allPosts.find((x) => x.id === id) ?? state.posts.find((x) => x.id === id);
 		if (post) return post;
 
-		const dbPost = await db
+		const dbPost = await firestore
 			.collection('posts')
 			.doc(id)
 			.get();

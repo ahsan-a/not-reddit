@@ -1,4 +1,4 @@
-import db from '@/db';
+import { firestore } from '@/db';
 import { reactive } from 'vue';
 import firebase from '../firebase';
 import { Subreddit } from '@/typings';
@@ -36,7 +36,7 @@ const actions = {
 	},
 	async bindSubreddits(): Promise<void> {
 		if (state.snapshot) return;
-		state.snapshot = db
+		state.snapshot = firestore
 			.collection('subreddits')
 			.where('approved', '==', true)
 			.orderBy('created_at')
@@ -53,7 +53,7 @@ const actions = {
 			const subreddit = state.subreddits.find((x) => x.id === id);
 			if (subreddit) return subreddit;
 
-			const dbSubreddit = await db
+			const dbSubreddit = await firestore
 				.collection('subreddits')
 				.doc(id)
 				.get();
@@ -64,7 +64,7 @@ const actions = {
 			const subreddit = state.subreddits.find((x) => x.name === name);
 			if (subreddit) return subreddit;
 
-			const dbSubreddit = await db
+			const dbSubreddit = await firestore
 				.collection('subreddits')
 				.where('name', '==', name)
 				.get();

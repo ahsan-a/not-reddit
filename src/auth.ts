@@ -1,11 +1,11 @@
 import firebase from './firebase';
 import store from './store';
-import db from '@/db';
+import { firestore } from '@/db';
 
 firebase.auth().onAuthStateChanged(async (user) => {
 	if (user) {
 		let currentUser: any = {};
-		const doc = await db
+		const doc = await firestore
 			.collection('users')
 			.doc(user.uid)
 			.get();
@@ -21,7 +21,7 @@ firebase.auth().onAuthStateChanged(async (user) => {
 				lastLoggedIn: firebase.firestore.FieldValue.serverTimestamp(),
 				about: '',
 			};
-			await db
+			await firestore
 				.collection('users')
 				.doc(user.uid)
 				.set(currentUser);
@@ -29,12 +29,13 @@ firebase.auth().onAuthStateChanged(async (user) => {
 			currentUser = doc.data();
 			currentUser.lastLoggedIn = firebase.firestore.FieldValue.serverTimestamp();
 
-			await db
+			await firestore
 				.collection('users')
 				.doc(user.uid)
 				.set(currentUser);
 		}
 		store.auth.mutations.setUser(currentUser);
+		store.notifications.actions.bindNotifications(currentUser.id);
 	} else {
 		store.auth.mutations.setUser(null);
 	}

@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 import { User, Post, Comment } from '@/typings';
-import db from '@/db';
+import { firestore } from '@/db';
 import router from '@/router';
 import store from '@/store';
 import firebase from '@/firebase';
@@ -33,7 +33,7 @@ const actions = {
 
 		listeners.posts?.();
 
-		listeners.posts = db
+		listeners.posts = firestore
 			.collection('posts')
 			.where('user_id', '==', id)
 			.orderBy('created_at', 'desc')
@@ -56,7 +56,7 @@ const actions = {
 			});
 
 		listeners.comments?.();
-		listeners.comments = db
+		listeners.comments = firestore
 			.collection('comments')
 			.where('user_id', '==', id)
 			.orderBy('created_at', 'desc')

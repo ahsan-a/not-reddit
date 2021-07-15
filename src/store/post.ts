@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 // import firebase from '@/firebase';
-import db from '@/db';
+import { firestore } from '@/db';
 import store from '.';
 import { Post, User, Comment } from '@/typings';
 import router from '@/router';
@@ -25,10 +25,11 @@ let commentsSnapshot: () => void;
 
 const actions = {
 	async getPost(id: string, bindComments?: boolean, setTitle?: boolean): Promise<any> {
+		state.currentPost = {};
 		let post = store.subreddit.state.allPosts.find((x) => x.id === id) || store.subreddit.state.posts.find((x) => x.id === id);
 
 		if (!post) {
-			const dbPost = await db
+			const dbPost = await firestore
 				.collection('posts')
 				.doc(id)
 				.get();
@@ -38,7 +39,7 @@ const actions = {
 			post.user = store.users.state.users.find((x) => x.id === post?.user_id);
 
 			if (!post.user) {
-				const dbUser = await db
+				const dbUser = await firestore
 					.collection('users')
 					.doc(post.user_id)
 					.get();
@@ -57,7 +58,7 @@ const actions = {
 	},
 	async bindComments(post_id: string): Promise<any> {
 		commentsSnapshot?.();
-		commentsSnapshot = db
+		commentsSnapshot = firestore
 			.collection('comments')
 			.where('post_id', '==', post_id)
 			.orderBy('created_at', 'desc')
@@ -104,8 +105,8 @@ const actions = {
 			.then((res) => res.json())
 			.catch((e) => alert(e));
 
-		if (!data.success) alert(`Server Error: ${data.error}`);
-		return Boolean(data.success);
+		if (!data?.success) alert(`Server Error: ${data.error}`);
+		return Boolean(data?.success);
 	},
 	async deleteComment(id: string): Promise<any> {
 		const data = await fetch(`${process.env.VUE_APP_backend}comment/deleteComment`, {

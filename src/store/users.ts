@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 import { User } from '@/typings';
-import db from '@/db';
+import { firestore } from '@/db';
 
 interface State {
 	users: User[];
@@ -16,7 +16,7 @@ const actions = {
 			if (user) return user;
 		}
 
-		const dbUser = await db
+		const dbUser = await firestore
 			.collection('users')
 			.doc(id)
 			.get();
