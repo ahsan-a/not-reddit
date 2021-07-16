@@ -965,7 +965,7 @@ module.exports = {
 		strokeWidth: ['responsive'],
 		tableLayout: ['responsive'],
 		textAlign: ['responsive'],
-		textColor: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus', 'active'],
+		textColor: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus'],
 		textDecoration: ['responsive', 'group-hover', 'focus-within', 'hover', 'focus'],
 		textOpacity: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus'],
 		textOverflow: ['responsive'],
