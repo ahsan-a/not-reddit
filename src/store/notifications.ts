@@ -32,45 +32,6 @@ const actions = {
 
 					if (notif.type !== 'interaction') continue;
 
-					switch (notif.content_type) {
-						case 'comment': {
-							const comment = await firestore
-								.collection('comments')
-								.where('id', '==', notif.content_id)
-								.get();
-
-							if (comment.empty) {
-								actions.deleteNotification(notif.content_id || '');
-								continue;
-							}
-
-							if (
-								(
-									await firestore
-										.collection('posts')
-										.where('id', '==', comment.docs[0].data().post_id)
-										.get()
-								).empty
-							) {
-								actions.deleteNotification(notif.content_id || '');
-								continue;
-							}
-							break;
-						}
-						case 'post':
-							if (
-								(
-									await firestore
-										.collection('posts')
-										.where('id', '==', notif.content_id)
-										.get()
-								).empty
-							)
-								continue;
-
-							break;
-					}
-
 					const user = await store.users.actions.getUser(notif.sent_by || '');
 
 					if (!user) {
