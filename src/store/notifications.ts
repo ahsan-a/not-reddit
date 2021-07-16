@@ -32,8 +32,6 @@ const actions = {
 
 					if (notif.type !== 'interaction') continue;
 
-					console.log(notif.content_type);
-
 					switch (notif.content_type) {
 						case 'comment': {
 							const comment = await firestore
