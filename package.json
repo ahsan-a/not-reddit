@@ -9,7 +9,7 @@
 	},
 	"dependencies": {
 		"@adamdehaven/vue-custom-tooltip": "^2.0.4",
-		"@tailwindcss/postcss7-compat": "^2.0.2",
+		"@tailwindcss/postcss7-compat": "2.0.2",
 		"@vueform/multiselect": "^1.5.0",
 		"autoprefixer": "^9",
 		"core-js": "^3.6.5",
