@@ -16,7 +16,7 @@
 		"firebase": "^8.6.5",
 		"highlight.js": "^10.7.3",
 		"markdown-it-task-lists": "^2.1.1",
-		"postcss": "^7",
+		"postcss": "7",
 		"sanitize-html": "^2.4.0",
 		"tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
 		"timeago.js": "^4.0.2",
