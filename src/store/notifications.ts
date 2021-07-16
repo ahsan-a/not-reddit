@@ -10,15 +10,17 @@ const state: { notifications: Notification[]; newNotifs: boolean } = reactive({
 	newNotifs: false,
 });
 
-// let listener: (a: firebase.database.DataSnapshot | null, b?: string | null | undefined) => any;
+let listener: undefined | ((a: firebase.database.DataSnapshot | null, b?: string | null | undefined) => any);
 
 // for dynamic notif unread-ing
-// let notifWatcher: WatchStopHandle | undefined;
-// let previousRoute: string;
+let notifWatcher: WatchStopHandle | undefined;
+let previousRoute: string;
 
 const actions = {
 	async bindNotifications(user_id: string): Promise<void> {
-		rtdb.ref(`/notifications/${user_id}`)
+		if (listener) return;
+		listener = rtdb
+			.ref(`/notifications/${user_id}`)
 			.orderByChild('created_at')
 			.on('value', async (snapshot) => {
 				const data = await snapshot.val();
@@ -39,24 +41,22 @@ const actions = {
 					notif.sender = user;
 					notifs.push(notif);
 				}
-
-				if (state.notifications.length < notifs.length && router.currentRoute.value.name !== 'Notifications') state.newNotifs = true;
-
 				state.notifications = notifs;
+
+				if (state.notifications.some((x) => x.unread)) state.newNotifs = true;
+				else state.newNotifs = false;
 
 				// dynamic notif unreading
 
-				// if (notifWatcher) return;
+				if (notifWatcher) return;
 
-				// function notifReadHandler() {
-				// 	if (previousRoute === 'Notifications') {
-				// 		state.notifications.forEach((_, i) => (state.notifications[i].unread = false));
-				// 	}
-				// 	previousRoute = router.currentRoute.value.name as string;
-				// }
-				// notifReadHandler();
+				async function notifReadHandler() {
+					if (previousRoute === 'Notifications') await actions.readNotifications();
+					previousRoute = router.currentRoute.value.name as string;
+				}
+				notifReadHandler();
 
-				// notifWatcher = watch(router.currentRoute, notifReadHandler);
+				notifWatcher = watch(router.currentRoute, notifReadHandler);
 			});
 	},
 	async deleteNotification(id: string): Promise<void> {
@@ -79,11 +79,10 @@ const actions = {
 		if (!data?.success) alert(`Server Error: ${data?.error}`);
 	},
 
-	async readNotification(id: string): Promise<void> {
-		const data = await fetch(`${process.env.VUE_APP_backend}notification/readNotification`, {
+	async readNotifications(): Promise<void> {
+		const data = await fetch(`${process.env.VUE_APP_backend}notification/readNotifications`, {
 			method: 'post',
 			body: JSON.stringify({
-				id,
 				id_token: (await firebase.auth().currentUser?.getIdToken()) || '',
 				user_id: store.auth.state.user?.id,
 			}),

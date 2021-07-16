@@ -7,7 +7,7 @@
 			<div class="mt-5" v-if="store.notifications.state.notifications.length">
 				<div v-for="(notif, i) in store.notifications.state.notifications" :key="notif.id">
 					<div
-						class="px-4 py-3 transition duration-150 ease-out border-t border-l border-r text-nord6 border-nord0 hover:bg-nord2"
+						class="px-4 transition duration-150 ease-out border-t border-l border-r text-nord6 border-nord0 hover:bg-nord2"
 						:class="{
 							border: store.notifications.state.notifications.length <= 1,
 							'border-b': store.notifications.state.notifications.length - 1 === i,
@@ -20,7 +20,7 @@
 						}"
 					>
 						<div class="flex flex-row items-center justify-between">
-							<div class="flex items-center w-11/12 cursor-pointer" @click="handleNotifClick(notif)">
+							<div class="flex items-center w-11/12 py-3 cursor-pointer" @click="handleNotifClick(notif)">
 								<router-link
 									v-if="notif.type === 'interaction' && notif.sender?.image"
 									class="mr-4 rounded-full w-9 h-9"
@@ -39,7 +39,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="flex flex-row items-center">
+							<div class="flex flex-row items-center py-3">
 								<tip label="Delete">
 									<button class="focus:outline-none" @click="store.notifications.actions.deleteNotification(notif.id)">
 										<svg
@@ -89,7 +89,6 @@ export default defineComponent({
 		function handleNotifClick(notif: Notification) {
 			if (!notif.url?.length) return;
 			router.push(notif.url);
-			store.notifications.actions.readNotification(notif.id);
 		}
 		return {
 			store,
