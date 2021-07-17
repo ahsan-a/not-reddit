@@ -5,9 +5,10 @@ import { Notification } from '@/typings';
 import store from '.';
 import router from '@/router';
 
-const state: { notifications: Notification[]; newNotifs: boolean } = reactive({
+const state: { notifications: Notification[]; newNotifs: boolean; cleaning: boolean } = reactive({
 	notifications: [],
 	newNotifs: false,
+	cleaning: false,
 });
 
 let listener: undefined | ((a: firebase.database.DataSnapshot | null, b?: string | null | undefined) => any);
@@ -42,10 +43,13 @@ const actions = {
 					notif.sender = user;
 					notifs.push(notif);
 				}
+				notifs.sort((a, b) => b.created_at - a.created_at);
 				state.notifications = notifs;
 
 				if (state.notifications.some((x) => x.unread)) state.newNotifs = true;
 				else state.newNotifs = false;
+
+				actions.cleanNotifications();
 
 				// dynamic notif unreading
 
@@ -97,6 +101,26 @@ const actions = {
 			});
 
 		if (!data?.success) alert(`Server Error: ${data?.error}`);
+	},
+	async cleanNotifications(): Promise<void> {
+		if (state.cleaning) return;
+		state.cleaning = true;
+
+		await fetch(`${process.env.VUE_APP_backend}notification/cleanNotifications`, {
+			method: 'post',
+			body: JSON.stringify({
+				id_token: (await firebase.auth().currentUser?.getIdToken()) || '',
+				user_id: store.auth.state.user?.id,
+			}),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((res) => res.json())
+			.catch((e) => {
+				console.log(e);
+			});
+		state.cleaning = false;
 	},
 };
 

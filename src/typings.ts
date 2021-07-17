@@ -62,7 +62,7 @@ export interface Notification {
 	unread: boolean;
 	content_id?: string;
 	content_type?: 'post' | 'comment';
-	created_at: any;
+	created_at: number;
 	url?: string;
 	sender?: User;
 	deletedSender?: true;
