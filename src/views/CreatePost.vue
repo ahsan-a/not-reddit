@@ -171,7 +171,7 @@ export default defineComponent({
 		FullMDEditor,
 	},
 	setup() {
-		document.title = 'create a post | (not) reddit';
+		document.title = 'Create Post | (not) reddit';
 		const router = useRouter();
 		const mdEditor: Ref<HTMLTextAreaElement | null> = ref(null);
 

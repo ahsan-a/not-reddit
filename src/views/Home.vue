@@ -62,7 +62,12 @@
 			<Post v-for="post in store.subreddit.state.posts" :key="post.id" :post="post" location="home" />
 			<div class="w-full h-1" id="sB" key="bottomScrollCalc"></div>
 		</transition-group>
-		<SubredditSidebar class="hidden lg:w-1/3 lg:block xl:w-3/12" />
+		<div class="hidden lg:w-1/3 lg:block xl:w-3/12">
+			<div class="sticky mt-6 top-16">
+				<SubredditSidebar />
+				<InfoSidebar />
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -73,12 +78,14 @@ import store from '@/store';
 import Navbar from '@/components/Navbar.vue';
 import Post from '@/components/Post.vue';
 import SubredditSidebar from '@/components/SubredditSidebar.vue';
+import InfoSidebar from '@/components/InfoSidebar.vue';
 
 export default defineComponent({
 	components: {
 		Navbar,
 		Post,
 		SubredditSidebar,
+		InfoSidebar,
 	},
 	setup() {
 		document.title = '(not) reddit';

@@ -46,6 +46,16 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'Notifications',
 		component: () => import('@/views/Notifications.vue'),
 	},
+	{
+		path: '/about',
+		name: 'About',
+		component: () => import('@/views/about/Index.vue'),
+	},
+	{
+		path: '/about/privacy',
+		name: 'Privacy Policy',
+		component: () => import('@/views/about/Privacy.vue'),
+	},
 
 	{
 		path: '/:catchAll(.*)',

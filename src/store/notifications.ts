@@ -1,5 +1,5 @@
 import firebase from '@/firebase';
-import { rtdb, firestore } from '@/db';
+import { rtdb } from '@/db';
 import { reactive, watch, WatchStopHandle } from 'vue';
 import { Notification } from '@/typings';
 import store from '.';
