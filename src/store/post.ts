@@ -103,7 +103,10 @@ const actions = {
 			},
 		})
 			.then((res) => res.json())
-			.catch((e) => alert(e));
+			.catch((e) => {
+				alert(e);
+				return false;
+			});
 
 		if (!data?.success) alert(`Server Error: ${data.error}`);
 		return Boolean(data?.success);

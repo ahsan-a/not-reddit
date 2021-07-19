@@ -1,5 +1,5 @@
 import firebase from '@/firebase';
-import { rtdb, firestore } from '@/db';
+import { rtdb } from '@/db';
 import { reactive, watch, WatchStopHandle } from 'vue';
 import { Notification } from '@/typings';
 import store from '.';
@@ -11,7 +11,7 @@ const state: { notifications: Notification[]; newNotifs: boolean; cleaning: bool
 	cleaning: false,
 });
 
-let listener: undefined | ((a: firebase.database.DataSnapshot | null, b?: string | null | undefined) => any);
+let listener: undefined | firebase.database.Query;
 
 // for dynamic notif unread-ing
 let notifWatcher: WatchStopHandle | undefined;
@@ -19,50 +19,50 @@ let previousRoute: string;
 
 const actions = {
 	async bindNotifications(user_id: string): Promise<void> {
-		if (listener) return;
-		listener = rtdb
-			.ref(`/notifications/${user_id}`)
-			.orderByChild('created_at')
-			.on('value', async (snapshot) => {
-				const data = await snapshot.val();
+		if (listener) listener.off();
 
-				const notifs: Notification[] = [];
+		listener = rtdb.ref(`/notifications/${user_id}`).orderByChild('created_at');
+		listener.on('value', async (snapshot) => {
+			if (!store.auth.state.isLoggedIn) return;
+			const data = await snapshot.val();
 
-				for (const index in data) {
-					const notif = data[index] as Notification;
+			const notifs: Notification[] = [];
 
-					if (notif.type !== 'interaction') continue;
+			for (const index in data) {
+				const notif = data[index] as Notification;
 
-					const user = await store.users.actions.getUser(notif.sent_by || '');
+				if (notif.type !== 'interaction') continue;
 
-					if (!user) {
-						notif.deletedSender = true;
-						continue;
-					}
+				const user = await store.users.actions.getUser(notif.sent_by || '');
 
-					notif.sender = user;
-					notifs.push(notif);
+				if (!user) {
+					notif.deletedSender = true;
+					continue;
 				}
-				notifs.sort((a, b) => b.created_at - a.created_at);
-				state.notifications = notifs;
 
-				if (state.notifications.some((x) => x.unread)) state.newNotifs = true;
-				else state.newNotifs = false;
+				notif.sender = user;
+				notifs.push(notif);
+			}
+			notifs.sort((a, b) => b.created_at - a.created_at);
+			state.notifications = notifs;
 
-				actions.cleanNotifications();
+			if (state.notifications.some((x) => x.unread)) state.newNotifs = true;
+			else state.newNotifs = false;
 
-				// dynamic notif unreading
+			actions.cleanNotifications();
 
-				if (notifWatcher) return;
+			// dynamic notif unreading
 
-				async function notifReadHandler() {
-					if (previousRoute === 'Notifications' && store.auth.state.isLoggedIn) await actions.readNotifications();
-					previousRoute = router.currentRoute.value.name as string;
-				}
-				notifReadHandler();
+			if (notifWatcher) return;
 
-				notifWatcher = watch(router.currentRoute, notifReadHandler);
-			});
+			async function notifReadHandler() {
+				if (previousRoute === 'Notifications' && store.auth.state.isLoggedIn) await actions.readNotifications();
+				previousRoute = router.currentRoute.value.name as string;
+			}
+			notifReadHandler();
+
+			notifWatcher = watch(router.currentRoute, notifReadHandler);
+		});
 	},
 	async deleteNotification(id: string): Promise<void> {
 		const data = await fetch(`${process.env.VUE_APP_backend}notification/deleteNotification`, {

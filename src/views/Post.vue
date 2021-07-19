@@ -255,7 +255,6 @@ export default defineComponent({
 			});
 
 			button.disabled = false;
-
 			commentInput.value = '';
 		}
 
