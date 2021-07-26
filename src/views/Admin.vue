@@ -85,6 +85,7 @@ export default defineComponent({
 		SubredditSidebar,
 	},
 	setup() {
+		document.title = 'Admin | (not) reddit';
 		store.admin.actions.bindSubreddits();
 
 		return {

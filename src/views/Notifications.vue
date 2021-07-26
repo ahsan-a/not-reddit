@@ -83,6 +83,7 @@ export default defineComponent({
 		SubredditSidebar,
 	},
 	setup() {
+		document.title = 'Notifications | (not) reddit';
 		const router = useRouter();
 		store.notifications.state.newNotifs = false;
 
