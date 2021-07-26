@@ -57,12 +57,12 @@
 			</div>
 		</div>
 	</div>
-	<div class="flex w-full pt-2 mx-auto xl:w-9/12 lg:w-11/12">
-		<transition-group name="posts" tag="div" class="w-full mt-6 sm:mx-5 lg:w-2/3 xl:w-9/12">
+	<div class="flex justify-between w-full pt-2 mx-auto xl:w-9/12 lg:w-11/12">
+		<transition-group name="posts" tag="div" class="w-full max-w-full mt-6 sm:mx-5 lg:w-8/12 xl:w-3/4">
 			<Post v-for="post in store.subreddit.state.posts" :key="post.id" :post="post" location="home" />
 			<div class="w-full h-1" id="sB" key="bottomScrollCalc"></div>
 		</transition-group>
-		<SubredditSidebar class="hidden lg:w-1/3 lg:block xl:w-3/12" />
+		<SubredditSidebar class="hidden lg:w-4/12 lg:block xl:w-1/4 min-w-max" />
 	</div>
 </template>
 

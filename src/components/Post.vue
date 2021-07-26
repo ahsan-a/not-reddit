@@ -1,8 +1,8 @@
 <template>
 	<div
-		class="flex flex-col w-full px-5 pt-5 mb-8 overflow-hidden transition-all rounded-lg shadow-md md:px-8 hover:shadow-xl bg-nord1 border-nord2 text-nord4 hover:text-nord5"
+		class="flex flex-col px-5 pt-5 mb-8 overflow-hidden transition-all rounded-lg shadow-md w-49/50 max-w-49/50 md:px-8 hover:shadow-xl bg-nord1 border-nord2 text-nord4 hover:text-nord5"
 	>
-		<div class="flex flex-row items-stretch justify-between w-full mb-5">
+		<div class="flex flex-row items-stretch justify-between mb-5">
 			<div class="flex flex-row items-end titleMaxW ">
 				<h1 class="overflow-hidden text-3xl font-bold break-words md:text-4xl lh50 text-nord6">{{ post.title }}</h1>
 			</div>
@@ -28,47 +28,9 @@
 				<img :src="post.user.image || require('../assets/defaultPfp.webp')" class="inline ml-2 rounded-full md:ml-4 obejct-cover h-9 w-9" />
 			</router-link>
 		</div>
-		<vue3-markdown-it
-			:source="store.createPost.actions.purify(post.content)"
-			:html="true"
-			:breaks="true"
-			:linkify="true"
-			:emoji="{
-				shortcuts: {
-					angry: [],
-					blush: [],
-					broken_heart: [],
-					confused: [],
-					cry: [],
-					frowning: [],
-					heart: [],
-					imp: [],
-					innocent: [],
-					joy: [],
-					kissing: [],
-					laughing: [],
-					neutral_face: [],
-					open_mouth: [],
-					rage: [],
-					smile: [],
-					smiley: [],
-					smiling_imp: [],
-					sob: [],
-					stuck_out_tongue: [],
-					sunglasses: [],
-					sweat: [],
-					sweat_smile: [],
-					unamused: [],
-					wink: [],
-				},
-			}"
-			:plugins="[
-				{
-					plugin: taskLists,
-					options: { enabled: true },
-				},
-			]"
-			class="max-w-full overflow-hidden break-words markdownRender"
+		<div
+			v-html="store.createPost.actions.purify(post.content)"
+			class="w-full max-w-full overflow-hidden break-words markdownRender"
 			:class="{ postClipped: location !== 'post' }"
 		/>
 		<div class="mt-10 mb-3 overflow-hidden">
@@ -156,7 +118,7 @@
 			</span>
 		</div>
 
-		<div class="flex flex-row items-center mb-6 just" v-if="shareEnabled">
+		<div class="flex flex-row items-center mb-6" v-if="shareEnabled">
 			<input
 				type="text"
 				:value="`https://not-reddit.vercel.app/r/${subreddit.name}/${post.id}`"
@@ -254,13 +216,9 @@ export default defineComponent({
 	background-color: nord9
 }
 .postClipped {
-	@media (max-width: 1023px) {
-		max-height: 400px
-	}
-	@media (min-width: 1024px) {
-		display: -webkit-box;
-		-webkit-line-clamp: 15;
-		-webkit-box-orient: vertical;
-	}
+	display: -webkit-box;
+	-webkit-line-clamp: 15;
+	-webkit-box-orient: vertical;
+	max-height: 400px
 }
 </style>

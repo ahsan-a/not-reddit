@@ -14,46 +14,8 @@
 				<span class="float-right text-sm font-medium text-nord6">{{ createDateText(comment.created_at?.toDate()) }}</span>
 			</div>
 
-			<vue3-markdown-it
-				:source="store.createPost.actions.purify(comment.content)"
-				:html="true"
-				:breaks="true"
-				:linkify="true"
-				:emoji="{
-					shortcuts: {
-						angry: [],
-						blush: [],
-						broken_heart: [],
-						confused: [],
-						cry: [],
-						frowning: [],
-						heart: [],
-						imp: [],
-						innocent: [],
-						joy: [],
-						kissing: [],
-						laughing: [],
-						neutral_face: [],
-						open_mouth: [],
-						rage: [],
-						smile: [],
-						smiley: [],
-						smiling_imp: [],
-						sob: [],
-						stuck_out_tongue: [],
-						sunglasses: [],
-						sweat: [],
-						sweat_smile: [],
-						unamused: [],
-						wink: [],
-					},
-				}"
-				:plugins="[
-					{
-						plugin: taskLists,
-						options: { enabled: true },
-					},
-				]"
+			<div
+				v-html="store.createPost.actions.purify(comment.content)"
 				class="max-w-full mt-4 overflow-hidden break-words text-md text-nord4 markdownRender"
 			/>
 
