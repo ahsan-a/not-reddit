@@ -28,47 +28,9 @@
 			<h1 class="mb-5 text-3xl font-semibold text-nord6">
 				Markdown Preview
 			</h1>
-			<vue3-markdown-it
-				:source="store.createPost.actions.purify(commentInput)"
-				:html="true"
-				:breaks="true"
-				:linkify="true"
-				:emoji="{
-					shortcuts: {
-						angry: [],
-						blush: [],
-						broken_heart: [],
-						confused: [],
-						cry: [],
-						frowning: [],
-						heart: [],
-						imp: [],
-						innocent: [],
-						joy: [],
-						kissing: [],
-						laughing: [],
-						neutral_face: [],
-						open_mouth: [],
-						rage: [],
-						smile: [],
-						smiley: [],
-						smiling_imp: [],
-						sob: [],
-						stuck_out_tongue: [],
-						sunglasses: [],
-						sweat: [],
-						sweat_smile: [],
-						unamused: [],
-						wink: [],
-					},
-				}"
+			<div
+				v-html="store.createPost.actions.purify(commentInput)"
 				class="max-w-full overflow-hidden text-sm break-words text-nord5 markdownRender"
-				:plugins="[
-					{
-						plugin: taskLists,
-						options: { label: true },
-					},
-				]"
 			/>
 
 			<span class="flex flex-row items-center justify-center mt-6">

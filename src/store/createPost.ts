@@ -1,8 +1,23 @@
 import firebase from '../firebase';
-// import db from '@/db';
 import { reactive } from 'vue';
 import sanitizeHtml from 'sanitize-html';
-// import store from '.';
+
+import markdown from 'markdown-it';
+
+const md = new markdown({
+	breaks: true,
+	html: true,
+	linkify: true,
+	typographer: false,
+	xhtmlOut: true,
+})
+	.use(require('markdown-it-abbr'))
+	.use(require('markdown-it-footnote'))
+	.use(require('markdown-it-highlightjs'))
+	.use(require('markdown-it-sub'))
+	.use(require('markdown-it-sup'))
+	.use(require('markdown-it-task-lists'), { enabled: true })
+	.use(require('markdown-it-toc'));
 
 const state = reactive({
 	newPost: {
@@ -39,102 +54,30 @@ const actions = {
 	},
 
 	purify: (text: string): string =>
-		sanitizeHtml(text, {
-			allowedTags: [
-				'a',
-				'abbr',
-				'address',
-				'article',
-				'aside',
-				'b',
-				'bdi',
-				'bdo',
-				'blockquote',
-				'br',
-				'caption',
-				'cite',
-				'code',
-				'col',
-				'colgroup',
-				'data',
-				'dd',
-				'details',
-				'dfn',
-				'div',
-				'dl',
-				'dt',
-				'em',
-				'figcaption',
-				'figure',
-				'footer',
-				'h1',
-				'h2',
-				'h3',
-				'h4',
-				'h5',
-				'h6',
-				'header',
-				'hgroup',
-				'hr',
-				'i',
-				'img',
-				'kbd',
-				'li',
-				'main',
-				'mark',
-				'marquee',
-				'nav',
-				'ol',
-				'p',
-				'pre',
-				'q',
-				'rb',
-				'rp',
-				'rt',
-				'rtc',
-				'ruby',
-				's',
-				'samp',
-				'section',
-				'small',
-				'span',
-				'strong',
-				'sub',
-				'summary',
-				'sup',
-				'table',
-				'tbody',
-				'td',
-				'tfoot',
-				'th',
-				'thead',
-				'time',
-				'tr',
-				'u',
-				'ul',
-				'var',
-				'video',
-				'wbr',
-			],
+		sanitizeHtml(md.render(text), {
+			allowedTags: sanitizeHtml.defaults.allowedTags.concat(['details', 'img', 'marquee', 'summary', 'video', 'input', 'iframe']),
 			disallowedTagsMode: 'discard',
 			allowedAttributes: {
 				'*': ['align', 'style'],
 				a: ['href', 'name', 'target'],
-				// We don't currently allow img itself by default, but this
-				// would make sense if we did. You could add srcset here,
-				// and if you do the URL is checked for safety
-				img: ['src'],
+				img: ['src', 'srcset'],
 				video: ['src', 'controls', 'poster'],
-				marquee: ['behaviour'],
+				iframe: ['src', 'title', 'frameborder', 'allowfullscreen', 'width', 'height'],
+			},
+			allowedClasses: {
+				code: ['hljs', 'language-*'],
+				span: ['hljs-*'],
+				input: ['task-list-item-checkbox'],
 			},
 			// Lots of these won't come up by default because we don't allow them
 			selfClosing: ['img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta'],
 			// URL schemes we permit
-			allowedSchemes: ['http', 'https', 'ftp', 'mailto', 'tel'],
+			allowedSchemes: ['http', 'https', 'mailto', 'tel'],
 			allowedSchemesByTag: {},
 			allowedSchemesAppliedToAttributes: ['href', 'src', 'cite'],
 			allowProtocolRelative: true,
 			enforceHtmlBoundary: false,
+			allowedIframeHostnames: ['www.youtube.com'],
 		}),
 };
 

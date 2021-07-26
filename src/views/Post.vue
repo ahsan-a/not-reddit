@@ -28,7 +28,7 @@
 				location="post"
 			/>
 			<div
-				class="flex flex-col w-full px-5 py-5 mb-8 overflow-hidden transition-all rounded-lg shadow-md md:px-8 hover:shadow-xl bg-nord1 border-nord2"
+				class="flex flex-col px-5 py-5 mb-8 overflow-hidden transition-all rounded-lg shadow-md w-49/50 md:px-8 hover:shadow-xl bg-nord1 border-nord2"
 				v-if="store.auth.state.isLoggedIn"
 				id="comment"
 			>
@@ -58,40 +58,8 @@
 					<h1 class="mb-5 text-3xl font-semibold text-nord6">
 						Markdown Preview
 					</h1>
-					<vue3-markdown-it
-						:source="store.createPost.actions.purify(commentInput)"
-						:html="true"
-						:breaks="true"
-						:linkify="true"
-						:emoji="{
-							shortcuts: {
-								angry: [],
-								blush: [],
-								broken_heart: [],
-								confused: [],
-								cry: [],
-								frowning: [],
-								heart: [],
-								imp: [],
-								innocent: [],
-								joy: [],
-								kissing: [],
-								laughing: [],
-								neutral_face: [],
-								open_mouth: [],
-								rage: [],
-								smile: [],
-								smiley: [],
-								smiling_imp: [],
-								sob: [],
-								stuck_out_tongue: [],
-								sunglasses: [],
-								sweat: [],
-								sweat_smile: [],
-								unamused: [],
-								wink: [],
-							},
-						}"
+					<div
+						v-html="store.createPost.actions.purify(commentInput)"
 						class="max-w-full overflow-hidden text-sm break-words text-nord5 markdownRender"
 					/>
 

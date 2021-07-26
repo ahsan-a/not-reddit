@@ -94,47 +94,9 @@
 		<div class="mx-1 mt-6 md:mx-10 lg:w-9/12 lg:mr-10" v-else>
 			<div class="w-full px-6 py-5 border rounded-lg shadow-sm bg-nord1 border-nord2">
 				<h1 class="mb-4 overflow-hidden text-3xl font-bold break-words md:text-4xl lh50 text-nord6">{{ postInput.title }}</h1>
-				<vue3-markdown-it
-					:source="store.createPost.actions.purify(postInput.content)"
-					:html="true"
-					:breaks="true"
-					:linkify="true"
-					:emoji="{
-						shortcuts: {
-							angry: [],
-							blush: [],
-							broken_heart: [],
-							confused: [],
-							cry: [],
-							frowning: [],
-							heart: [],
-							imp: [],
-							innocent: [],
-							joy: [],
-							kissing: [],
-							laughing: [],
-							neutral_face: [],
-							open_mouth: [],
-							rage: [],
-							smile: [],
-							smiley: [],
-							smiling_imp: [],
-							sob: [],
-							stuck_out_tongue: [],
-							sunglasses: [],
-							sweat: [],
-							sweat_smile: [],
-							unamused: [],
-							wink: [],
-						},
-					}"
+				<div
+					v-html="store.createPost.actions.purify(postInput.content)"
 					class="max-w-full overflow-hidden break-words markdownRender text-nord5"
-					:plugins="[
-						{
-							plugin: taskLists,
-							options: { enabled: true },
-						},
-					]"
 				/>
 
 				<span class="flex flex-row items-center justify-center mt-6">

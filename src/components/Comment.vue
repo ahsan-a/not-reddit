@@ -1,5 +1,5 @@
 <template>
-	<div class="flex max-w-full mb-3">
+	<div class="flex mb-3 max-w-49/50">
 		<div>
 			<router-link :to="`/u/${comment.user?.id}`" v-if="comment.user?.name" class="hidden w-10 h-10 md:block">
 				<img :src="comment.user?.image || require('../assets/defaultPfp.webp')" class="object-cover w-10 h-10 rounded-full" />
@@ -14,48 +14,9 @@
 				}}</router-link>
 				<span class="float-right text-sm font-medium text-nord6">{{ createDateText(comment.created_at?.toDate()) }}</span>
 			</div>
-
-			<vue3-markdown-it
-				:source="store.createPost.actions.purify(comment.content)"
-				:html="true"
-				:breaks="true"
-				:linkify="true"
-				:emoji="{
-					shortcuts: {
-						angry: [],
-						blush: [],
-						broken_heart: [],
-						confused: [],
-						cry: [],
-						frowning: [],
-						heart: [],
-						imp: [],
-						innocent: [],
-						joy: [],
-						kissing: [],
-						laughing: [],
-						neutral_face: [],
-						open_mouth: [],
-						rage: [],
-						smile: [],
-						smiley: [],
-						smiling_imp: [],
-						sob: [],
-						stuck_out_tongue: [],
-						sunglasses: [],
-						sweat: [],
-						sweat_smile: [],
-						unamused: [],
-						wink: [],
-					},
-				}"
-				:plugins="[
-					{
-						plugin: taskLists,
-						options: { enabled: true },
-					},
-				]"
+			<div
 				class="max-w-full mt-4 overflow-hidden break-words text-md text-nord4 markdownRender"
+				v-html="store.createPost.actions.purify(comment.content)"
 			/>
 			<div class="flex flex-row mt-3 mb-2">
 				<button

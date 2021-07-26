@@ -31,49 +31,10 @@
 			<div class="w-1/2 h-full" ref="mdPreview">
 				<div class="ml-5 h-5/6 mdPreview">
 					<h1 class="mb-3 text-xl font-semibold text-nord5">Preview</h1>
-					<vue3-markdown-it
-						:source="store.createPost.actions.purify(store.createPost.state.newPost.content)"
-						:html="true"
-						:breaks="true"
-						:linkify="true"
-						:emoji="{
-							shortcuts: {
-								angry: [],
-								blush: [],
-								broken_heart: [],
-								confused: [],
-								cry: [],
-								frowning: [],
-								heart: [],
-								imp: [],
-								innocent: [],
-								joy: [],
-								kissing: [],
-								laughing: [],
-								neutral_face: [],
-								open_mouth: [],
-								rage: [],
-								smile: [],
-								smiley: [],
-								smiling_imp: [],
-								sob: [],
-								stuck_out_tongue: [],
-								sunglasses: [],
-								sweat: [],
-								sweat_smile: [],
-								unamused: [],
-								wink: [],
-							},
-						}"
+					<div
 						class="w-full h-full px-3 mx-3 overflow-x-hidden overflow-y-scroll break-words text-nord5 markdownRender"
-						id="mdPreview"
-						:plugins="[
-							{
-								plugin: taskLists,
-								options: { enabled: true },
-							},
-						]"
-					/>
+						v-html="store.createPost.actions.purify(store.createPost.state.newPost.content)"
+					></div>
 				</div>
 			</div>
 		</div>
@@ -84,9 +45,6 @@
 import { defineComponent, ref, Ref, onMounted } from 'vue';
 
 import store from '@/store';
-
-// @ts-ignore
-import taskLists from 'markdown-it-task-lists';
 
 export default defineComponent({
 	setup() {
@@ -193,7 +151,6 @@ export default defineComponent({
 			store,
 			mdEditor,
 			textAreaHandler,
-			taskLists,
 		};
 	},
 });
