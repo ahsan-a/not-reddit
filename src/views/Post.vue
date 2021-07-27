@@ -2,10 +2,13 @@
 	<div class="bg" />
 	<Navbar :padding="true" />
 
-	<div class="flex w-full mx-auto xl:w-9/12 lg:w-11/12">
-		<div class="w-full sm:mx-5 lg:w-2/3 xl:w-9/12">
+	<div
+		class="flex w-full max-w-full overflow-hidden mx-auto xl:w-9/12 mt-6 lg:w-11/12 xl:max-w-9/12 lg:max-w-11/12"
+	>
+		<div class="w-full max-w-full mx-2 lg:w-8/12 xl:w-3/4">
 			<button
-				class="sticky flex flex-row items-center justify-between w-full px-3 py-2 mb-3 transition-all rounded-b-lg shadow-lg z-5 noOutline active:bg-nord3 hover:bg-nord2 group top-16 bg-nord1 border-nord2"
+				class=" 
+				flex flex-row items-center justify-between w-49/50 mx-auto px-3 py-2 mb-3 transition-all rounded-b-lg shadow-lg z-5 noOutline active:bg-nord3 hover:bg-nord2 group bg-nord1 border-nord2"
 				@click="backButton"
 			>
 				<svg
@@ -19,12 +22,17 @@
 						d="M13.427 3.021h-7.427v-3.021l-6 5.39 6 5.61v-3h7.427c3.071 0 5.561 2.356 5.561 5.427 0 3.071-2.489 5.573-5.561 5.573h-7.427v5h7.427c5.84 0 10.573-4.734 10.573-10.573s-4.733-10.406-10.573-10.406z"
 					/>
 				</svg>
-				<h1 class="text-lg font-medium text-center text-nord5">Go Back</h1>
+				<h1 class="text-lg font-medium text-center text-nord5">
+					Go Back
+				</h1>
 				<div></div>
 			</button>
 			<Post
 				:post="store.post.state.currentPost"
-				v-if="store.post.state.currentPost.deletedUser || store.post.state.currentPost.user?.id"
+				v-if="
+					store.post.state.currentPost.deletedUser ||
+						store.post.state.currentPost.user?.id
+				"
 				location="post"
 			/>
 			<div
@@ -46,10 +54,24 @@
 							required
 						/>
 
-						<span class="flex flex-row items-center justify-center mt-6">
+						<span
+							class="flex flex-row items-center justify-center mt-6"
+						>
 							<div class="flex flex-row items-center">
-								<button class="mx-3 button-blue" type="button" @click="mdPreview = true">Preview</button>
-								<button class="mx-3 button-green" type="submit" id="submitCommentButton">Submit</button>
+								<button
+									class="mx-3 button-blue"
+									type="button"
+									@click="mdPreview = true"
+								>
+									Preview
+								</button>
+								<button
+									class="mx-3 button-green"
+									type="submit"
+									id="submitCommentButton"
+								>
+									Submit
+								</button>
 							</div>
 						</span>
 					</form>
@@ -63,19 +85,36 @@
 						class="max-w-full overflow-hidden text-sm break-words text-nord5 markdownRender"
 					/>
 
-					<span class="flex flex-row items-center justify-center mt-6">
+					<span
+						class="flex flex-row items-center justify-center mt-6"
+					>
 						<div class="flex flex-row items-center">
-							<button class="mx-3 button-blue" type="button" @click="mdPreview = false">Hide Preview</button>
+							<button
+								class="mx-3 button-blue"
+								type="button"
+								@click="mdPreview = false"
+							>
+								Hide Preview
+							</button>
 						</div>
 					</span>
 				</div>
 			</div>
 
 			<div class="max-w-full">
-				<Comment v-for="comment in store.post.state.currentPost.comments" :key="comment.id" :comment="comment" />
+				<Comment
+					v-for="comment in store.post.state.currentPost.comments"
+					:key="comment.id"
+					:comment="comment"
+				/>
 			</div>
 		</div>
-		<SubredditSidebar class="hidden lg:w-1/3 lg:block xl:w-3/12" />
+		<div
+			class="hidden lg:w-4/12 lg:block xl:w-1/4 lg:min-w-4/12 xl:min-w-1/4"
+		>
+			<SubredditSidebar />
+			<InfoSidebar />
+		</div>
 	</div>
 </template>
 
@@ -87,10 +126,8 @@ import store from '@/store';
 import Navbar from '@/components/Navbar.vue';
 import Post from '@/components/Post.vue';
 import SubredditSidebar from '@/components/SubredditSidebar.vue';
+import InfoSidebar from '@/components/InfoSidebar.vue';
 import Comment from '@/components/Comment.vue';
-
-// @ts-ignore
-import taskLists from 'markdown-it-task-lists';
 
 export default defineComponent({
 	components: {
@@ -98,6 +135,7 @@ export default defineComponent({
 		Post,
 		SubredditSidebar,
 		Comment,
+		InfoSidebar,
 	},
 	setup() {
 		const route = useRoute();
@@ -160,13 +198,22 @@ export default defineComponent({
 					contentArr.splice(cursorEnd + 1, 0, ctrlChars[e.key]);
 					newCommentTextarea.value.value = contentArr.join('');
 					newCommentTextarea.value.selectionStart = cursorStart;
-					newCommentTextarea.value.selectionEnd = cursorEnd + ctrlChars[e.key].length * 2;
+					newCommentTextarea.value.selectionEnd =
+						cursorEnd + ctrlChars[e.key].length * 2;
 					return;
 				}
 
-				if (!(e.key in delimiters.always || e.key in delimiters.nextToWhitespace)) return;
+				if (
+					!(
+						e.key in delimiters.always ||
+						e.key in delimiters.nextToWhitespace
+					)
+				)
+					return;
 				e.preventDefault();
-				const delimiter1 = delimiters.always[e.key] || delimiters.nextToWhitespace[e.key];
+				const delimiter1 =
+					delimiters.always[e.key] ||
+					delimiters.nextToWhitespace[e.key];
 
 				contentArr.splice(cursorStart, 0, e.key);
 				contentArr.splice(cursorEnd + 1, 0, delimiter1);
@@ -182,24 +229,38 @@ export default defineComponent({
 			if (e.key === 'Backspace') {
 				if (
 					!(
-						(contentArr[cursorStart] in delimiters.always || contentArr[cursorStart] in delimiters.nextToWhitespace) &&
-						(contentArr[cursorStart - 1] in delimiters.always || contentArr[cursorStart - 1] in delimiters.nextToWhitespace)
+						(contentArr[cursorStart] in delimiters.always ||
+							contentArr[cursorStart] in
+								delimiters.nextToWhitespace) &&
+						(contentArr[cursorStart - 1] in delimiters.always ||
+							contentArr[cursorStart - 1] in
+								delimiters.nextToWhitespace)
 					)
 				)
 					return;
 				contentArr.splice(cursorStart, 1);
 			} else if (e.ctrlKey && e.key in ctrlChars) {
 				e.preventDefault();
-				contentArr.splice(cursorStart, 0, ctrlChars[e.key] + ctrlChars[e.key]);
+				contentArr.splice(
+					cursorStart,
+					0,
+					ctrlChars[e.key] + ctrlChars[e.key]
+				);
 				newCommentTextarea.value.value = contentArr.join('');
-				newCommentTextarea.value.selectionStart = cursorStart + ctrlChars[e.key].length;
-				newCommentTextarea.value.selectionEnd = cursorStart + ctrlChars[e.key].length;
+				newCommentTextarea.value.selectionStart =
+					cursorStart + ctrlChars[e.key].length;
+				newCommentTextarea.value.selectionEnd =
+					cursorStart + ctrlChars[e.key].length;
 				return;
 			} else if (e.key in delimiters.always) {
 				contentArr.splice(cursorStart, 0, delimiters.always[e.key]);
 			} else if (e.key in delimiters.nextToWhitespace) {
 				if (/^\S$/g.test(contentArr[cursorStart - 1])) return;
-				contentArr.splice(cursorStart, 0, delimiters.nextToWhitespace[e.key]);
+				contentArr.splice(
+					cursorStart,
+					0,
+					delimiters.nextToWhitespace[e.key]
+				);
 			} else return;
 
 			newCommentTextarea.value.value = contentArr.join('');
@@ -208,9 +269,12 @@ export default defineComponent({
 		}
 
 		async function createComment() {
-			if (!commentInput.value.replace(/\s+/g, '').length) return alert('Your comment must not be empty.');
+			if (!commentInput.value.replace(/\s+/g, '').length)
+				return alert('Your comment must not be empty.');
 
-			const button = document.getElementById('submitCommentButton') as HTMLButtonElement;
+			const button = document.getElementById(
+				'submitCommentButton'
+			) as HTMLButtonElement;
 
 			button.disabled = true;
 
@@ -228,7 +292,10 @@ export default defineComponent({
 
 		function backButton() {
 			if (window.history.state.back) router.go(-1);
-			else router.push({ path: `/r/${route.params.subreddit.toString()}` });
+			else
+				router.push({
+					path: `/r/${route.params.subreddit.toString()}`,
+				});
 		}
 
 		return {
@@ -241,7 +308,6 @@ export default defineComponent({
 			mdPreview,
 			backButton,
 			createComment,
-			taskLists,
 		};
 	},
 });

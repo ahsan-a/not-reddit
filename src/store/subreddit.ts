@@ -60,7 +60,6 @@ const actions = {
 		globalListener?.();
 
 		state.posts = [];
-		let firstLoad = true;
 		activeSubListener.listener = posts
 			.orderBy('created_at', 'desc')
 			.where('subreddit_id', '==', state.subreddit.id)
@@ -76,10 +75,6 @@ const actions = {
 
 					postsToUpdate.push(post as Post);
 				}
-
-				if (firstLoad) firstLoad = false;
-				else if (postsToUpdate.length > state.posts.length && window.innerWidth / 4 < window.scrollY) state.scrollNotif = true;
-
 				state.posts = postsToUpdate;
 			});
 	},
@@ -133,7 +128,7 @@ const actions = {
 		if (!(Math.abs(window.innerHeight - (document.getElementById('sB')?.getBoundingClientRect().bottom ?? 0)) <= 1000)) return;
 		if (router.currentRoute.value.fullPath !== '/') return document.removeEventListener('scroll', actions.homeScrollCheck);
 
-		state.posts = state.allPosts.slice(0, state.posts.length + 5);
+		state.posts = state.allPosts.slice(0, state.posts.length + 2);
 	},
 
 	async getPost(id: string): Promise<Post | null> {

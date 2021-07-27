@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="flex flex-col px-5 pt-5 mb-8 overflow-hidden transition-all rounded-lg shadow-md w-49/50 max-w-49/50 md:px-8 hover:shadow-xl bg-nord1 border-nord2 text-nord4 hover:text-nord5"
+		class="flex flex-col px-5 pt-5 mb-8 overflow-hidden transition-all rounded-lg shadow-md w-49/50 max-w-49/50 mx-auto md:px-8 hover:shadow-xl bg-nord1 border-nord2 text-nord4 hover:text-nord5"
 	>
 		<div class="flex flex-row items-stretch justify-between mb-5">
 			<div class="flex flex-row items-end titleMaxW ">
@@ -36,7 +36,7 @@
 		<div class="mt-10 mb-3 overflow-hidden">
 			<router-link
 				:to="`/r/${subreddit.name}/${post.id}`"
-				class="inline px-2 py-1 pb-2 transition-all rounded-md group hover:bg-nord2 text-nord4 hover:text-nord6"
+				class="inline px-2 py-1 pb-2 mr-2 transition-all rounded-md group hover:bg-nord2 text-nord4 hover:text-nord6"
 				v-if="location !== 'post'"
 			>
 				<svg
@@ -52,7 +52,7 @@
 			</router-link>
 			<router-link
 				:to="`/r/${subreddit.name}/${post.id}#comment`"
-				class="hidden px-2 py-1 pb-2 mx-2 transition-all rounded-md md:mx-4 sm:inline group hover:bg-nord2 text-nord4 hover:text-nord6"
+				class="hidden px-2 py-1 pb-2 transition-all mr-2 rounded-md lg:inline group hover:bg-nord2 text-nord4 hover:text-nord6"
 				v-if="location !== 'post'"
 			>
 				<svg
@@ -70,7 +70,7 @@
 			</router-link>
 
 			<button
-				class="hidden px-2 py-1 transition-all rounded-md sm:inline hover:bg-nord2 text-nord4 hover:text-nord6 group noOutline"
+				class="hidden px-2 py-1 transition-all rounded-md mr-2 sm:inline hover:bg-nord2 text-nord4 hover:text-nord6 group noOutline"
 				@click="shareEnabled = !shareEnabled"
 			>
 				<svg
@@ -88,7 +88,7 @@
 			</button>
 
 			<button
-				class="inline px-2 py-1 ml-2 transition-all rounded-md md:ml-4 hover:bg-nord2 text-nord4 hover:text-nord6 group noOutline"
+				class="inline px-2 py-1 transition-all rounded-md hover:bg-nord2 text-nord4 hover:text-nord6 group noOutline"
 				v-if="store.auth.state.user?.admin || post.user_id === store.auth.state.user?.id"
 				@click="deletePost()"
 			>
@@ -153,9 +153,6 @@ import { Post } from '@/typings';
 import * as timeago from 'timeago.js';
 import store from '@/store';
 
-// @ts-ignore
-import taskLists from 'markdown-it-task-lists';
-
 export default defineComponent({
 	props: {
 		post: {
@@ -194,7 +191,6 @@ export default defineComponent({
 			store,
 			deletePost,
 			subreddit,
-			taskLists,
 		};
 	},
 });

@@ -2,7 +2,12 @@
 	<div class="bg" />
 	<Navbar />
 	<div class="h-16" id="scrollTop"></div>
-	<div class="fixed w-full transition-all" :style="{ marginTop: store.subreddit.state.scrollNotif ? '5px' : '-140px' }">
+	<div
+		class="fixed w-full transition-all"
+		:style="{
+			marginTop: store.subreddit.state.scrollNotif ? '5px' : '-140px',
+		}"
+	>
 		<div class="flex w-full mx-auto xl:w-9/12 lg:w-11/12">
 			<div class="w-full sm:mx-5 lg:w-2/3 xl:w-9/12">
 				<button
@@ -20,18 +25,30 @@
 							d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z"
 						/>
 					</svg>
-					<h1 class="px-3 font-semibold text-nord6 group-hover:text-nord4">New Posts</h1>
+					<h1
+						class="px-3 font-semibold text-nord6 group-hover:text-nord4"
+					>
+						New Posts
+					</h1>
 				</button>
 			</div>
 		</div>
 	</div>
 	<div class="w-full pt-6 mx-auto xl:w-9/12 lg:w-11/12 bg-nord0 z-2">
-		<div class="pb-2 border shadow-md px-9 lg:rounded-t-lg sm:mx-5 pt-7 bg-nord1 border-nord2">
+		<div
+			class="pb-2 border shadow-md px-9 lg:rounded-t-lg pt-7 bg-nord1 border-nord2"
+		>
 			<div class="flex flex-row items-center justify-between">
 				<div>
 					<div class="pl-3">
-						<h1 class="text-4xl font-bold text-nord5">Welcome to not-reddit</h1>
-						<p class="mt-6 overflow-x-visible overflow-y-hidden break-words text-md text-nord4">(this isn't reddit)</p>
+						<h1 class="text-4xl font-bold text-nord5">
+							Welcome to not-reddit
+						</h1>
+						<p
+							class="mt-6 overflow-x-visible overflow-y-hidden break-words text-md text-nord4"
+						>
+							(this isn't reddit)
+						</p>
 					</div>
 
 					<div class="flex flex-row items-center w-full mt-5">
@@ -49,7 +66,9 @@
 								<path d="M24 9h-9v-9h-6v9h-9v6h9v9h6v-9h9z" />
 							</svg>
 
-							<span class="ml-2 text-sm font-medium">Create Post</span>
+							<span class="ml-2 text-sm font-medium"
+								>Create Post</span
+							>
 						</router-link>
 					</div>
 				</div>
@@ -57,16 +76,27 @@
 			</div>
 		</div>
 	</div>
-	<div class="flex justify-between w-full pt-2 mx-auto xl:w-9/12 lg:w-11/12">
-		<transition-group name="posts" tag="div" class="w-full max-w-full mt-6 sm:mx-5 lg:w-8/12 xl:w-3/4">
-			<Post v-for="post in store.subreddit.state.posts" :key="post.id" :post="post" location="home" />
+	<div
+		class="flex justify-between w-full max-w-full xl:max-w-9/12 lg:max-w-11/12 overflow-x-hidden mt-4 pt-2 mx-auto xl:w-9/12 lg:w-11/12"
+	>
+		<transition-group
+			name="posts"
+			tag="div"
+			class="w-full max-w-full md:w-35/50 xl:w-37/50"
+		>
+			<Post
+				v-for="post in store.subreddit.state.posts"
+				:key="post.id"
+				:post="post"
+				location="home"
+			/>
 			<div class="w-full h-1" id="sB" key="bottomScrollCalc"></div>
 		</transition-group>
-		<div class="hidden lg:w-4/12 lg:block xl:w-1/4 min-w-max">
-			<div class="sticky mt-6 top-16">
-				<SubredditSidebar />
-				<InfoSidebar />
-			</div>
+		<div
+			class="hidden md:w-14/50 md:block xl:w-1/4 md:min-w-14/50 xl:min-w-1/4"
+		>
+			<SubredditSidebar />
+			<InfoSidebar />
 		</div>
 	</div>
 </template>
@@ -93,7 +123,8 @@ export default defineComponent({
 		store.subreddit.actions.bindAllPosts();
 
 		document.addEventListener('scroll', () => {
-			if (window.scrollY < 10 && store.subreddit.state.scrollNotif) store.subreddit.state.scrollNotif = false;
+			if (window.scrollY < 10 && store.subreddit.state.scrollNotif)
+				store.subreddit.state.scrollNotif = false;
 		});
 
 		function newPostScroll() {
