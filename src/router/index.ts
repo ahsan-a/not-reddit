@@ -56,6 +56,11 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'Privacy Policy',
 		component: () => import('@/views/about/Privacy.vue'),
 	},
+	{
+		path: '/about/guidelines',
+		name: 'Guidelines',
+		component: () => import('@/views/about/Guidelines.vue'),
+	},
 
 	{
 		path: '/:catchAll(.*)',
