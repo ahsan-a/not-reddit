@@ -1,11 +1,24 @@
 <template>
+	<CookieBugger />
 	<router-view />
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+import CookieBugger from './components/CookieBugger.vue';
+export default defineComponent({
+	components: {
+		CookieBugger,
+	},
+});
+</script>
 
 <style lang="stylus">
 @import './assets/styles.styl';
 body::-webkit-scrollbar {
 	width: 10px;
+	height: 10px;
 }
 body::-webkit-scrollbar-track {
 	background: nord0

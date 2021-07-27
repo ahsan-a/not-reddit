@@ -30,7 +30,7 @@
 				location="post"
 			/>
 			<div
-				class="flex flex-col px-5 py-5 mb-8 overflow-hidden transition-all rounded-lg shadow-md w-49/50 md:px-8 hover:shadow-xl bg-nord1 border-nord2"
+				class="flex flex-col px-5 py-5 mb-8 overflow-hidden transition-all rounded-lg shadow-md w-49/50 mx-auto md:px-8 hover:shadow-xl bg-nord1 border-nord2"
 				v-if="store.auth.state.isLoggedIn"
 				id="comment"
 			>
