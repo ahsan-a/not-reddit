@@ -2,23 +2,16 @@
 	<div class="bg" />
 	<Navbar :padding="true" />
 	<div class="w-full pt-6 mx-auto xl:w-9/12 lg:w-11/12 bg-nord0 z-2">
-		<div
-			class="pb-2 border shadow-md px-9 lg:rounded-t-lg pt-7 bg-nord1 border-nord2"
-		>
+		<div class="pb-2 border shadow-md px-9 lg:rounded-t-lg pt-7 bg-nord1 border-nord2">
 			<div class="pl-3">
 				<span class="text-4xl font-bold text-nord5">
 					<img
-						:src="
-							store.subreddit.state.subreddit.image ||
-								require('../assets/defaultSub.svg')
-						"
+						:src="store.subreddit.state.subreddit.image || require('../assets/defaultSub.svg')"
 						class="inline object-cover w-10 h-10 mr-3 rounded-full"
 					/>
 					r/{{ store.subreddit.state.subreddit.name }}
 				</span>
-				<p
-					class="mt-6 overflow-x-visible overflow-y-hidden break-words text-md text-nord4"
-				>
+				<p class="mt-6 overflow-x-visible overflow-y-hidden break-words text-md text-nord4">
 					{{ store.subreddit.state.subreddit.description }}
 				</p>
 			</div>
@@ -61,26 +54,16 @@
 			</div>
 		</div>
 	</div>
-	<div
-		class="flex w-full justify-between max-w-full xl:max-w-9/12 mt-6 lg:max-w-11/12 mx-auto xl:w-9/12 lg:w-11/12"
-	>
-		<transition-group
-			name="posts"
-			tag="div"
-			class="w-full max-w-full lg:w-35/50 xl:w-37/50"
-		>
-			<Post
-				v-for="post in store.subreddit.state.posts"
-				:key="post.id"
-				:post="post"
-			/>
+	<div class="flex justify-between w-full max-w-full mx-auto mt-6 xl:max-w-9/12 lg:max-w-11/12 xl:w-9/12 lg:w-11/12">
+		<transition-group name="posts" tag="div" class="w-full max-w-full md:w-35/50 xl:w-37/50">
+			<Post v-for="post in store.subreddit.state.posts" :key="post.id" :post="post" />
 		</transition-group>
 
-		<div
-			class="hidden lg:w-14/50 lg:block xl:w-1/4 lg:min-w-14/50 xl:min-w-1/4"
-		>
-			<SubredditSidebar />
-			<InfoSidebar />
+		<div class="hidden md:w-14/50 md:block xl:w-1/4 lg:min-w-14/50 xl:min-w-1/4">
+			<div class="sticky overflow-y-auto max-h-90vh top-16" id="sidebar">
+				<SubredditSidebar />
+				<InfoSidebar />
+			</div>
 		</div>
 	</div>
 </template>
@@ -107,9 +90,7 @@ export default defineComponent({
 
 		function init(name?: string) {
 			document.title = `r/${name ?? route.params.name} | (not) reddit`;
-			store.subreddit.actions.bindPosts(
-				name || route.params.name.toString()
-			);
+			store.subreddit.actions.bindPosts(name || route.params.name.toString());
 		}
 		init();
 		watch(

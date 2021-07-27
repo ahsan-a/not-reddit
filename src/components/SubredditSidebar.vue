@@ -1,5 +1,5 @@
 <template>
-	<div class="sticky block top-0 h-auto p-5 rounded-lg bg-nord1 border-nord2">
+	<div class="block h-auto p-5 rounded-lg bg-nord1 border-nord2">
 		<h1 class="mb-5 text-2xl font-bold text-nord5">Subreddits</h1>
 		<router-link to="/" class="font-medium text-nord4">
 			r/All

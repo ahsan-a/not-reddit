@@ -1,8 +1,8 @@
 <template>
 	<div class="bg" />
 	<Navbar :padding="true" />
-	<div class="flex w-full mx-auto xl:w-9/12 lg:w-11/12">
-		<div class="w-full px-6 py-5 mx-1 mt-6 rounded-lg shadow-sm md:mx-5 lg:w-9/12 bg-nord1">
+	<div class="flex w-full mx-auto mt-5 xl:w-9/12 lg:w-11/12">
+		<div class="w-full px-6 py-5 mx-1 rounded-lg shadow-sm md:mx-5 lg:w-9/12 bg-nord1">
 			<h1 class="text-2xl font-bold text-nord6">Notifications</h1>
 			<div class="mt-5" v-if="store.notifications.state.notifications.length">
 				<div v-for="(notif, i) in store.notifications.state.notifications" :key="notif.id">
@@ -58,12 +58,17 @@
 					</div>
 				</div>
 			</div>
-			<div class="mt-5" v-else>
-				<img src="../assets/images/win10.webp" alt="" />
+			<div v-else>
+				<img src="../assets/images/win10.webp" class="object-cover w-3/4 h-auto mx-auto mt-5" />
 				<h1 class="mt-3 text-lg font-semibold text-center text-nord4">All caught up!</h1>
 			</div>
 		</div>
-		<SubredditSidebar class="hidden lg:w-1/3 lg:block xl:w-3/12" />
+		<div class="hidden lg:w-1/3 lg:block xl:w-3/12">
+			<div class="sticky overflow-y-auto max-h-90vh top-16" id="sidebar">
+				<SubredditSidebar />
+				<InfoSidebar />
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -74,6 +79,7 @@ import { useRouter } from 'vue-router';
 
 import Navbar from '@/components/Navbar.vue';
 import SubredditSidebar from '@/components/SubredditSidebar.vue';
+import InfoSidebar from '@/components/InfoSidebar.vue';
 
 import { Notification } from '@/typings';
 
@@ -81,6 +87,7 @@ export default defineComponent({
 	components: {
 		Navbar,
 		SubredditSidebar,
+		InfoSidebar,
 	},
 	setup() {
 		document.title = 'Notifications | (not) reddit';

@@ -1,8 +1,8 @@
 <template>
 	<div class="bg" />
 	<Navbar :padding="true" />
-	<div class="flex w-full pt-2 mx-auto xl:w-9/12 lg:w-11/12">
-		<div class="w-full mt-6 sm:mx-5 lg:w-2/3 xl:w-9/12">
+	<div class="flex justify-between w-full max-w-full pt-2 mx-auto mt-4 xl:max-w-9/12 lg:max-w-11/12 xl:w-9/12 lg:w-11/12">
+		<div class="w-full max-w-full mx-5 md:w-35/50 xl:w-37/50">
 			<div class="px-6 pt-6 rounded-lg bg-nord1">
 				<div class="flex flex-row items-center justify-between">
 					<span class="flex flex-row items-center overflow-y-hidden">
@@ -117,7 +117,12 @@
 				><h1 class="text-xl font-semibold text-nord5">This isn't your account.</h1></div
 			>
 		</div>
-		<SubredditSidebar class="hidden lg:w-1/3 lg:block xl:w-3/12" />
+		<div class="hidden md:w-14/50 md:block xl:w-1/4 lg:min-w-14/50 xl:min-w-1/4">
+			<div class="sticky overflow-y-auto max-h-90vh top-16" id="sidebar">
+				<SubredditSidebar />
+				<InfoSidebar />
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -128,9 +133,10 @@ import store from '@/store';
 import * as timeago from 'timeago.js';
 
 import Navbar from '@/components/Navbar.vue';
-import SubredditSidebar from '@/components/SubredditSidebar.vue';
 import Post from '@/components/Post.vue';
 import Subcomment from '@/components/Subcomment.vue';
+import SubredditSidebar from '@/components/SubredditSidebar.vue';
+import InfoSidebar from '@/components/InfoSidebar.vue';
 
 export default defineComponent({
 	components: {
@@ -138,6 +144,7 @@ export default defineComponent({
 		SubredditSidebar,
 		Post,
 		Subcomment,
+		InfoSidebar,
 	},
 	setup() {
 		const router = useRouter();

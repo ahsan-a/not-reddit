@@ -1,7 +1,7 @@
 <template>
 	<div class="w-full">
 		<div class="sticky mt-4 top-20">
-			<div class="sticky h-auto p-5 rounded-lg bg-nord1 border-nord2">
+			<div class="sticky h-auto px-2 py-5 rounded-lg lg:p-5 bg-nord1 border-nord2">
 				<div class="grid grid-flow-row grid-cols-2 mx-3 text-sm text-nord4 gap-y-1.5">
 					<div>
 						<router-link to="about" class="hover:underline">About</router-link>

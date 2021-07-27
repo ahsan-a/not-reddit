@@ -28,12 +28,13 @@
 					ref="mdEditor"
 				/>
 			</div>
-			<div class="w-1/2 h-full" ref="mdPreview">
+			<div class="w-1/2 h-full">
 				<div class="ml-5 h-5/6 mdPreview">
 					<h1 class="mb-3 text-xl font-semibold text-nord5">Preview</h1>
 					<div
 						class="w-full h-full px-3 mx-3 overflow-x-hidden overflow-y-scroll break-words text-nord5 markdownRender"
 						v-html="store.createPost.actions.purify(store.createPost.state.newPost.content)"
+						id="mdPreview"
 					></div>
 				</div>
 			</div>
