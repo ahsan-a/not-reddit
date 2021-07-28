@@ -2,7 +2,7 @@
 	<div class="bg" />
 	<Navbar :padding="true" />
 	<div class="w-full pt-6 mx-auto xl:w-9/12 lg:w-11/12 bg-nord0 z-2">
-		<div class="pb-2 border shadow-md px-9 lg:rounded-t-lg pt-7 bg-nord1 border-nord2">
+		<div class="pb-2 border rounded-lg shadow-md px-9 pt-7 bg-nord1 border-nord2">
 			<div class="pl-3">
 				<span class="text-4xl font-bold text-nord5">
 					<img

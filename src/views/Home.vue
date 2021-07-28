@@ -33,7 +33,7 @@
 		</div>
 	</div>
 	<div class="w-full pt-6 mx-auto xl:w-9/12 lg:w-11/12 bg-nord0 z-2">
-		<div class="pb-2 border shadow-md px-9 lg:rounded-t-lg pt-7 bg-nord1 border-nord2">
+		<div class="pb-2 border rounded-lg shadow-md px-9 pt-7 bg-nord1 border-nord2">
 			<div class="flex flex-row items-center justify-between">
 				<div>
 					<div class="block pl-3">
@@ -68,13 +68,13 @@
 			</div>
 		</div>
 	</div>
-	<div class="flex justify-between w-full max-w-full pt-2 mx-auto mt-4 xl:max-w-9/12 lg:max-w-11/12 xl:w-9/12 lg:w-11/12">
+	<div class="flex justify-between w-full max-w-full pt-2 mx-auto mt-3 lg:mt-4 xl:max-w-9/12 lg:max-w-11/12 xl:w-9/12 lg:w-11/12">
 		<transition-group name="posts" tag="div" class="w-full max-w-full md:w-35/50 xl:w-37/50">
-			<Post v-for="post in store.subreddit.state.posts" :key="post.id" :post="post" location="home" />
+			<Post v-for="post in store.subreddit.state.homePosts" :key="post.id" :post="post" location="home" />
 			<div class="w-full h-1" id="sB" key="bottomScrollCalc"></div>
 		</transition-group>
 		<div class="hidden md:w-14/50 md:block xl:w-1/4 md:min-w-14/50 xl:min-w-1/4">
-			<div class="sticky overflow-y-auto max-h-90vh top-16" id="sidebar">
+			<div class="sticky overflow-y-auto md:top-16 max-h-90vh" id="sidebar">
 				<SubredditSidebar />
 				<InfoSidebar />
 			</div>

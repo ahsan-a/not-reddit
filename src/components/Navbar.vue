@@ -3,10 +3,10 @@
 		<div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
 			<div class="flex items-center justify-between h-16">
 				<div class="flex items-center">
-					<router-link class="flex-shrink-0 noOutline" to="/">
+					<router-link class="noOutline" to="/">
 						<img class="h-12 cursor-pointer" src="../assets/logo.webp" alt="not reddit" />
 					</router-link>
-					<router-link class="px-5 text-3xl cursor-pointer text-nord6 navbarLogoText noOutline" to="/">
+					<router-link class="px-5 text-2xl cursor-pointer lg:text-3xl text-nord6 navbarLogoText noOutline" to="/">
 						(not) reddit
 					</router-link>
 
