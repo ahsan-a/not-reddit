@@ -7,18 +7,40 @@
 			class="w-full px-6 py-5 mx-1 mt-4 border rounded-lg shadow-sm md:mx-10 lg:w-9/12 bg-nord1 border-nord2"
 			v-if="!store.auth.state.isLoggedIn"
 		>
-			<h1 class="text-3xl font-bold text-center text-nord6">You must be logged in to create a post.</h1>
-			<router-link to="/login" class="block w-full mx-auto mt-8 text-xl font-semibold text-center underline text-nord8">Log In</router-link>
+			<h1 class="text-3xl font-bold text-center text-nord6">
+				You must be logged in to create a post.
+			</h1>
+			<router-link
+				to="/login"
+				class="block w-full mx-auto mt-8 text-xl font-semibold text-center underline text-nord8"
+				>Log In</router-link
+			>
 		</div>
 
 		<div class="w-full md:mx-10 lg:w-9/12 " v-else-if="!local.mdPreview">
-			<div class="w-full px-6 py-5 mx-1 border rounded-lg shadow-sm bg-nord1 border-nord2">
-				<h1 class="text-2xl font-bold text-center text-nord6">Create a Post</h1>
+			<div
+				class="w-full px-6 py-5 mx-1 border rounded-lg shadow-sm bg-nord1 border-nord2"
+			>
+				<h1 class="text-2xl font-bold text-center text-nord6">
+					Create a Post
+				</h1>
+				<h1 class="mt-3 text-sm text-center text-nord5">
+					By creating a post, you agree to respect our
+					<router-link to="/about/guidelines"
+					class="text-nord8 hover:underline"
+						>Community Guidelines</router-link
+					>.
+				</h1>
 				<form @submit.prevent="createPost" class="w-full">
-					<h2 class="mt-4 mb-3 text-lg font-semibold text-nord5">Subreddit <span class="text-red-500">*</span></h2>
+					<h2 class="mb-3 text-lg font-semibold text-nord5">
+						Subreddit <span class="text-red-500">*</span>
+					</h2>
 					<div class="flex flex-row items-center">
 						<img
-							:src="local.subreddit?.image || require('../assets/defaultSub.svg')"
+							:src="
+								local.subreddit?.image ||
+									require('../assets/defaultSub.svg')
+							"
 							class="object-cover w-10 h-10 mr-3 rounded-full"
 							v-if="postInput.subreddit"
 						/>
@@ -31,7 +53,9 @@
 							:options="subreddits.map((x) => `r/${x.name}`)"
 						/>
 					</div>
-					<h2 class="mt-6 mb-2 text-lg font-semibold text-nord5">Title <span class="text-red-500">*</span></h2>
+					<h2 class="mt-6 mb-2 text-lg font-semibold text-nord5">
+						Title <span class="text-red-500">*</span>
+					</h2>
 					<input
 						type="text"
 						placeholder="Post Title"
@@ -41,8 +65,8 @@
 						v-model="postInput.title"
 						title="Required"
 					/>
-					<h2 class="mt-6 mb-4 text-lg font-semibold text-nord5"
-						>Body
+					<h2 class="mt-6 mb-4 text-lg font-semibold text-nord5">
+						Body
 						<button
 							v-if="true"
 							class="flex-row items-center hidden float-right p-2 text-sm font-semibold transition-all rounded-md xl:flex active:bg-nord3 noOutline ml-text-nord2 group hover:bg-nord2"
@@ -72,11 +96,25 @@
 						@keydown="textAreaHandler"
 						ref="mdEditor"
 					/>
-					<span class="flex flex-row items-center justify-center mt-6">
+					<span
+						class="flex flex-row items-center justify-center mt-6"
+					>
 						<div class="flex flex-row items-center">
-							<button class="mx-3 button-blue" type="button" @click="local.mdPreview = true">Preview</button>
+							<button
+								class="mx-3 button-blue"
+								type="button"
+								@click="local.mdPreview = true"
+							>
+								Preview
+							</button>
 							<div class="flex flex-row items-center ml-3">
-								<button class="button-green" type="submit" id="submitPost">Submit</button>
+								<button
+									class="button-green"
+									type="submit"
+									id="submitPost"
+								>
+									Submit
+								</button>
 								<img
 									v-if="local.submittingPost"
 									src="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif"
@@ -91,8 +129,14 @@
 		</div>
 
 		<div class="mx-1 mt-6 md:mx-10 lg:w-9/12 lg:mr-10" v-else>
-			<div class="w-full px-6 py-5 border rounded-lg shadow-sm bg-nord1 border-nord2">
-				<h1 class="mb-4 overflow-hidden text-3xl font-bold break-words md:text-4xl lh50 text-nord6">{{ postInput.title }}</h1>
+			<div
+				class="w-full px-6 py-5 border rounded-lg shadow-sm bg-nord1 border-nord2"
+			>
+				<h1
+					class="mb-4 overflow-hidden text-3xl font-bold break-words md:text-4xl lh50 text-nord6"
+				>
+					{{ postInput.title }}
+				</h1>
 				<div
 					v-html="store.createPost.actions.purify(postInput.content)"
 					class="max-w-full overflow-hidden break-words markdownRender text-nord5"
@@ -100,13 +144,21 @@
 
 				<span class="flex flex-row items-center justify-center mt-6">
 					<div class="flex flex-row items-center">
-						<button class="mx-3 button-blue" type="button" @click="local.mdPreview = false">Hide Preview</button>
+						<button
+							class="mx-3 button-blue"
+							type="button"
+							@click="local.mdPreview = false"
+						>
+							Hide Preview
+						</button>
 					</div>
 				</span>
 			</div>
 		</div>
 
-		<div class="hidden lg:w-4/12 lg:block xl:w-1/4 lg:min-w-4/12 xl:min-w-1/4">
+		<div
+			class="hidden lg:w-4/12 lg:block xl:w-1/4 lg:min-w-4/12 xl:min-w-1/4"
+		>
 			<div class="sticky overflow-y-auto max-h-90vh top-16" id="sidebar">
 				<SubredditSidebar />
 				<InfoSidebar />
@@ -116,7 +168,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, watch, toRefs, ref, Ref } from 'vue';
+import {
+	defineComponent,
+	reactive,
+	onMounted,
+	watch,
+	toRefs,
+	ref,
+	Ref,
+} from 'vue';
 import { useRouter } from 'vue-router';
 import { Subreddit } from '@/typings';
 import store from '@/store';
@@ -143,7 +203,11 @@ export default defineComponent({
 		const router = useRouter();
 		const mdEditor: Ref<HTMLTextAreaElement | null> = ref(null);
 
-		const local: { subreddit: Subreddit | null; mdPreview: boolean; submittingPost: boolean } = reactive({
+		const local: {
+			subreddit: Subreddit | null;
+			mdPreview: boolean;
+			submittingPost: boolean;
+		} = reactive({
 			subreddit: null,
 			mdPreview: false,
 			submittingPost: false,
@@ -154,9 +218,23 @@ export default defineComponent({
 		const { subreddits } = toRefs(store.subreddits.state);
 
 		function getSubFromParams() {
-			if (subreddits.value.some((x) => x.name.toLowerCase() === router.currentRoute.value.params.subreddit.toString().toLowerCase())) {
+			if (
+				subreddits.value.some(
+					(x) =>
+						x.name.toLowerCase() ===
+						router.currentRoute.value.params.subreddit
+							.toString()
+							.toLowerCase()
+				)
+			) {
 				postInput.value.subreddit = `r/${
-					subreddits.value.find((x) => x.name.toLowerCase() === router.currentRoute.value.params.subreddit.toString().toLowerCase())?.name
+					subreddits.value.find(
+						(x) =>
+							x.name.toLowerCase() ===
+							router.currentRoute.value.params.subreddit
+								.toString()
+								.toLowerCase()
+					)?.name
 				}`;
 			}
 		}
@@ -164,14 +242,19 @@ export default defineComponent({
 		const subredditName = toRefs(postInput.value).subreddit;
 
 		onMounted(() => {
-			if (!subreddits.value.length) watch(subreddits, getSubFromParams, { immediate: true });
+			if (!subreddits.value.length)
+				watch(subreddits, getSubFromParams, { immediate: true });
 			else getSubFromParams();
 
 			watch(subredditName, () => {
 				if (!postInput.value.subreddit) return;
 				local.subreddit =
 					store.subreddits.state.subreddits.find(
-						(x) => x.name.toLowerCase() === postInput.value.subreddit.toLowerCase().replace(/r\//g, '')
+						(x) =>
+							x.name.toLowerCase() ===
+							postInput.value.subreddit
+								.toLowerCase()
+								.replace(/r\//g, '')
 					) ?? store.subreddits.state.subreddits[0];
 			});
 
@@ -223,13 +306,22 @@ export default defineComponent({
 					contentArr.splice(cursorEnd + 1, 0, ctrlChars[e.key]);
 					mdEditor.value.value = contentArr.join('');
 					mdEditor.value.selectionStart = cursorStart;
-					mdEditor.value.selectionEnd = cursorEnd + ctrlChars[e.key].length * 2;
+					mdEditor.value.selectionEnd =
+						cursorEnd + ctrlChars[e.key].length * 2;
 					return;
 				}
 
-				if (!(e.key in delimiters.always || e.key in delimiters.nextToWhitespace)) return;
+				if (
+					!(
+						e.key in delimiters.always ||
+						e.key in delimiters.nextToWhitespace
+					)
+				)
+					return;
 				e.preventDefault();
-				const delimiter1 = delimiters.always[e.key] || delimiters.nextToWhitespace[e.key];
+				const delimiter1 =
+					delimiters.always[e.key] ||
+					delimiters.nextToWhitespace[e.key];
 
 				contentArr.splice(cursorStart, 0, e.key);
 				contentArr.splice(cursorEnd + 1, 0, delimiter1);
@@ -245,24 +337,38 @@ export default defineComponent({
 			if (e.key === 'Backspace') {
 				if (
 					!(
-						(contentArr[cursorStart] in delimiters.always || contentArr[cursorStart] in delimiters.nextToWhitespace) &&
-						(contentArr[cursorStart - 1] in delimiters.always || contentArr[cursorStart - 1] in delimiters.nextToWhitespace)
+						(contentArr[cursorStart] in delimiters.always ||
+							contentArr[cursorStart] in
+								delimiters.nextToWhitespace) &&
+						(contentArr[cursorStart - 1] in delimiters.always ||
+							contentArr[cursorStart - 1] in
+								delimiters.nextToWhitespace)
 					)
 				)
 					return;
 				contentArr.splice(cursorStart, 1);
 			} else if (e.ctrlKey && e.key in ctrlChars) {
 				e.preventDefault();
-				contentArr.splice(cursorStart, 0, ctrlChars[e.key] + ctrlChars[e.key]);
+				contentArr.splice(
+					cursorStart,
+					0,
+					ctrlChars[e.key] + ctrlChars[e.key]
+				);
 				mdEditor.value.value = contentArr.join('');
-				mdEditor.value.selectionStart = cursorStart + ctrlChars[e.key].length;
-				mdEditor.value.selectionEnd = cursorStart + ctrlChars[e.key].length;
+				mdEditor.value.selectionStart =
+					cursorStart + ctrlChars[e.key].length;
+				mdEditor.value.selectionEnd =
+					cursorStart + ctrlChars[e.key].length;
 				return;
 			} else if (e.key in delimiters.always) {
 				contentArr.splice(cursorStart, 0, delimiters.always[e.key]);
 			} else if (e.key in delimiters.nextToWhitespace) {
 				if (/^\S$/g.test(contentArr[cursorStart - 1])) return;
-				contentArr.splice(cursorStart, 0, delimiters.nextToWhitespace[e.key]);
+				contentArr.splice(
+					cursorStart,
+					0,
+					delimiters.nextToWhitespace[e.key]
+				);
 			} else return;
 
 			mdEditor.value.value = contentArr.join('');
@@ -273,21 +379,31 @@ export default defineComponent({
 
 		async function createPost() {
 			if (!store.auth.state.isLoggedIn) return;
-			if (!postInput.value.title.length) return alert('A title is required.');
+			if (!postInput.value.title.length)
+				return alert('A title is required.');
 			const subreddit = store.subreddits.state.subreddits.find(
-				(x) => x.name.toLowerCase() === postInput.value.subreddit.toLowerCase().replace('r/', '')
+				(x) =>
+					x.name.toLowerCase() ===
+					postInput.value.subreddit.toLowerCase().replace('r/', '')
 			);
 
-			if (!subreddit) return alert("This subreddit doesn't exist or could not be found.");
+			if (!subreddit)
+				return alert(
+					"This subreddit doesn't exist or could not be found."
+				);
 
 			local.submittingPost = true;
 
-			const submitButton = document.getElementById('submitPost') as HTMLButtonElement;
+			const submitButton = document.getElementById(
+				'submitPost'
+			) as HTMLButtonElement;
 			submitButton.disabled = true;
 
 			const res = await store.createPost.actions.createPost({
 				title: postInput.value.title,
-				content: store.createPost.actions.purify(postInput.value.content),
+				content: store.createPost.actions.purify(
+					postInput.value.content
+				),
 				subreddit_id: subreddit.id,
 				user_id: store.auth.state.user?.id,
 			});

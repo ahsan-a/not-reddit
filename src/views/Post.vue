@@ -35,9 +35,16 @@
 				id="comment"
 			>
 				<div v-if="!mdPreview">
-					<h1 class="mb-5 text-3xl font-semibold text-nord6">
+					<h1 class="text-3xl font-semibold text-nord6">
 						Create Comment
 					</h1>
+				<h1 class="my-3 text-sm text-nord5">
+					By creating a comment, you agree to respect our
+					<router-link to="/about/guidelines"
+					class="text-nord8 hover:underline"
+						>Community Guidelines</router-link
+					>.
+				</h1>
 					<form @submit.prevent="createComment">
 						<textarea
 							placeholder="Comment (Markdown)"

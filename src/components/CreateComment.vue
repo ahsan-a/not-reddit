@@ -4,9 +4,16 @@
 		v-if="store.auth.state.isLoggedIn"
 	>
 		<div v-if="!mdPreview">
-			<h1 class="w-full mb-2 text-2xl font-semibold text-center md:mb-5 text-nord6 md:text-left">
+			<h1 class="w-full text-2xl font-semibold text-center text-nord6 md:text-left">
 				Create Comment
 			</h1>
+				<h1 class="my-3 text-sm text-nord5">
+					By creating a comment, you agree to respect our
+					<router-link to="/about/guidelines"
+					class="text-nord8 hover:underline"
+						>Community Guidelines</router-link
+					>.
+				</h1>
 			<form @submit.prevent="createComment">
 				<textarea
 					placeholder="Comment (Markdown)"
