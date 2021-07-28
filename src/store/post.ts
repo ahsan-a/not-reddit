@@ -26,7 +26,7 @@ let commentsSnapshot: () => void;
 const actions = {
 	async getPost(id: string, bindComments?: boolean, setTitle?: boolean): Promise<any> {
 		state.currentPost = {};
-		let post = store.subreddit.state.allPosts.find((x) => x.id === id) || store.subreddit.state.posts.find((x) => x.id === id);
+		let post = await store.subreddit.actions.getPost(id);
 
 		if (!post) {
 			const dbPost = await firestore

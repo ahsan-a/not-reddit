@@ -1,4 +1,4 @@
-import { firestore } from '@/db';
+import { firestore, firebase } from '@/db';
 import { reactive } from 'vue';
 import router from '@/router';
 import { Post, Subreddit } from '@/typings';
@@ -8,8 +8,10 @@ const posts = firestore.collection('posts');
 interface stateType {
 	subreddit: Partial<Subreddit>;
 	posts: Post[];
+	postSnapshot?: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>;
 	allPosts: Post[];
 	scrollNotif: boolean;
+	homePosts: Post[];
 }
 
 const state: stateType = reactive({
@@ -17,14 +19,17 @@ const state: stateType = reactive({
 	posts: [],
 	allPosts: [],
 	scrollNotif: false,
+	homePosts: [],
 });
 
-let globalListener: () => void | undefined;
+let globalListener: (() => void) | undefined;
 
 const activeSubListener: {
 	id?: string;
 	listener?: () => void;
 } = {};
+
+let caching = false;
 
 const actions = {
 	async bindPosts(name: string, id?: boolean): Promise<any> {
@@ -57,8 +62,6 @@ const actions = {
 		if (activeSubListener?.id !== state.subreddit.id) activeSubListener.listener?.();
 		else if (activeSubListener.id === state.subreddit.id) return;
 
-		globalListener?.();
-
 		state.posts = [];
 		activeSubListener.listener = posts
 			.orderBy('created_at', 'desc')
@@ -66,43 +69,32 @@ const actions = {
 			.onSnapshot(async (serverPosts) => {
 				const postsToUpdate: Post[] = [];
 				for (let i = 0; i < serverPosts.docs.length; i++) {
-					const post = serverPosts.docs[i].data();
-					if (post.content) post.content = store.createPost.actions.purify(post.content);
+					const post = serverPosts.docs[i].data() as Post;
+					post.content = store.createPost.actions.purify(post.content);
 
 					const user = await store.users.actions.getUser(post.user_id);
 					if (user) post.user = user;
 					else post.deletedUser = true;
 
-					postsToUpdate.push(post as Post);
+					postsToUpdate.push(post);
 				}
 				state.posts = postsToUpdate;
 			});
 	},
 
 	async bindAllPosts(): Promise<void> {
-		if (state.subreddit?.id) {
-			state.subreddit = {};
-			state.posts = [];
-		}
-		activeSubListener.listener?.();
-
-		if (store.user.state.currentUser) {
-			store.user.state = {
-				comments: [],
-				currentUser: null,
-				posts: [],
-			};
-		}
+		if (globalListener) return;
 
 		let firstLoad = true;
 		globalListener = posts.orderBy('created_at', 'desc').onSnapshot(async (serverPosts) => {
-			if (router.currentRoute.value.name !== 'Home') return globalListener?.();
+			state.postSnapshot = serverPosts;
+			const scrollNeeded = state.postSnapshot.docs.length < serverPosts.docs.length;
 
+			// initial 8 post caching, 4 post loading
 			const postsToUpdate: Post[] = [];
-			for (let i = 0; i < serverPosts.docs.length; i++) {
-				const post = serverPosts.docs[i].data();
-				post.user = {};
-				if (post.content) post.content = store.createPost.actions.purify(post.content);
+			for (let i = 0; i <= Math.max(Math.min(5, serverPosts.docs.length - 1), state.homePosts.length); i++) {
+				const post = serverPosts.docs[i].data() as Post;
+				store.createPost.actions.purify(post.content);
 
 				const user = await store.users.actions.getUser(post.user_id);
 				if (!user) post.deletedUser = true;
@@ -110,10 +102,8 @@ const actions = {
 
 				postsToUpdate.push(post as Post);
 			}
-			const scrollNeeded = state.allPosts.length < postsToUpdate.length;
 			state.allPosts = postsToUpdate;
-
-			state.posts = state.allPosts.slice(0, state.posts.length < 5 ? 5 : state.posts.length);
+			state.homePosts = postsToUpdate.slice(0, Math.max(2, state.homePosts.length));
 
 			if (firstLoad) {
 				document.addEventListener('scroll', actions.homeScrollCheck);
@@ -126,9 +116,31 @@ const actions = {
 
 	async homeScrollCheck(): Promise<any> {
 		if (!(Math.abs(window.innerHeight - (document.getElementById('sB')?.getBoundingClientRect().bottom ?? 0)) <= 1000)) return;
-		if (router.currentRoute.value.fullPath !== '/') return document.removeEventListener('scroll', actions.homeScrollCheck);
+		if (router.currentRoute.value.name !== 'Home') return;
+		if (!state.postSnapshot) return;
+		if (state.homePosts.length >= state.postSnapshot?.docs.length) return;
 
-		state.posts = state.allPosts.slice(0, state.posts.length + 2);
+		// by the first call, there should be 4 cached posts and 2 rendered posts. the difference should always be 2 unless there are no posts left
+		// here, we assign the cached posts to our rendered posts...
+		state.homePosts = state.allPosts.slice(0, Math.min(state.allPosts.length - 1));
+
+		// ...and then proceed to canche more posts.
+		const newPosts: Post[] = [];
+		if (!caching) {
+			caching = true;
+			for (let i = state.allPosts.length; i < Math.min(state.allPosts.length + 3, state.postSnapshot.docs.length); i++) {
+				const post = state.postSnapshot?.docs[i].data() as Post;
+				store.createPost.actions.purify(post.content);
+
+				const user = await store.users.actions.getUser(post.user_id);
+				if (!user) post.deletedUser = true;
+				else post.user = user;
+
+				newPosts.push(post as Post);
+			}
+			state.allPosts.push(...newPosts);
+			caching = false;
+		}
 	},
 
 	async getPost(id: string): Promise<Post | null> {

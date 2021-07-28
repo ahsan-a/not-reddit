@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="fixed bottom-3 mx-auto shadow-lg right-3 w-49/50 bg-nord2 border border-nord1 max-w-max rounded-lg p-5 text-nord5 z-10"
+		class="fixed z-10 p-5 mx-auto border rounded-lg shadow-lg bottom-3 right-3 w-49/50 bg-nord2 border-nord1 max-w-max text-nord5"
 		v-if="!cookieAccepted"
 	>
 		<h1 class="text-xl font-semibold">Privacy and Guidelines</h1>
@@ -10,7 +10,7 @@
 			and our
 			<router-link to="/about/privacy" class="inline text-nord8 hover:underline">Privacy Policy.</router-link></p
 		>
-		<button class="button-blue block mt-4" @click="acceptCookies">
+		<button class="block mt-4 button-blue" @click="acceptCookies">
 			Understood
 		</button>
 	</div>
@@ -22,8 +22,6 @@ import { defineComponent, ref, Ref } from 'vue';
 export default defineComponent({
 	setup() {
 		let cookieAccepted: Ref<string | boolean | null> = ref(localStorage.getItem('cookieAccepted'));
-
-		console.log(cookieAccepted.value);
 
 		if (cookieAccepted.value === 'false') {
 			localStorage.setItem('cookieAccepted', 'false');

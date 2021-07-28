@@ -1,8 +1,9 @@
 <template>
 	<div class="bg" />
-	<Navbar :padding="true" />
+	<Navbar />
+	<div class="h-16" id="scrollTop"></div>
 	<div class="w-full pt-6 mx-auto xl:w-9/12 lg:w-11/12 bg-nord0 z-2">
-		<div class="pb-2 border shadow-md px-9 lg:rounded-t-lg pt-7 bg-nord1 border-nord2">
+		<div class="pb-2 border rounded-lg shadow-md px-9 pt-7 bg-nord1 border-nord2">
 			<div class="pl-3">
 				<span class="text-4xl font-bold text-nord5">
 					<img
@@ -57,6 +58,7 @@
 	<div class="flex justify-between w-full max-w-full mx-auto mt-6 xl:max-w-9/12 lg:max-w-11/12 xl:w-9/12 lg:w-11/12">
 		<transition-group name="posts" tag="div" class="w-full max-w-full md:w-35/50 xl:w-37/50">
 			<Post v-for="post in store.subreddit.state.posts" :key="post.id" :post="post" />
+			<div class="w-full h-1" id="sB" key="bottomScrollCalc"></div>
 		</transition-group>
 
 		<div class="hidden md:w-14/50 md:block xl:w-1/4 lg:min-w-14/50 xl:min-w-1/4">
