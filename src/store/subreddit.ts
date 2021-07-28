@@ -83,20 +83,6 @@ const actions = {
 	},
 
 	async bindAllPosts(): Promise<void> {
-		// if (state.subreddit?.id) {
-		// 	state.subreddit = {};
-		// 	state.posts = [];
-		// }
-		// activeSubListener.listener?.();
-
-		// if (store.user.state.currentUser) {
-		// 	store.user.state = {
-		// 		comments: [],
-		// 		currentUser: null,
-		// 		posts: [],
-		// 	};
-		// }
-
 		if (globalListener) return;
 
 		let firstLoad = true;
