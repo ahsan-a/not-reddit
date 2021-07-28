@@ -184,6 +184,7 @@ export default defineComponent({
 			user.value = null;
 			user.value = await store.users.actions.getUser(route.value.params.id.toString());
 			if (!store.user.state.currentUser) return router.push({ path: '/404' });
+			document.title = `${store.user.state.currentUser.name} | (not) reddit`
 
 			store.user.actions.bindSubmissions((route.value.params.id as string) || '');
 		}

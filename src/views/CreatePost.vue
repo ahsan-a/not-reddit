@@ -173,7 +173,6 @@ import {
 	reactive,
 	onMounted,
 	watch,
-	toRefs,
 	ref,
 	Ref,
 } from 'vue';
@@ -213,9 +212,9 @@ export default defineComponent({
 			submittingPost: false,
 		});
 
-		const postInput = toRefs(store.createPost.state).newPost;
+		const postInput = ref(store.createPost.state.newPost);
 
-		const { subreddits } = toRefs(store.subreddits.state);
+		const subreddits = ref(store.subreddits.state.subreddits);
 
 		function getSubFromParams() {
 			if (
@@ -239,7 +238,7 @@ export default defineComponent({
 			}
 		}
 
-		const subredditName = toRefs(postInput.value).subreddit;
+		const subredditName = ref(postInput.value.subreddit);
 
 		onMounted(() => {
 			if (!subreddits.value.length)
@@ -258,7 +257,7 @@ export default defineComponent({
 					) ?? store.subreddits.state.subreddits[0];
 			});
 
-			watch(toRefs(postInput.value).content, () => {
+			watch(ref(postInput.value.content), () => {
 				if (!mdEditor.value) return;
 				mdEditor.value.style.height = 'auto';
 				mdEditor.value.style.height = `${mdEditor.value.scrollHeight}px`;

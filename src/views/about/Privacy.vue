@@ -130,7 +130,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import store from '@/store';
 
 import Navbar from '@/components/Navbar.vue';
 import Post from '@/components/Post.vue';
@@ -145,13 +144,10 @@ export default defineComponent({
 		InfoSidebar,
 	},
 	setup() {
-		document.title = 'About | (not) reddit';
+		document.title = 'Privacy Policy | (not) reddit';
 
 		return {
-			store,
 		};
 	},
 });
 </script>
-
-<style lang="stylus" scoped></style>

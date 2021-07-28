@@ -2,7 +2,9 @@
 	<div class="bg" />
 	<Navbar :padding="true" />
 
-	<div class="flex w-full max-w-full mx-auto mt-6 xl:w-9/12 lg:w-11/12 xl:max-w-9/12 lg:max-w-11/12">
+	<div
+		class="flex w-full max-w-full mx-auto mt-6 xl:w-9/12 lg:w-11/12 xl:max-w-9/12 lg:max-w-11/12"
+	>
 		<div class="w-full max-w-full mx-2 lg:w-8/12 xl:w-3/4">
 			<button
 				class="sticky flex flex-row items-center justify-between px-3 py-2 mx-auto mb-3 transition-all rounded-b-lg shadow-lg top-16 w-49/50 z-5 noOutline active:bg-nord3 hover:bg-nord2 group bg-nord1 border-nord2"
@@ -26,7 +28,10 @@
 			</button>
 			<Post
 				:post="store.post.state.currentPost"
-				v-if="store.post.state.currentPost.deletedUser || store.post.state.currentPost.user?.id"
+				v-if="
+					store.post.state.currentPost.deletedUser ||
+						store.post.state.currentPost.user?.id
+				"
 				location="post"
 			/>
 			<div
@@ -38,13 +43,14 @@
 					<h1 class="text-3xl font-semibold text-nord6">
 						Create Comment
 					</h1>
-				<h1 class="my-3 text-sm text-nord5">
-					By creating a comment, you agree to respect our
-					<router-link to="/about/guidelines"
-					class="text-nord8 hover:underline"
-						>Community Guidelines</router-link
-					>.
-				</h1>
+					<h1 class="my-3 text-sm text-nord5">
+						By creating a comment, you agree to respect our
+						<router-link
+							to="/about/guidelines"
+							class="text-nord8 hover:underline"
+							>Community Guidelines</router-link
+						>.
+					</h1>
 					<form @submit.prevent="createComment">
 						<textarea
 							placeholder="Comment (Markdown)"
@@ -55,12 +61,22 @@
 							required
 						/>
 
-						<span class="flex flex-row items-center justify-center mt-6">
+						<span
+							class="flex flex-row items-center justify-center mt-6"
+						>
 							<div class="flex flex-row items-center">
-								<button class="mx-3 button-blue" type="button" @click="mdPreview = true">
+								<button
+									class="mx-3 button-blue"
+									type="button"
+									@click="mdPreview = true"
+								>
 									Preview
 								</button>
-								<button class="mx-3 button-green" type="submit" id="submitCommentButton">
+								<button
+									class="mx-3 button-green"
+									type="submit"
+									id="submitCommentButton"
+								>
 									Submit
 								</button>
 							</div>
@@ -76,9 +92,15 @@
 						class="max-w-full overflow-hidden text-sm break-words text-nord5 markdownRender"
 					/>
 
-					<span class="flex flex-row items-center justify-center mt-6">
+					<span
+						class="flex flex-row items-center justify-center mt-6"
+					>
 						<div class="flex flex-row items-center">
-							<button class="mx-3 button-blue" type="button" @click="mdPreview = false">
+							<button
+								class="mx-3 button-blue"
+								type="button"
+								@click="mdPreview = false"
+							>
 								Hide Preview
 							</button>
 						</div>
@@ -87,10 +109,16 @@
 			</div>
 
 			<div class="max-w-full">
-				<Comment v-for="comment in store.post.state.currentPost.comments" :key="comment.id" :comment="comment" />
+				<Comment
+					v-for="comment in store.post.state.currentPost.comments"
+					:key="comment.id"
+					:comment="comment"
+				/>
 			</div>
 		</div>
-		<div class="hidden lg:w-4/12 lg:block xl:w-1/4 lg:min-w-4/12 xl:min-w-1/4">
+		<div
+			class="hidden lg:w-4/12 lg:block xl:w-1/4 lg:min-w-4/12 xl:min-w-1/4"
+		>
 			<div class="sticky overflow-y-auto max-h-90vh top-16" id="sidebar">
 				<SubredditSidebar />
 				<InfoSidebar />
@@ -123,7 +151,12 @@ export default defineComponent({
 		const router = useRouter();
 
 		const newCommentTextarea: Ref<HTMLTextAreaElement | null> = ref(null);
-		store.post.actions.getPost(route.params.id.toString(), true, true);
+		store.post.actions
+			.getPost(route.params.id.toString(), true, true)
+			.then(
+				() =>
+					(document.title = `${store.post.state.currentPost?.title} | (not) reddit`)
+			);
 
 		const commentInput = ref('');
 		const mdPreview = ref(false);
@@ -179,13 +212,22 @@ export default defineComponent({
 					contentArr.splice(cursorEnd + 1, 0, ctrlChars[e.key]);
 					newCommentTextarea.value.value = contentArr.join('');
 					newCommentTextarea.value.selectionStart = cursorStart;
-					newCommentTextarea.value.selectionEnd = cursorEnd + ctrlChars[e.key].length * 2;
+					newCommentTextarea.value.selectionEnd =
+						cursorEnd + ctrlChars[e.key].length * 2;
 					return;
 				}
 
-				if (!(e.key in delimiters.always || e.key in delimiters.nextToWhitespace)) return;
+				if (
+					!(
+						e.key in delimiters.always ||
+						e.key in delimiters.nextToWhitespace
+					)
+				)
+					return;
 				e.preventDefault();
-				const delimiter1 = delimiters.always[e.key] || delimiters.nextToWhitespace[e.key];
+				const delimiter1 =
+					delimiters.always[e.key] ||
+					delimiters.nextToWhitespace[e.key];
 
 				contentArr.splice(cursorStart, 0, e.key);
 				contentArr.splice(cursorEnd + 1, 0, delimiter1);
@@ -201,24 +243,38 @@ export default defineComponent({
 			if (e.key === 'Backspace') {
 				if (
 					!(
-						(contentArr[cursorStart] in delimiters.always || contentArr[cursorStart] in delimiters.nextToWhitespace) &&
-						(contentArr[cursorStart - 1] in delimiters.always || contentArr[cursorStart - 1] in delimiters.nextToWhitespace)
+						(contentArr[cursorStart] in delimiters.always ||
+							contentArr[cursorStart] in
+								delimiters.nextToWhitespace) &&
+						(contentArr[cursorStart - 1] in delimiters.always ||
+							contentArr[cursorStart - 1] in
+								delimiters.nextToWhitespace)
 					)
 				)
 					return;
 				contentArr.splice(cursorStart, 1);
 			} else if (e.ctrlKey && e.key in ctrlChars) {
 				e.preventDefault();
-				contentArr.splice(cursorStart, 0, ctrlChars[e.key] + ctrlChars[e.key]);
+				contentArr.splice(
+					cursorStart,
+					0,
+					ctrlChars[e.key] + ctrlChars[e.key]
+				);
 				newCommentTextarea.value.value = contentArr.join('');
-				newCommentTextarea.value.selectionStart = cursorStart + ctrlChars[e.key].length;
-				newCommentTextarea.value.selectionEnd = cursorStart + ctrlChars[e.key].length;
+				newCommentTextarea.value.selectionStart =
+					cursorStart + ctrlChars[e.key].length;
+				newCommentTextarea.value.selectionEnd =
+					cursorStart + ctrlChars[e.key].length;
 				return;
 			} else if (e.key in delimiters.always) {
 				contentArr.splice(cursorStart, 0, delimiters.always[e.key]);
 			} else if (e.key in delimiters.nextToWhitespace) {
 				if (/^\S$/g.test(contentArr[cursorStart - 1])) return;
-				contentArr.splice(cursorStart, 0, delimiters.nextToWhitespace[e.key]);
+				contentArr.splice(
+					cursorStart,
+					0,
+					delimiters.nextToWhitespace[e.key]
+				);
 			} else return;
 
 			newCommentTextarea.value.value = contentArr.join('');
@@ -227,9 +283,12 @@ export default defineComponent({
 		}
 
 		async function createComment() {
-			if (!commentInput.value.replace(/\s+/g, '').length) return alert('Your comment must not be empty.');
+			if (!commentInput.value.replace(/\s+/g, '').length)
+				return alert('Your comment must not be empty.');
 
-			const button = document.getElementById('submitCommentButton') as HTMLButtonElement;
+			const button = document.getElementById(
+				'submitCommentButton'
+			) as HTMLButtonElement;
 
 			button.disabled = true;
 
