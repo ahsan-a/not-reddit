@@ -158,7 +158,7 @@ export default defineComponent({
 </script>
 
 <style lang="stylus">
-@import '../assets/markdown.styl';
+@import '../../assets/markdown.styl';
 
 ::-webkit-scrollbar {
 	width: 10px;

@@ -2,9 +2,12 @@
 	<FullMDEditor v-if="store.createPost.state.fullscreen" />
 	<div class="bg -z-10" />
 	<Navbar :padding="true" />
-	<div class="flex w-full pt-6 mx-auto xl:w-5/6 2xl:w-2/3 lg:w-11/12">
+	<Topbar v-if="route.params?.name" />
+	<div
+		class="flex justify-between w-full max-w-full mx-auto mt-6 xl:max-w-9/12 lg:max-w-11/12 xl:w-9/12 lg:w-11/12"
+	>
 		<div
-			class="w-full px-6 py-5 mx-1 mt-4 border rounded-lg shadow-sm md:mx-10 lg:w-9/12 bg-nord1 border-nord2"
+			class="md:w-35/50 xl:w-37/50 w-full px-6 py-5 mx-1 mt-4 border rounded-lg shadow-sm bg-nord1 border-nord2"
 			v-if="!store.auth.state.isLoggedIn"
 		>
 			<h1 class="text-3xl font-bold text-center text-nord6">
@@ -17,17 +20,23 @@
 			>
 		</div>
 
-		<div class="w-full md:mx-10 lg:w-9/12 " v-else-if="!local.mdPreview">
+		<div
+			class="w-full max-w-full md:w-35/50 xl:w-36/50"
+			v-else-if="
+				!local.mdPreview && (!route.params.name || postInput.subreddit)
+			"
+		>
 			<div
 				class="w-full px-6 py-5 mx-1 border rounded-lg shadow-sm bg-nord1 border-nord2"
 			>
 				<h1 class="text-2xl font-bold text-center text-nord6">
 					Create a Post
 				</h1>
-				<h1 class="mt-3 text-sm text-center text-nord5">
+				<h1 class="my-3 text-sm text-center text-nord5">
 					By creating a post, you agree to respect our
-					<router-link to="/about/guidelines"
-					class="text-nord8 hover:underline"
+					<router-link
+						to="/about/guidelines"
+						class="text-nord8 hover:underline"
 						>Community Guidelines</router-link
 					>.
 				</h1>
@@ -47,10 +56,17 @@
 
 						<Multiselect
 							v-model="postInput.subreddit"
-							v-if="subreddits.length"
+							v-if="
+								store.subreddits.state.subreddits.length &&
+									postInput.subreddit
+							"
 							:searchable="true"
 							class="w-full"
-							:options="subreddits.map((x) => `r/${x.name}`)"
+							:options="
+								store.subreddits.state.subreddits.map(
+									(x) => `r/${x.name}`
+								)
+							"
 						/>
 					</div>
 					<h2 class="mt-6 mb-2 text-lg font-semibold text-nord5">
@@ -128,7 +144,7 @@
 			</div>
 		</div>
 
-		<div class="mx-1 mt-6 md:mx-10 lg:w-9/12 lg:mr-10" v-else>
+		<div class="w-full max-w-full md:w-35/50 xl:w-37/50" v-else>
 			<div
 				class="w-full px-6 py-5 border rounded-lg shadow-sm bg-nord1 border-nord2"
 			>
@@ -157,7 +173,7 @@
 		</div>
 
 		<div
-			class="hidden lg:w-4/12 lg:block xl:w-1/4 lg:min-w-4/12 xl:min-w-1/4"
+			class="hidden md:w-14/50 md:block xl:w-1/4 lg:min-w-14/50 xl:min-w-1/4"
 		>
 			<div class="sticky overflow-y-auto max-h-90vh top-16" id="sidebar">
 				<SubredditSidebar />
@@ -168,23 +184,17 @@
 </template>
 
 <script lang="ts">
-import {
-	defineComponent,
-	reactive,
-	onMounted,
-	watch,
-	ref,
-	Ref,
-} from 'vue';
-import { useRouter } from 'vue-router';
+import { defineComponent, reactive, onMounted, watch, ref, Ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { Subreddit } from '@/typings';
 import store from '@/store';
 
 import Navbar from '@/components/Navbar.vue';
 import Multiselect from '@vueform/multiselect';
-import FullMDEditor from '@/components/FullMDEditor.vue';
+import FullMDEditor from '@/components/CreatePost/FullMDEditor.vue';
 import SubredditSidebar from '@/components/SubredditSidebar.vue';
 import InfoSidebar from '@/components/InfoSidebar.vue';
+import Topbar from '@/components/Subreddit/Topbar.vue';
 
 // @ts-ignore
 import taskLists from 'markdown-it-task-lists';
@@ -196,14 +206,16 @@ export default defineComponent({
 		Multiselect,
 		FullMDEditor,
 		InfoSidebar,
+		Topbar,
 	},
 	setup() {
 		document.title = 'Create Post | (not) reddit';
 		const router = useRouter();
+		const route = useRoute();
 		const mdEditor: Ref<HTMLTextAreaElement | null> = ref(null);
 
 		const local: {
-			subreddit: Subreddit | null;
+			subreddit: Partial<Subreddit> | null;
 			mdPreview: boolean;
 			submittingPost: boolean;
 		} = reactive({
@@ -213,42 +225,22 @@ export default defineComponent({
 		});
 
 		const postInput = ref(store.createPost.state.newPost);
-
 		const subreddits = ref(store.subreddits.state.subreddits);
 
-		function getSubFromParams() {
-			if (
-				subreddits.value.some(
-					(x) =>
-						x.name.toLowerCase() ===
-						router.currentRoute.value.params.subreddit
-							.toString()
-							.toLowerCase()
-				)
-			) {
-				postInput.value.subreddit = `r/${
-					subreddits.value.find(
-						(x) =>
-							x.name.toLowerCase() ===
-							router.currentRoute.value.params.subreddit
-								.toString()
-								.toLowerCase()
-					)?.name
-				}`;
+		onMounted(async () => {
+			if (route.params.name && route.params.r) {
+				const subreddit = ref(store.subreddit.state.subreddit);
+				store.subreddit.state.menu = 'create';
+				if (store.subreddit.state.subredditLoaded) {
+					postInput.value.subreddit = `r/${subreddit.value.name}`;
+					local.subreddit = subreddit.value;
+				} else router.push(`/r/${route.params.name}`);
 			}
-		}
 
-		const subredditName = ref(postInput.value.subreddit);
-
-		onMounted(() => {
-			if (!subreddits.value.length)
-				watch(subreddits, getSubFromParams, { immediate: true });
-			else getSubFromParams();
-
-			watch(subredditName, () => {
+			watch(ref(postInput.value.subreddit), () => {
 				if (!postInput.value.subreddit) return;
 				local.subreddit =
-					store.subreddits.state.subreddits.find(
+					subreddits.value.find(
 						(x) =>
 							x.name.toLowerCase() ===
 							postInput.value.subreddit
@@ -374,7 +366,6 @@ export default defineComponent({
 			mdEditor.value.selectionEnd = cursorStart;
 			mdEditor.value.selectionStart = cursorStart;
 		}
-		// lol
 
 		async function createPost() {
 			if (!store.auth.state.isLoggedIn) return;
@@ -400,9 +391,7 @@ export default defineComponent({
 
 			const res = await store.createPost.actions.createPost({
 				title: postInput.value.title,
-				content: store.createPost.actions.purify(
-					postInput.value.content
-				),
+				content: postInput.value.content,
 				subreddit_id: subreddit.id,
 				user_id: store.auth.state.user?.id,
 			});
@@ -410,13 +399,11 @@ export default defineComponent({
 			local.submittingPost = false;
 			submitButton.disabled = false;
 
+			postInput.value.title = '';
+			postInput.value.content = '';
+
 			if (res) {
 				let subredditToPush = postInput.value.subreddit;
-				postInput.value = {
-					title: '',
-					subreddit: 'r/General',
-					content: '',
-				};
 				router.push({ path: `/${subredditToPush}` });
 			}
 		}
@@ -424,6 +411,7 @@ export default defineComponent({
 		return {
 			store,
 			router,
+			route,
 			postInput,
 			subreddits,
 			local,

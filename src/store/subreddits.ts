@@ -48,7 +48,8 @@ const actions = {
 			});
 	},
 
-	async getSubreddit(id?: string, name?: string): Promise<Subreddit | null> {
+	async getSubreddit(opts: {id?: string, name?: string}): Promise<Subreddit | null> {
+		const {id, name} = opts;
 		if (id) {
 			const subreddit = state.subreddits.find((x) => x.id === id);
 			if (subreddit) return subreddit;

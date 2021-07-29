@@ -127,7 +127,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, reactive, watch } from 'vue';
+import { defineComponent, ref, reactive, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import store from '@/store';
 import * as timeago from 'timeago.js';
@@ -163,7 +163,7 @@ export default defineComponent({
 			},
 		});
 
-		const user = toRefs(store.user.state).currentUser;
+		const user = ref(store.user.state.currentUser);
 		async function init() {
 			local.optionsInput = {
 				name: store.user.state.currentUser?.name ?? 'New User',
