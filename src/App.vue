@@ -33,4 +33,7 @@ body::-webkit-scrollbar-thumb:hover {
 html {
 	scroll-behavior: smooth;
 }
+body {
+	background-color: nord0
+}
 </style>

@@ -5,21 +5,25 @@ import { Post, Subreddit } from '@/typings';
 import store from '.';
 
 const posts = firestore.collection('posts');
-interface stateType {
+interface State {
 	subreddit: Partial<Subreddit>;
 	posts: Post[];
 	postSnapshot?: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>;
 	allPosts: Post[];
 	scrollNotif: boolean;
 	homePosts: Post[];
+	menu: 'home' | 'options' | 'create' | null;
+	subredditLoaded: boolean;
 }
 
-const state: stateType = reactive({
+const state: State = reactive({
 	subreddit: {},
 	posts: [],
 	allPosts: [],
 	scrollNotif: false,
 	homePosts: [],
+	menu: null,
+	subredditLoaded: false,
 });
 
 let globalListener: (() => void) | undefined;
@@ -33,6 +37,7 @@ let caching = false;
 
 const actions = {
 	async bindPosts(name: string, id?: boolean): Promise<any> {
+		store.subreddit.state.subredditLoaded = false;
 		if (!id) {
 			let subInSubreddits = store.subreddits.state.subreddits.find((x) => x.name.toLowerCase() === name.toLowerCase());
 			if (!subInSubreddits) {
@@ -58,6 +63,8 @@ const actions = {
 			}
 			state.subreddit = subInSubreddits;
 		}
+
+		store.subreddit.state.subredditLoaded = true;
 
 		if (activeSubListener?.id !== state.subreddit.id) activeSubListener.listener?.();
 		else if (activeSubListener.id === state.subreddit.id) return;
@@ -96,10 +103,6 @@ const actions = {
 				const post = serverPosts.docs[i].data() as Post;
 				store.createPost.actions.purify(post.content);
 
-				const user = await store.users.actions.getUser(post.user_id);
-				if (!user) post.deletedUser = true;
-				else post.user = user;
-
 				postsToUpdate.push(post as Post);
 			}
 			state.allPosts = postsToUpdate;
@@ -126,6 +129,8 @@ const actions = {
 
 		// ...and then proceed to canche more posts.
 		const newPosts: Post[] = [];
+
+		// removes possibility of simultaneous caching, which may render duplicate posts.
 		if (!caching) {
 			caching = true;
 			for (let i = state.allPosts.length; i < Math.min(state.allPosts.length + 3, state.postSnapshot.docs.length); i++) {
