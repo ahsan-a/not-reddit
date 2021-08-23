@@ -103,7 +103,7 @@ const actions = {
 				postsToUpdate.push(post as Post);
 			}
 			state.allPosts = postsToUpdate;
-			state.homePosts = postsToUpdate.slice(0, Math.max(2, state.homePosts.length));
+			state.homePosts = postsToUpdate.slice(0, Math.max(5, state.homePosts.length));
 
 			if (firstLoad) {
 				document.addEventListener('scroll', actions.homeScrollCheck);
