@@ -63,7 +63,7 @@ const actions = {
 				img: ['src', 'srcset'],
 				video: ['src', 'controls', 'poster'],
 				iframe: ['src', 'title', 'frameborder', 'allowfullscreen', 'width', 'height'],
-				input: ['type'],
+				input: ['type', 'checked'],
 			},
 			allowedClasses: {
 				code: ['hljs', 'language-*'],

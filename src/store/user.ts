@@ -76,7 +76,7 @@ const actions = {
 					if (post) comment.post = post;
 					else continue;
 
-					const subreddit = await store.subreddits.actions.getSubreddit((id = post.subreddit_id));
+					const subreddit = await store.subreddits.actions.getSubreddit({id: post.subreddit_id});
 					if (subreddit) comment.subreddit = subreddit;
 					else continue;
 
