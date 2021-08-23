@@ -103,6 +103,10 @@ const actions = {
 				const post = serverPosts.docs[i].data() as Post;
 				store.createPost.actions.purify(post.content);
 
+				const user = await store.users.actions.getUser(post.user_id);
+				if (!user) post.deletedUser = true;
+				else post.user = user;
+
 				postsToUpdate.push(post as Post);
 			}
 			state.allPosts = postsToUpdate;

@@ -7,10 +7,10 @@
 				<h1 class="overflow-hidden text-3xl font-bold break-words md:text-4xl lh50 text-nord6">{{ post.title }}</h1>
 			</div>
 			<div class="float-right w-auto ml-1 md:ml-10 justify-self-end min-w-max" v-if="location === 'home'">
-				<router-link :to="`/r/${subreddit.name}`" class="inline font-medium text-nord6 hover:underline">r/{{ subreddit.name }}</router-link>
-				<router-link :to="`/r/${subreddit.name}`">
+				<router-link :to="`/r/${subreddit?.name}`" class="inline font-medium text-nord6 hover:underline">r/{{ subreddit?.name }}</router-link>
+				<router-link :to="`/r/${subreddit?.name}`">
 					<img
-						:src="subreddit.image || require('../assets/defaultSub.svg')"
+						:src="subreddit?.image || require('../assets/defaultSub.svg')"
 						class="hidden object-cover ml-2 rounded-full sm:inline md:ml-4 h-9 w-9"
 					/>
 				</router-link>
@@ -24,8 +24,8 @@
 				v-else-if="!post.deletedUser"
 				:to="`/u/${post.user_id}`"
 			>
-				<span class="text-base font-medium text-nord6 group-hover:underline">{{ post.user.name }}</span>
-				<img :src="post.user.image || require('../assets/defaultPfp.webp')" class="inline ml-2 rounded-full md:ml-4 obejct-cover h-9 w-9" />
+				<span class="text-base font-medium text-nord6 group-hover:underline">{{ post.user?.name }}</span>
+				<img :src="post.user?.image || require('../assets/defaultPfp.webp')" class="inline ml-2 rounded-full md:ml-4 obejct-cover h-9 w-9" />
 			</router-link>
 		</div>
 		<div
@@ -35,7 +35,7 @@
 		/>
 		<div class="mt-10 mb-3 overflow-hidden">
 			<router-link
-				:to="`/r/${subreddit.name}/${post.id}`"
+				:to="`/r/${subreddit?.name}/${post.id}`"
 				class="inline px-2 py-1 pb-2 mr-2 transition-all rounded-md group hover:bg-nord2 text-nord4 hover:text-nord6"
 				v-if="location !== 'post'"
 			>
@@ -51,7 +51,7 @@
 				<span class="ml-2 text-sm font-medium">View</span>
 			</router-link>
 			<router-link
-				:to="`/r/${subreddit.name}/${post.id}#comment`"
+				:to="`/r/${subreddit?.name}/${post.id}#comment`"
 				class="hidden px-2 py-1 pb-2 transition-all mr-2 rounded-md lg:inline group hover:bg-nord2 text-nord4 hover:text-nord6"
 				v-if="location !== 'post'"
 			>
@@ -110,7 +110,7 @@
 				>
 				<span class="ml-0.5 font-semibold" v-if="location === 'home' && post.deletedUser">[deleted] </span>
 				<router-link class="hover:underline ml-0.5 font-semibold text-sm" v-else-if="location === 'home'" :to="`/u/${post.user_id}`">{{
-					post.user.name
+					post.user?.name
 				}}</router-link>
 				<router-link class="ml-0.5 font-semibold hover:underline" :to="`/r/${subreddit?.name}`" v-else-if="location === 'post'"
 					>r/{{ subreddit?.name }}</router-link
@@ -121,7 +121,7 @@
 		<div class="flex flex-row items-center mb-6" v-if="shareEnabled">
 			<input
 				type="text"
-				:value="`https://not-reddit.vercel.app/r/${subreddit.name}/${post.id}`"
+				:value="`https://not-reddit.vercel.app/r/${subreddit?.name}/${post.id}`"
 				class="w-full px-3 py-2 mx-auto rounded-md shadow-sm bg-nord2 text-nord4 focus:text-nord5 noOutline shareinput"
 				readonly
 			/>
